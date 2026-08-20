@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.levtech.rookie.attendance.mapper.TestMapper">
+	<select id="findAll" resultType="jp.levtech.rookie.attendance.model.TbMstEmployee">
+		SELECT
+			employee_id,
+			employee_name,
+			deparment_id,
+			employee_email,
+			employee_password,
+			hire_date,
+			employee_status_id,
+			employee_type
+		FROM
+			tb_mst_employee
+	</select>
+	
+	<select id="findByEmployeeId" resultType="jp.levtech.rookie.attendance.model.TbMstEmployee">
+		SELECT
+			employee_id,
+			employee_name,
+			department_id,
+			employee_email,
+			employee_password,
+			hire_date,
+			employee_status_id,
+			employee_type
+		FROM
+			tb_mst_employee
+		WHERE
+			employee_id = #{employeeId}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.levtech.rookie.attendance.mapper.AttendanceMapper">
+	<insert id="insert">
+		INSERT INTO tb_trn_attendance (
+			attendance_id,
+			user_id,
+			working_day,
+			working_start_time,
+			working_end_time,
+			actual_working_start_time,
+			actual_working_end_time
+		)
+		VALUES (
+			#{attendanceId}
+			#{userId}
+			#{workingDay}
+			#{workingStartTime}
+			#{workingEndTime}
+			#{actualWorkingStartTime}
+			#{actual_workingEndTime}
+		)
+		
+	</insert>
+</mapper>
