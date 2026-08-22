@@ -26,7 +26,7 @@
 
     <p>
         出勤時間：
-        <span th:text="${startTime}">--:--</span>
+        <span th:text="${actualWorkingStartTime}">--:--</span>
     </p>
 
     <form th:action="@{/attendance/end}" method="post">
@@ -35,7 +35,7 @@
 
     <p>
         退勤時間：
-        <span th:text="${endTime}">--:--</span>
+        <span th:text="${actualWorkingEndTime}">--:--</span>
     </p>
 
     <hr>

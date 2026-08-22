@@ -1,27 +1,86 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="jp.levtech.rookie.attendance.mapper.AttendanceMapper">
-	<insert id="insert">
-		INSERT INTO tb_trn_attendance (
-			attendance_id,
-			user_id,
-			working_day,
-			working_start_time,
-			working_end_time,
-			actual_working_start_time,
-			actual_working_end_time
-		)
-		VALUES (
-			#{attendanceId}
-			#{userId}
-			#{workingDay}
-			#{workingStartTime}
-			#{workingEndTime}
-			#{actualWorkingStartTime}
-			#{actual_workingEndTime}
-		)
-		
-	</insert>
+
+    <select id="findByUserIdAndWorkingDay"
+            resultType="jp.levtech.rookie.attendance.model.TbTrnAttendance">
+
+        SELECT
+            attendance_id,
+            user_id,
+            working_day,
+            working_start_time,
+            working_end_time,
+            actual_working_start_time,
+            actual_working_end_time
+        FROM
+            tb_trn_attendance
+        WHERE
+            user_id = #{employeeId}
+        AND
+            working_day = #{today}
+
+    </select>
+
+    <insert id="insert">
+
+        INSERT INTO tb_trn_attendance (
+            attendance_id,
+            user_id,
+            working_day,
+            working_start_time,
+            working_end_time,
+            actual_working_start_time,
+            actual_working_end_time
+        )
+        VALUES (
+            #{attendanceId},
+            #{userId},
+            #{workingDay},
+            #{workingStartTime},
+            #{workingEndTime},
+            #{actualWorkingStartTime},
+            #{actualWorkingEndTime}
+        )
+
+    </insert>
+
+    <update id="update">
+
+        UPDATE
+            tb_trn_attendance
+        SET
+            working_start_time = #{workingStartTime},
+            working_end_time = #{workingEndTime},
+            actual_working_start_time = #{actualWorkingStartTime},
+            actual_working_end_time = #{actualWorkingEndTime}
+        WHERE
+            attendance_id = #{attendanceId}
+
+    </update>
+    
+    <select id="findByUserId"
+            resultType="jp.levtech.rookie.attendance.model.TbTrnAttendance">
+
+        SELECT
+            attendance_id AS attendanceId,
+            user_id AS userId,
+            working_day AS workingDay,
+            working_start_time AS workingStartTime,
+            working_end_time AS workingEndTime,
+            actual_working_start_time AS actualWorkingStartTime,
+            actual_working_end_time AS actualWorkingEndTime
+        FROM
+            tb_trn_attendance
+        WHERE
+            user_id = #{employeeId}
+        ORDER BY
+            working_day ASC
+
+    </select>
+
 </mapper>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>勤怠実績一覧</title>
+</head>
+
+<body>
+
+    <h1>株式会社アテンダンス</h1>
+
+    <p>
+        社員名：
+        <span th:text="${employee.employeeName}">山田太郎</span>
+    </p>
+
+
+    <!-- 勤務時間登録 -->
+    <h2>勤務時間登録</h2>
+
+    <form th:action="@{/attendance/register}" method="post">
+		<p>
+	        <label for="startDate">開始日</label>
+	        <input
+	            type="date"
+	            id="startDate"
+	            name="startDate"
+	            required>
+	    </p>
+	
+	    <p>
+	        <label for="endDate">終了日</label>
+	        <input
+	            type="date"
+	            id="endDate"
+	            name="endDate"
+	            required>
+	    </p>
+
+        <p>
+            <label for="workingStartTime">勤務開始時間</label>
+
+            <input
+                type="time"
+                id="workingStartTime"
+                name="workingStartTime"
+                required>
+        </p>
+
+        <p>
+            <label for="workingEndTime">勤務終了時間</label>
+
+            <input
+                type="time"
+                id="workingEndTime"
+                name="workingEndTime"
+                required>
+        </p>
+        
+		<p>
+		    <label>
+		        <input type="checkbox"
+		               name="excludeWeekend"
+		               value="true">
+		        土日を除外する
+		    </label>
+		</p>       
+
+        <button type="submit">登録</button>
+
+    </form>
+
+
+    <hr>
+
+
+    <!-- 勤怠実績一覧 -->
+    <h2>勤怠実績一覧</h2>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>勤務時間</th>
+                <th>出勤</th>
+                <th>退勤</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr th:each="attendance : ${attendanceList}">
+
+                <!-- 勤務日 -->
+                <td th:text="${#temporals.format(
+                        attendance.workingDay,
+                        'M月d日'
+                    )}">
+                </td>
+
+
+                <!-- 登録した勤務予定時間 -->
+                <td>
+
+                    <span th:text="${attendance.workingStartTime != null
+                            ? #temporals.format(
+                                attendance.workingStartTime,
+                                'HH:mm'
+                              )
+                            : '--:--'}">
+                    </span>
+
+                    ～
+
+                    <span th:text="${attendance.workingEndTime != null
+                            ? #temporals.format(
+                                attendance.workingEndTime,
+                                'HH:mm'
+                              )
+                            : '--:--'}">
+                    </span>
+
+                </td>
+
+
+                <!-- 実際の出勤時間 -->
+                <td th:text="${attendance.actualWorkingStartTime != null
+                        ? #temporals.format(
+                            attendance.actualWorkingStartTime,
+                            'HH:mm'
+                          )
+                        : '--:--'}">
+                </td>
+
+
+                <!-- 実際の退勤時間 -->
+                <td th:text="${attendance.actualWorkingEndTime != null
+                        ? #temporals.format(
+                            attendance.actualWorkingEndTime,
+                            'HH:mm'
+                          )
+                        : '--:--'}">
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <br>
+
+    <a th:href="@{/home}">ホームへ戻る</a>
+
+</body>
+
+</html>

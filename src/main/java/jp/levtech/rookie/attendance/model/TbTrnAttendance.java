@@ -1,26 +1,29 @@
 package jp.levtech.rookie.attendance.model;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TbTrnAttendance {
 	
-	private final String attendanceId;
+	private String attendanceId;
 	
-	private final String userId;
+	private String userId;
 	
-	private final Date workingDay;
+	private LocalDate workingDay;
 	
-	private final LocalTime workingStartTime;
+	private LocalTime workingStartTime;
 	
-	private final LocalTime workingEndTime;
+	private LocalTime workingEndTime;
 	
-	private final LocalTime actualWorkingStartTime;
+	private LocalTime actualWorkingStartTime;
 	
-	private final LocalTime actual_workingEndTime;
-
+	private LocalTime actualWorkingEndTime; // キャメルケースに統一
 
 }
