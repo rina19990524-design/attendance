@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>有給申請</title>
+</head>
+
+<body>
+
+    <!-- 会社名と社員名 -->
+    <div>
+        <p>
+            会社名：株式会社アテンダンス
+        </p>
+
+        <p>
+            社員名：
+            <span th:text="${employee.employeeName}">
+                山田太郎
+            </span>
+        </p>
+    </div>
+    
+	<form th:action="@{/logout}"
+	      method="post">
+	
+	    <button type="submit">
+	        ログアウト
+	    </button>
+	</form>
+
+    <!-- 画面タイトル -->
+    <h1>有給申請</h1>
+
+    <!-- 有給申請フォーム -->
+    <form th:action="@{/paid-holiday/register}"
+          method="post">
+
+
+        <!-- 休暇区分 -->
+        <div>
+            <label for="holidayType">
+                休暇区分
+            </label>
+
+            <select id="holidayType"
+                    name="holidayType"
+                    required>
+
+                <option value="">
+                    選択してください
+                </option>
+
+                <option value="1">
+                    1日有給
+                </option>
+
+                <option value="2">
+                    午前半休
+                </option>
+
+                <option value="3">
+                    午後半休
+                </option>
+
+            </select>
+        </div>
+
+
+        <!-- 日付入力欄 -->
+        <div id="date-container">
+
+            <div>
+                <label>
+                    日付
+                </label>
+
+                <input type="date"
+                       name="holidays"
+                       required>
+            </div>
+
+        </div>
+
+
+        <!-- 日付欄を追加するボタン -->
+        <div>
+            <button type="button"
+                    onclick="addDate()">
+                ＋
+            </button>
+        </div>
+
+
+        <!-- 申請理由 -->
+        <div>
+            <label for="reason">
+                申請理由
+            </label>
+
+            <textarea id="reason"
+                      name="reason"
+                      maxlength="500"
+                      required></textarea>
+        </div>
+        
+        <p th:if="${message}"
+   			th:text="${message}"
+   			style="color: red;">
+   			申請しました
+   		</p>
+
+        <!-- 申請ボタンと戻るボタン -->
+        <div>
+            <button type="submit">
+                申請
+            </button>
+
+            <a th:href="@{/home}">
+                戻る
+            </a>
+        </div>
+
+    </form>
+
+
+    <!-- ＋ボタンを押したときの処理 -->
+    <script>
+        function addDate() {
+
+            // 日付入力欄を入れる場所を取得
+            const dateContainer =
+                document.getElementById("date-container");
+
+            // 新しいdivを作成
+            const newDateRow =
+                document.createElement("div");
+
+            // 新しい日付入力欄を作成
+            newDateRow.innerHTML = `
+                <label>
+                    日付
+                </label>
+
+                <input type="date"
+                       name="holidays"
+                       required>
+
+                <button type="button"
+                        onclick="removeDate(this)">
+                    削除
+                </button>
+            `;
+
+            // 作成した日付入力欄を追加
+            dateContainer.appendChild(newDateRow);
+        }
+
+
+        function removeDate(button) {
+
+            // 押した削除ボタンがある日付欄を削除
+            button.parentElement.remove();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.levtech.rookie.attendance.mapper.AttendanceRequestMapper">
+
+    <insert id="insert">
+
+        INSERT INTO tb_trn_attendance_request (
+            attendance_request_id,
+            attendance_id,
+            requested_working_start_time,
+            requested_working_end_time,
+            request_reason,
+            request_flag,
+            request_type
+        )
+        VALUES (
+            #{attendanceRequestId},
+            #{attendanceId},
+            #{workingStartTime},
+            #{workingEndTime},
+            #{requestReason},
+            #{requestFlag},
+            #{requestType}
+        )
+
+    </insert>
+
+</mapper>

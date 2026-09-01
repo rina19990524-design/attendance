@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>勤怠申請</title>
+</head>
+
+<body>
+
+    <h1>株式会社アテンダンス</h1>
+
+    <!-- ログイン中の社員名 -->
+    <p>
+        社員名：
+        <span th:text="${employee.employeeName}">山田太郎</span>
+    </p>
+	<form th:action="@{/logout}"
+	      method="post">
+	
+	    <button type="submit">
+	        ログアウト
+	    </button>
+	</form>
+
+    <hr>
+
+    <h2>勤怠申請</h2>
+
+    <form th:action="@{/request/register}" method="post">
+
+        <!-- 申請種別 -->
+        <p>
+            <label for="requestType">申請種別</label>
+
+            <select id="requestType"
+                    name="requestType"
+                    required>
+
+                <option value="">選択してください</option>
+                <option value="1">勤怠修正</option>
+                <option value="2">打刻漏れ</option>
+
+            </select>
+        </p>
+
+
+        <!-- 日付 -->
+        <p>
+            <label for="workingDay">日付</label>
+
+            <input type="date"
+                   id="workingDay"
+                   name="workingDay"
+                   required>
+        </p>
+
+
+        <!-- 出勤時刻 -->
+        <p>
+            <label for="workingStartTime">出勤時刻</label>
+
+            <input type="time"
+                   id="workingStartTime"
+                   name="workingStartTime"
+                   required>
+        </p>
+
+
+        <!-- 退勤時刻 -->
+        <p>
+            <label for="workingEndTime">退勤時刻</label>
+
+            <input type="time"
+                   id="workingEndTime"
+                   name="workingEndTime"
+                   required>
+        </p>
+
+
+        <!-- 申請理由 -->
+        <p>
+            <label for="reason">申請理由</label>
+        </p>
+
+        <p>
+            <textarea id="reason"
+                      name="reason"
+                      rows="8"
+                      cols="60"
+                      required></textarea>
+        </p>
+
+
+        <!-- 申請ボタン -->
+        <button type="submit">
+            申請
+        </button>
+
+    </form>
+
+
+    <!-- 戻る -->
+    <p>
+        <a th:href="@{/home}">
+            戻る
+        </a>
+    </p>
+
+</body>
+
+</html>

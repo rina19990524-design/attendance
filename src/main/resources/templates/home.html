@@ -12,6 +12,15 @@
         社員名：
         <span th:text="${employee.employeeName}">社員名</span>
     </p>
+    
+    <form th:action="@{/logout}"
+      method="post">
+
+    <button type="submit">
+        ログアウト
+    </button>
+
+</form>
 
     <p>
         日付：

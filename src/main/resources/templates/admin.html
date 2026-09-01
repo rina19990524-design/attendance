@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>管理者ホーム</title>
+</head>
+
+<body>
+
+    <!-- 上部の管理者情報 -->
+    <header>
+
+        <div>
+            会社名：株式会社アテンダンス
+        </div>
+
+        <div>
+            管理者名：
+            <span th:text="${employee.employeeName}">
+                山田太郎
+            </span>
+        </div>
+
+        <!-- ログアウト -->
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit">
+                ログアウト
+            </button>
+
+        </form>
+
+    </header>
+
+
+    <!-- 画面タイトル -->
+    <h1>管理者ホーム</h1>
+
+
+    <!-- 管理者メニュー -->
+    <main>
+
+        <!-- 社員管理 -->
+        <div>
+            <a th:href="@{/admin/users}">
+                社員管理
+            </a>
+        </div>
+
+
+        <!-- 勤怠実績一覧 -->
+        <div>
+            <a th:href="@{/admin/attendance}">
+                勤怠実績一覧
+            </a>
+        </div>
+
+
+        <!-- 勤怠修正申請 -->
+        <div>
+            <a th:href="@{/admin/attendance-requests}">
+
+                <span>勤怠申請</span>
+
+                <br>
+
+                <span>承認未　</span>
+
+                <span th:text="${attendanceRequestCount}">
+                    0
+                </span>
+
+                <span>件</span>
+
+            </a>
+        </div>
+
+
+        <!-- 有給申請 -->
+        <div>
+            <a th:href="@{/admin/paid-holiday-requests}">
+
+                <span>有給申請</span>
+
+                <br>
+
+                <span>承認未　</span>
+
+                <span th:text="${paidHolidayRequestCount}">
+                    0
+                </span>
+
+                <span>件</span>
+
+            </a>
+        </div>
+
+    </main>
+
+</body>
+</html>

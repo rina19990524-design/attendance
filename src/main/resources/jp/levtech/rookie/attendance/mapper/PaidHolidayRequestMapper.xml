@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace=
+        "jp.levtech.rookie.attendance.mapper.PaidHolidayRequestMapper">
+
+    <insert id="insert">
+        INSERT INTO tb_trn_paid_holiday_request (
+            paid_holiday_request_id,
+            holiday_type,
+            holiday,
+            employee_id,
+            request_reason,
+            request_flag
+        )
+        VALUES (
+            #{paidHolidayRequestId},
+            #{holidayType},
+            #{holiday},
+            #{employeeId},
+            #{requestReason},
+            #{requestFlag}
+        )
+    </insert>
+
+</mapper>

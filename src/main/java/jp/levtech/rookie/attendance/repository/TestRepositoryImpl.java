@@ -9,30 +9,79 @@ import jp.levtech.rookie.attendance.mapper.TestMapper;
 import jp.levtech.rookie.attendance.model.TbMstEmployee;
 
 @Repository
-public class TestRepositoryImpl implements TestRepository {
-	/**
-	 * タスクのマッパー
-	 */
-	private final TestMapper testMapper;
+public class TestRepositoryImpl
+        implements TestRepository {
 
-	/**
-	 * タスクをデータベースで管理するリポジトリのコンストラクタ
-	 *
-	 * @param taskMapper タスクのマッパー
-	 */
-	public TestRepositoryImpl(TestMapper testMapper) {
-		// タスクのマッパーを初期化する。
-		this.testMapper = testMapper;
-	}
-	
-	@Override
-	public List<TbMstEmployee> findAll() {
-		return testMapper.findAll();
-	}
-	
-	@Override
-	public Optional<TbMstEmployee> findByEmployeeId(String employeeId) {
-		return testMapper.findByEmployeeId(employeeId);
-	}
+    private final TestMapper testMapper;
 
+
+    public TestRepositoryImpl(
+            TestMapper testMapper) {
+
+        this.testMapper = testMapper;
+    }
+
+
+    @Override
+    public List<TbMstEmployee> findAll() {
+
+        return testMapper.findAll();
+    }
+
+
+    @Override
+    public Optional<TbMstEmployee> findByEmployeeId(
+            String employeeId) {
+
+        return testMapper.findByEmployeeId(
+                employeeId
+        );
+    }
+
+
+    @Override
+    public List<TbMstEmployee>
+            findByEmployeeIdOrEmployeeName(
+                    String keyword) {
+
+        return testMapper
+                .findByEmployeeIdOrEmployeeName(
+                        keyword
+                );
+    }
+
+
+    @Override
+    public long nextEmployeeNumber() {
+
+        return testMapper.nextEmployeeNumber();
+    }
+
+
+    @Override
+    public int insert(
+            TbMstEmployee employee) {
+
+        return testMapper.insert(employee);
+    }
+
+
+    @Override
+    public int update(
+            TbMstEmployee employee) {
+
+        return testMapper.update(employee);
+    }
+
+
+    @Override
+    public int updatePassword(
+            String employeeId,
+            String encodedPassword) {
+
+        return testMapper.updatePassword(
+                employeeId,
+                encodedPassword
+        );
+    }
 }

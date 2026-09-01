@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,7 +39,8 @@ public class AttendanceController {
     @GetMapping("/attendance")
     public String attendance(
             Principal principal,
-            Model model) {
+            Model model,
+            @RequestParam(required = false) String month) {
 
         // ログイン中の社員IDを取得
         String employeeId = principal.getName();
@@ -47,27 +49,72 @@ public class AttendanceController {
         Optional<TbMstEmployee> employee =
                 testRepository.findByEmployeeId(employeeId);
 
-        // HTMLに社員情報を渡す
         model.addAttribute(
                 "employee",
                 employee.get()
         );
 
-        // ログイン中の社員の勤怠データを全部取得
+
+        // 表示する月を決める
+        YearMonth targetMonth;
+
+        if (month == null || month.isEmpty()) {
+
+            // 月指定がなければ今月
+            targetMonth = YearMonth.now();
+
+        } else {
+
+            // 指定された月
+            targetMonth = YearMonth.parse(month);
+        }
+
+
+        // ログイン中の社員の勤怠をすべて取得
         List<TbTrnAttendance> attendanceList =
                 attendanceRepository.findByUserId(employeeId);
 
-        // HTMLに勤怠一覧を渡す
+
+        // 選択した月のデータだけに絞る
+        List<TbTrnAttendance> monthlyAttendanceList =
+                attendanceList.stream()
+                        .filter(attendance ->
+                                attendance.getWorkingDay() != null
+                                && YearMonth.from(attendance.getWorkingDay())
+                                        .equals(targetMonth))
+                        .toList();
+
+
+        // 勤怠一覧をHTMLへ渡す
         model.addAttribute(
                 "attendanceList",
-                attendanceList
+                monthlyAttendanceList
         );
+
+        // 表示している月
+        model.addAttribute(
+                "targetMonth",
+                targetMonth
+        );
+
+        // 前月
+        model.addAttribute(
+                "previousMonth",
+                targetMonth.minusMonths(1)
+        );
+
+        // 翌月
+        model.addAttribute(
+                "nextMonth",
+                targetMonth.plusMonths(1)
+        );
+
 
         return "attendance";
     }
 
 
-    // 勤務時間を登録
+    // 勤務時間をまとめて登録
     @PostMapping("/attendance/register")
     public String register(
             Principal principal,
@@ -81,14 +128,17 @@ public class AttendanceController {
 
         LocalDate date = startDate;
 
+
+        // 開始日から終了日まで繰り返す
         while (!date.isAfter(endDate)) {
 
             boolean isWeekend =
                     date.getDayOfWeek() == DayOfWeek.SATURDAY
                     || date.getDayOfWeek() == DayOfWeek.SUNDAY;
 
+
             // チェックなし → 全日登録
-            // チェックあり → 土日だけ飛ばす
+            // チェックあり → 土日を除外
             if (!excludeWeekend || !isWeekend) {
 
                 Optional<TbTrnAttendance> existingAttendance =
@@ -97,18 +147,26 @@ public class AttendanceController {
                                 date
                         );
 
+
+                // すでにその日のデータがある場合
                 if (existingAttendance.isPresent()) {
 
                     TbTrnAttendance attendance =
                             existingAttendance.get();
 
-                    attendance.setWorkingStartTime(workingStartTime);
-                    attendance.setWorkingEndTime(workingEndTime);
+                    attendance.setWorkingStartTime(
+                            workingStartTime
+                    );
+
+                    attendance.setWorkingEndTime(
+                            workingEndTime
+                    );
 
                     attendanceRepository.update(attendance);
 
                 } else {
 
+                    // その日のデータがない場合
                     TbTrnAttendance attendance =
                             new TbTrnAttendance();
 
@@ -119,16 +177,25 @@ public class AttendanceController {
                     );
 
                     attendance.setUserId(employeeId);
+
                     attendance.setWorkingDay(date);
-                    attendance.setWorkingStartTime(workingStartTime);
-                    attendance.setWorkingEndTime(workingEndTime);
+
+                    attendance.setWorkingStartTime(
+                            workingStartTime
+                    );
+
+                    attendance.setWorkingEndTime(
+                            workingEndTime
+                    );
 
                     attendanceRepository.insert(attendance);
                 }
             }
 
+            // 次の日へ
             date = date.plusDays(1);
         }
+
 
         return "redirect:/attendance";
     }

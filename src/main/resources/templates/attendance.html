@@ -14,7 +14,13 @@
         社員名：
         <span th:text="${employee.employeeName}">山田太郎</span>
     </p>
-
+	<form th:action="@{/logout}"
+	      method="post">
+	
+	    <button type="submit">
+	        ログアウト
+	    </button>
+	</form>
 
     <!-- 勤務時間登録 -->
     <h2>勤務時間登録</h2>
@@ -77,6 +83,23 @@
 
     <!-- 勤怠実績一覧 -->
     <h2>勤怠実績一覧</h2>
+    <div>
+		<a th:href="@{/attendance(month=${previousMonth})}">
+			◀
+        </a>
+        <span
+            th:text="${#temporals.format(
+                targetMonth.atDay(1),
+                'yyyy年M月'
+            )}">
+            2026年8月
+        </span>
+        <a th:href="@{/attendance(month=${nextMonth})}">
+            ▶
+        </a>
+        </div>
+        
+    <br>
 
     <table border="1">
 

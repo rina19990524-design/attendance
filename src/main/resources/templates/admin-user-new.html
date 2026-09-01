@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>社員登録</title>
+</head>
+
+<body>
+
+    <!-- 上部 -->
+    <header>
+
+        <div>
+            <strong>会社名</strong>
+            <span>株式会社アテンダンス</span>
+        </div>
+
+        <div>
+            <strong>管理者名</strong>
+
+            <span th:text="${admin.employeeName}">
+                山田太郎
+            </span>
+        </div>
+
+        <!-- ログアウト用フォーム -->
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit">
+                ログアウト
+            </button>
+
+        </form>
+
+    </header>
+
+
+    <!-- 画面タイトル -->
+    <h1>社員登録</h1>
+
+
+    <!-- 登録完了後の表示 -->
+    <section th:if="${registrationResult != null}">
+
+        <!-- 登録完了メッセージ -->
+        <p th:text="${message}"
+           style="color: red;">
+
+            登録が完了しました。
+            社員IDとパスワードは
+            安全な方法でお伝えください。
+
+        </p>
+
+
+        <!-- 自動発行された社員ID -->
+        <div>
+
+            <label for="issuedEmployeeId">
+                社員ID
+            </label>
+
+            <input id="issuedEmployeeId"
+                   type="text"
+                   th:value="${registrationResult.employeeId}"
+                   readonly>
+
+            <button type="button"
+                    onclick="copyValue(
+                        'issuedEmployeeId',
+                        '社員ID'
+                    )">
+
+                コピー
+
+            </button>
+
+        </div>
+
+
+        <!-- 自動発行された初期パスワード -->
+        <div>
+
+            <label for="issuedPassword">
+                初期パスワード
+            </label>
+
+            <input id="issuedPassword"
+                   type="text"
+                   th:value="${registrationResult.initialPassword}"
+                   readonly>
+
+            <button type="button"
+                    onclick="copyValue(
+                        'issuedPassword',
+                        '初期パスワード'
+                    )">
+
+                コピー
+
+            </button>
+
+        </div>
+
+
+        <!-- コピー完了メッセージ -->
+        <p id="copyMessage"
+           style="color: blue;">
+        </p>
+
+
+        <!-- 登録完了後の操作 -->
+        <div>
+
+            <a th:href="@{/admin/users/new}">
+                続けて新規登録
+            </a>
+
+            <a th:href="@{/admin/users}">
+                社員一覧へ
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- 登録前だけ表示する社員登録フォーム -->
+    <form th:if="${registrationResult == null}"
+          th:action="@{/admin/users/new}"
+          method="post">
+
+
+        <!-- 社員ID -->
+        <div>
+
+            <label>
+                社員ID
+            </label>
+
+            <span>
+                登録後に自動発行されます
+            </span>
+
+        </div>
+
+
+        <!-- 初期パスワード -->
+        <div>
+
+            <label>
+                初期パスワード
+            </label>
+
+            <span>
+                登録後に自動発行されます
+            </span>
+
+        </div>
+
+
+        <!-- 社員名 -->
+        <div>
+
+            <label for="employeeName">
+                社員名
+            </label>
+
+            <input id="employeeName"
+                   type="text"
+                   name="employeeName"
+                   maxlength="100"
+                   required>
+
+        </div>
+
+
+        <!-- 部署 -->
+        <div>
+
+            <label for="departmentId">
+                部署名
+            </label>
+
+            <select id="departmentId"
+                    name="departmentId"
+                    required>
+
+                <option value="">
+                    選択してください
+                </option>
+
+                <option value="1">
+                    営業部
+                </option>
+
+                <option value="2">
+                    総務部
+                </option>
+
+                <option value="3">
+                    人事部
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- メールアドレス -->
+        <div>
+
+            <label for="employeeEmail">
+                メールアドレス
+            </label>
+
+            <input id="employeeEmail"
+                   type="email"
+                   name="employeeEmail"
+                   maxlength="100"
+                   required>
+
+        </div>
+
+
+        <!-- 社員タイプ -->
+        <div>
+
+            <label for="employeeType">
+                社員タイプ
+            </label>
+
+            <select id="employeeType"
+                    name="employeeType"
+                    required>
+
+                <option value="">
+                    選択してください
+                </option>
+
+                <option value="1">
+                    従業員
+                </option>
+
+                <option value="2">
+                    管理者
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- 入社日 -->
+        <div>
+
+            <label for="hireDate">
+                入社日
+            </label>
+
+            <input id="hireDate"
+                   type="date"
+                   name="hireDate"
+                   required>
+
+        </div>
+
+
+        <!-- 在籍状況 -->
+        <div>
+
+            <label for="employeeStatusId">
+                在籍状況
+            </label>
+
+            <select id="employeeStatusId"
+                    name="employeeStatusId"
+                    required>
+
+                <option value="">
+                    選択してください
+                </option>
+
+                <option value="1">
+                    在籍
+                </option>
+
+                <option value="2">
+                    退職
+                </option>
+
+                <option value="3">
+                    育休
+                </option>
+
+                <option value="4">
+                    休職
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- 登録・戻る -->
+        <div>
+
+            <button type="submit">
+                登録
+            </button>
+
+            <a th:href="@{/admin/users}">
+                戻る
+            </a>
+
+        </div>
+
+    </form>
+
+
+    <!-- コピー処理 -->
+    <script>
+
+        async function copyValue(
+                inputId,
+                itemName) {
+
+            const input =
+                document.getElementById(inputId);
+
+            const copyMessage =
+                document.getElementById("copyMessage");
+
+            try {
+
+                // 入力欄の値をクリップボードへコピー
+                await navigator.clipboard.writeText(
+                    input.value
+                );
+
+                copyMessage.textContent =
+                    itemName + "をコピーしました";
+
+            } catch (error) {
+
+                copyMessage.textContent =
+                    "コピーに失敗しました";
+
+                copyMessage.style.color =
+                    "red";
+            }
+        }
+
+    </script>
+
+</body>
+</html>

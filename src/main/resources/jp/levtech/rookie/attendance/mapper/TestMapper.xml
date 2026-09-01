@@ -1,37 +1,166 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="jp.levtech.rookie.attendance.mapper.TestMapper">
-	<select id="findAll" resultType="jp.levtech.rookie.attendance.model.TbMstEmployee">
-		SELECT
-			employee_id,
-			employee_name,
-			deparment_id,
-			employee_email,
-			employee_password,
-			hire_date,
-			employee_status_id,
-			employee_type
-		FROM
-			tb_mst_employee
-	</select>
-	
-	<select id="findByEmployeeId" resultType="jp.levtech.rookie.attendance.model.TbMstEmployee">
-		SELECT
-			employee_id,
-			employee_name,
-			department_id,
-			employee_email,
-			employee_password,
-			hire_date,
-			employee_status_id,
-			employee_type
-		FROM
-			tb_mst_employee
-		WHERE
-			employee_id = #{employeeId}
-	</select>
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace=
+        "jp.levtech.rookie.attendance.mapper.TestMapper">
+
+
+    <!-- 全社員を取得 -->
+    <select id="findAll"
+            resultType=
+            "jp.levtech.rookie.attendance.model.TbMstEmployee">
+
+        SELECT
+            employee_id,
+            employee_name,
+            department_id,
+            employee_email,
+            employee_password,
+            hire_date,
+            employee_status_id,
+            employee_type
+        FROM
+            tb_mst_employee
+        ORDER BY
+            employee_id
+
+    </select>
+
+
+    <!-- 社員IDから社員を取得 -->
+    <select id="findByEmployeeId"
+            resultType=
+            "jp.levtech.rookie.attendance.model.TbMstEmployee">
+
+        SELECT
+            employee_id,
+            employee_name,
+            department_id,
+            employee_email,
+            employee_password,
+            hire_date,
+            employee_status_id,
+            employee_type
+        FROM
+            tb_mst_employee
+        WHERE
+            employee_id = #{employeeId}
+
+    </select>
+
+
+    <!-- 社員IDまたは社員名で検索 -->
+    <select id="findByEmployeeIdOrEmployeeName"
+            resultType=
+            "jp.levtech.rookie.attendance.model.TbMstEmployee">
+
+        SELECT
+            employee_id,
+            employee_name,
+            department_id,
+            employee_email,
+            employee_password,
+            hire_date,
+            employee_status_id,
+            employee_type
+        FROM
+            tb_mst_employee
+        WHERE
+            employee_id ILIKE
+                CONCAT('%', #{keyword}, '%')
+        OR
+            employee_name ILIKE
+                CONCAT('%', #{keyword}, '%')
+        ORDER BY
+            employee_id
+
+    </select>
+
+
+    <!-- 次の社員番号を取得 -->
+    <select id="nextEmployeeNumber"
+            resultType="long">
+
+        SELECT
+            nextval('employee_id_seq')
+
+    </select>
+
+
+    <!-- 社員を新規登録 -->
+    <insert id="insert">
+
+        INSERT INTO tb_mst_employee (
+            employee_id,
+            employee_name,
+            department_id,
+            employee_email,
+            employee_password,
+            hire_date,
+            employee_status_id,
+            employee_type
+        )
+        VALUES (
+            #{employeeId},
+            #{employeeName},
+            #{departmentId},
+            #{employeeEmail},
+            #{employeePassword},
+            #{hireDate},
+            #{employeeStatusId},
+            #{employeeType}
+        )
+
+    </insert>
+
+
+    <!-- 社員情報を更新 -->
+    <update id="update">
+
+        UPDATE
+            tb_mst_employee
+        SET
+            employee_name =
+                #{employeeName},
+
+            department_id =
+                #{departmentId},
+
+            employee_email =
+                #{employeeEmail},
+
+            hire_date =
+                #{hireDate},
+
+            employee_status_id =
+                #{employeeStatusId},
+
+            employee_type =
+                #{employeeType}
+
+        WHERE
+            employee_id =
+                #{employeeId}
+
+    </update>
+
+
+    <!-- パスワードを更新 -->
+    <update id="updatePassword">
+
+        UPDATE
+            tb_mst_employee
+        SET
+            employee_password =
+                #{encodedPassword}
+        WHERE
+            employee_id =
+                #{employeeId}
+
+    </update>
 
 
 </mapper>
