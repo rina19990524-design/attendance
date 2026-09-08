@@ -1,183 +1,447 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>勤怠実績一覧</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/attendance.css}">
 </head>
 
 <body>
+    <div class="page-container">
 
-    <h1>株式会社アテンダンス</h1>
+        <!-- 上部 -->
+        <header class="header">
+            <div class="header-information">
+                <h1>
+                    株式会社アテンダンス
+                </h1>
 
-    <p>
-        社員名：
-        <span th:text="${employee.employeeName}">山田太郎</span>
-    </p>
-	<form th:action="@{/logout}"
-	      method="post">
-	
-	    <button type="submit">
-	        ログアウト
-	    </button>
-	</form>
-
-    <!-- 勤務時間登録 -->
-    <h2>勤務時間登録</h2>
-
-    <form th:action="@{/attendance/register}" method="post">
-		<p>
-	        <label for="startDate">開始日</label>
-	        <input
-	            type="date"
-	            id="startDate"
-	            name="startDate"
-	            required>
-	    </p>
-	
-	    <p>
-	        <label for="endDate">終了日</label>
-	        <input
-	            type="date"
-	            id="endDate"
-	            name="endDate"
-	            required>
-	    </p>
-
-        <p>
-            <label for="workingStartTime">勤務開始時間</label>
-
-            <input
-                type="time"
-                id="workingStartTime"
-                name="workingStartTime"
-                required>
-        </p>
-
-        <p>
-            <label for="workingEndTime">勤務終了時間</label>
-
-            <input
-                type="time"
-                id="workingEndTime"
-                name="workingEndTime"
-                required>
-        </p>
-        
-		<p>
-		    <label>
-		        <input type="checkbox"
-		               name="excludeWeekend"
-		               value="true">
-		        土日を除外する
-		    </label>
-		</p>       
-
-        <button type="submit">登録</button>
-
-    </form>
-
-
-    <hr>
-
-
-    <!-- 勤怠実績一覧 -->
-    <h2>勤怠実績一覧</h2>
-    <div>
-		<a th:href="@{/attendance(month=${previousMonth})}">
-			◀
-        </a>
-        <span
-            th:text="${#temporals.format(
-                targetMonth.atDay(1),
-                'yyyy年M月'
-            )}">
-            2026年8月
-        </span>
-        <a th:href="@{/attendance(month=${nextMonth})}">
-            ▶
-        </a>
-        </div>
-        
-    <br>
-
-    <table border="1">
-
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>勤務時間</th>
-                <th>出勤</th>
-                <th>退勤</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            <tr th:each="attendance : ${attendanceList}">
-
-                <!-- 勤務日 -->
-                <td th:text="${#temporals.format(
-                        attendance.workingDay,
-                        'M月d日'
-                    )}">
-                </td>
-
-
-                <!-- 登録した勤務予定時間 -->
-                <td>
-
-                    <span th:text="${attendance.workingStartTime != null
-                            ? #temporals.format(
-                                attendance.workingStartTime,
-                                'HH:mm'
-                              )
-                            : '--:--'}">
+                <p>
+                    社員名：
+                    <span th:text="${employee.employeeName}">
+                        山田太郎
                     </span>
+                </p>
+            </div>
+            
+            <!-- 右側のボタン -->
+		    <div class="header-actions">
+		
+		        <a class="header-home-link"
+		           th:href="@{/home}">
+		            ◀ ホームへ戻る
+		        </a>
+		
+		        <form class="logout-form"
+		              th:action="@{/logout}"
+		              method="post">
+		
+		            <button class="logout-button"
+		                    type="submit">
+		                ログアウト
+		            </button>
+		        </form>
+		
+		    </div>
+        </header>
 
-                    ～
+        <main>
 
-                    <span th:text="${attendance.workingEndTime != null
-                            ? #temporals.format(
-                                attendance.workingEndTime,
-                                'HH:mm'
-                              )
-                            : '--:--'}">
-                    </span>
+            <!-- 成功メッセージ -->
+            <p class="success-message"
+               th:if="${message != null}"
+               th:text="${message}">
+                登録しました
+            </p>
 
-                </td>
+            <!-- エラーメッセージ -->
+            <p class="error-message"
+               th:if="${errorMessage != null}"
+               th:text="${errorMessage}">
+                入力内容を確認してください
+            </p>
 
+            <!-- 勤務時間・公休登録 -->
+            <section class="registration-section">
+                <h2>
+                    勤務予定登録
+                </h2>
 
-                <!-- 実際の出勤時間 -->
-                <td th:text="${attendance.actualWorkingStartTime != null
-                        ? #temporals.format(
-                            attendance.actualWorkingStartTime,
-                            'HH:mm'
-                          )
-                        : '--:--'}">
-                </td>
+                <form class="registration-form"
+                      th:action="@{/attendance/register}"
+                      method="post">
 
+                    <!-- 開始日 -->
+                    <div class="form-item">
+                        <label for="startDate">
+                            開始日
+                        </label>
 
-                <!-- 実際の退勤時間 -->
-                <td th:text="${attendance.actualWorkingEndTime != null
-                        ? #temporals.format(
-                            attendance.actualWorkingEndTime,
-                            'HH:mm'
-                          )
-                        : '--:--'}">
-                </td>
+                        <input type="date"
+                               id="startDate"
+                               name="startDate"
+                               required>
+                    </div>
 
-            </tr>
+                    <!-- 終了日 -->
+                    <div class="form-item">
+                        <label for="endDate">
+                            終了日
+                        </label>
 
-        </tbody>
+                        <input type="date"
+                               id="endDate"
+                               name="endDate"
+                               required>
+                    </div>
 
-    </table>
+                    <!-- 勤務区分 -->
+                    <div class="form-item">
+                        <label for="workType">
+                            勤務区分
+                        </label>
 
+                        <select id="workType"
+                                name="workType"
+                                onchange="changeWorkType()">
 
-    <br>
+                            <option value="1">
+                                出勤日
+                            </option>
 
-    <a th:href="@{/home}">ホームへ戻る</a>
+                            <option value="2">
+                                公休
+                            </option>
+                        </select>
+                    </div>
 
+                    <!-- 勤務開始時間 -->
+                    <div class="form-item">
+                        <label for="workingStartTime">
+                            勤務開始時間
+                        </label>
+
+                        <input type="time"
+					       id="workingStartTime"
+					       name="workingStartTime"
+					       value="09:00"
+					       required>
+                   	 </div>
+
+                    <!-- 勤務終了時間 -->
+                    <div class="form-item">
+                        <label for="workingEndTime">
+                            勤務終了時間
+                        </label>
+
+                        <input type="time"
+                               id="workingEndTime"
+                               name="workingEndTime"
+                               value="18:00"
+                               required>
+                    </div>
+
+                    <!-- 土日除外 -->
+                    <label class="checkbox-label">
+                        <input type="checkbox"
+                               name="excludeWeekend"
+                               value="true">
+
+                        土日を除外する
+                    </label>
+
+                    <button class="register-button"
+                            type="submit">
+                        登録
+                    </button>
+                </form>
+            </section>
+
+            <!-- 勤怠実績一覧 -->
+            <section class="list-section">
+                <div class="list-header">
+                    <h2>
+                        勤怠実績一覧
+                    </h2>
+
+                    <!-- 前月・翌月 -->
+                    <div class="month-navigation">
+                        <a th:href="@{/attendance(month=${previousMonth})}">
+                            ◀
+                        </a>
+
+                        <span th:text="${#temporals.format(
+                                targetMonth.atDay(1),
+                                'yyyy年M月'
+                              )}">
+                            2026年9月
+                        </span>
+
+                        <a th:href="@{/attendance(month=${nextMonth})}">
+                            ▶
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>日付</th>
+                                <th>申告勤務時間</th>
+                                <th>出勤</th>
+                                <th>退勤</th>
+                                <th>実働時間</th>
+                                <th>残業時間</th>
+                                <th>備考</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="attendance : ${attendanceList}"
+                                th:classappend="${
+                                    attendance.holiday
+                                    ? 'holiday-row'
+                                    : (
+                                        attendance.requestPending
+                                        ? 'requesting-row'
+                                        : ''
+                                    )
+                                }">
+
+                                <!-- 日付 -->
+                                <td th:text="${#temporals.format(
+                                        attendance.workingDay,
+                                        'M月d日'
+                                      )}">
+                                    9月1日
+                                </td>
+
+                                <!-- 申告した勤務時間 -->
+                                <td>
+                                    <!-- 公休 -->
+                                    <span th:if="${attendance.holiday}">
+                                        ―
+                                    </span>
+
+                                    <!-- 出勤日 -->
+                                    <span th:unless="${attendance.holiday}">
+
+                                        <span th:if="${
+                                                  attendance.workingStartTime
+                                                  != null
+                                              }"
+                                              th:text="${#temporals.format(
+                                                  attendance.workingStartTime,
+                                                  'HH:mm'
+                                              )}">
+                                            09:00
+                                        </span>
+
+                                        <span th:if="${
+                                                  attendance.workingStartTime
+                                                  == null
+                                              }">
+                                            --:--
+                                        </span>
+
+                                        ～
+
+                                        <span th:if="${
+                                                  attendance.workingEndTime
+                                                  != null
+                                              }"
+                                              th:text="${#temporals.format(
+                                                  attendance.workingEndTime,
+                                                  'HH:mm'
+                                              )}">
+                                            18:00
+                                        </span>
+
+                                        <span th:if="${
+                                                  attendance.workingEndTime
+                                                  == null
+                                              }">
+                                            --:--
+                                        </span>
+                                    </span>
+                                </td>
+
+                                <!-- 実際の出勤時間 -->
+                                <td>
+                                    <!-- 公休 -->
+                                    <span th:if="${attendance.holiday}">
+                                        ―
+                                    </span>
+
+                                    <!-- 出勤日 -->
+                                    <span th:unless="${attendance.holiday}">
+
+                                        <span th:if="${
+                                                  attendance.actualWorkingStartTime
+                                                  != null
+                                              }"
+                                              th:text="${#temporals.format(
+                                                  attendance.actualWorkingStartTime,
+                                                  'HH:mm'
+                                              )}">
+                                            09:00
+                                        </span>
+
+                                        <span th:if="${
+                                                  attendance.actualWorkingStartTime
+                                                  == null
+                                              }">
+                                            --:--
+                                        </span>
+                                    </span>
+                                </td>
+
+                                <!-- 実際の退勤時間 -->
+                                <td>
+                                    <!-- 公休 -->
+                                    <span th:if="${attendance.holiday}">
+                                        ―
+                                    </span>
+
+                                    <!-- 出勤日 -->
+                                    <span th:unless="${attendance.holiday}">
+
+                                        <span th:if="${
+                                                  attendance.actualWorkingEndTime
+                                                  != null
+                                              }"
+                                              th:text="${#temporals.format(
+                                                  attendance.actualWorkingEndTime,
+                                                  'HH:mm'
+                                              )}">
+                                            18:00
+                                        </span>
+
+                                        <span th:if="${
+                                                  attendance.actualWorkingEndTime
+                                                  == null
+                                              }">
+                                            --:--
+                                        </span>
+                                    </span>
+                                </td>
+
+                                <!-- 実働時間 -->
+                                <td th:text="${
+                                        attendance.actualWorkingHoursDisplay
+                                    }">
+                                    --:--
+                                </td>
+
+                                <!-- 残業時間 -->
+                                <td th:text="${
+                                        attendance.overtimeDisplay
+                                    }">
+                                    --:--
+                                </td>
+
+                                <!-- 備考 -->
+                                <td>
+                                    <!-- 公休 -->
+                                    <span class="holiday-badge"
+                                          th:if="${attendance.holiday}">
+                                        公休
+                                    </span>
+
+                                    <!-- 勤怠修正申請中 -->
+                                    <span class="requesting-badge"
+                                          th:if="${
+                                              !attendance.holiday
+                                              and attendance.requestPending
+                                          }">
+                                        勤怠修正申請中
+                                    </span>
+
+                                    <!-- 承認済み -->
+                                    <span class="approved-badge"
+                                          th:if="${
+                                              !attendance.holiday
+                                              and attendance.requestApproved
+                                          }">
+                                        承認済み
+                                    </span>
+
+                                    <!-- 申請なし -->
+                                    <span th:if="${
+                                              !attendance.holiday
+                                              and !attendance.requestPending
+                                              and !attendance.requestApproved
+                                          }">
+                                        ―
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 勤務区分を変更したときの処理 -->
+    <script>
+        function changeWorkType() {
+            const workType =
+                document.getElementById("workType").value;
+
+            const workingStartTime =
+                document.getElementById("workingStartTime");
+
+            const workingEndTime =
+                document.getElementById("workingEndTime");
+
+            const isHoliday =
+                workType === "2";
+
+            /*
+             * 公休の場合は勤務時間を入力できなくする
+             */
+            workingStartTime.disabled =
+                isHoliday;
+
+            workingEndTime.disabled =
+                isHoliday;
+
+            /*
+             * 出勤日の場合だけ入力必須にする
+             */
+            workingStartTime.required =
+                !isHoliday;
+
+            workingEndTime.required =
+                !isHoliday;
+
+            /*
+             * 公休へ変更した場合は、
+             * 入力済みの時刻を消す
+             */
+            if (isHoliday) {
+                workingStartTime.value = "";
+                workingEndTime.value = "";
+            }
+        }
+
+        /*
+         * 画面を表示したときにも一度実行する
+         */
+        changeWorkType();
+    </script>
 </body>
 
 </html>

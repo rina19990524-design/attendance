@@ -5,31 +5,47 @@
 <head>
     <meta charset="UTF-8">
     <title>有給申請</title>
+    <link rel="stylesheet"
+          th:href="@{/css/paidholiday.css}">
 </head>
 
 <body>
+    <divdiv class="page-container">
 
-    <!-- 会社名と社員名 -->
-    <div>
-        <p>
-            会社名：株式会社アテンダンス
-        </p>
+        <!-- 上部 -->
+        <header class="header">
+            <div class="header-information">
+                <h1>
+                    株式会社アテンダンス
+                </h1>
 
-        <p>
-            社員名：
-            <span th:text="${employee.employeeName}">
-                山田太郎
-            </span>
-        </p>
-    </div>
-    
-	<form th:action="@{/logout}"
-	      method="post">
-	
-	    <button type="submit">
-	        ログアウト
-	    </button>
-	</form>
+                <p>
+                    社員名：
+                    <span th:text="${employee.employeeName}">
+                        山田太郎
+                    </span>
+                </p>
+            </div>
+            
+            <!-- 右側のボタン -->
+		    <div class="header-actions">
+		
+		        <a class="header-home-link"
+		           th:href="@{/home}">
+		            ◀ ホームへ戻る
+		        </a>
+		
+		        <form th:action="@{/logout}"
+	      			method="post">
+		
+		            <button class="logout-button"
+		                    type="submit">
+		                ログアウト
+		            </button>
+		        </form>
+		
+		    </div>
+        </header>
 
     <!-- 画面タイトル -->
     <h1>有給申請</h1>
@@ -117,10 +133,6 @@
             <button type="submit">
                 申請
             </button>
-
-            <a th:href="@{/home}">
-                戻る
-            </a>
         </div>
 
     </form>

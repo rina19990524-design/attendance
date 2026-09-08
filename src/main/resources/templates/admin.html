@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>管理者ホーム</title>
+    <link rel="stylesheet"
+          th:href="@{/css/admin.css}">
 </head>
 
 <body>
@@ -60,44 +62,51 @@
 
 
         <!-- 勤怠修正申請 -->
-        <div>
-            <a th:href="@{/admin/attendance-requests}">
+        <!-- 勤怠修正申請 -->
+		<div>
+		    <a th:href="@{/admin/attendance-requests}">
+		
+		        <span class="request-title">
+		            勤怠申請
+		        </span>
+		
+		        <span class="request-count">
+		
+		            未承認　
+		
+		            <strong th:text="${attendanceRequestCount}">
+		                0
+		            </strong>
+		
+		            件
+		
+		        </span>
+		
+		    </a>
+		</div>
 
-                <span>勤怠申請</span>
 
-                <br>
-
-                <span>承認未　</span>
-
-                <span th:text="${attendanceRequestCount}">
-                    0
-                </span>
-
-                <span>件</span>
-
-            </a>
-        </div>
-
-
-        <!-- 有給申請 -->
-        <div>
-            <a th:href="@{/admin/paid-holiday-requests}">
-
-                <span>有給申請</span>
-
-                <br>
-
-                <span>承認未　</span>
-
-                <span th:text="${paidHolidayRequestCount}">
-                    0
-                </span>
-
-                <span>件</span>
-
-            </a>
-        </div>
-
+		<!-- 有給申請 -->
+		<div>
+		    <a th:href="@{/admin/paid-holiday-requests}">
+		
+		        <span class="request-title">
+		            有給申請
+		        </span>
+		
+		        <span class="request-count">
+		
+		            未承認　
+		
+		            <strong th:text="${paidHolidayRequestCount}">
+		                0
+		            </strong>
+		
+		            件
+		
+		        </span>
+		
+		    </a>
     </main>
 
 </body>

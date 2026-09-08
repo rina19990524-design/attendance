@@ -8,18 +8,45 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jp.levtech.rookie.attendance.model.TbMstEmployee;
+import jp.levtech.rookie.attendance.repository.PaidHolidayRequestRepository;
 import jp.levtech.rookie.attendance.repository.TestRepository;
+import jp.levtech.rookie.attendance.service.AdminAttendanceRequestService;
 
 @Controller
 public class AdminController {
 
+    /**
+     * 有給申請の申請中フラグ
+     */
+    private static final int PAID_HOLIDAY_REQUESTING = 1;
+
+
     private final TestRepository testRepository;
+
+    private final AdminAttendanceRequestService
+            adminAttendanceRequestService;
+
+    private final PaidHolidayRequestRepository
+            paidHolidayRequestRepository;
 
 
     public AdminController(
-            TestRepository testRepository) {
+            TestRepository testRepository,
 
-        this.testRepository = testRepository;
+            AdminAttendanceRequestService
+                    adminAttendanceRequestService,
+
+            PaidHolidayRequestRepository
+                    paidHolidayRequestRepository) {
+
+        this.testRepository =
+                testRepository;
+
+        this.adminAttendanceRequestService =
+                adminAttendanceRequestService;
+
+        this.paidHolidayRequestRepository =
+                paidHolidayRequestRepository;
     }
 
 
@@ -31,21 +58,29 @@ public class AdminController {
             Principal principal,
             Model model) {
 
-        // ログインしている人の社員IDを取得
+        if (principal == null) {
+
+            throw new AccessDeniedException(
+                    "ログインが必要です"
+            );
+        }
+
+        // ログイン中の社員IDを取得
         String employeeId =
                 principal.getName();
 
-        // DBからログイン中の社員情報を取得
+        // ログイン中の社員情報を取得
         TbMstEmployee employee =
                 testRepository
                     .findByEmployeeId(employeeId)
                     .orElseThrow(() ->
                         new IllegalStateException(
-                            "ログイン中の社員情報が見つかりません"
+                            "ログイン中の社員情報が"
+                            + "見つかりません"
                         )
                     );
 
-        // 管理者ではない場合はアクセスを拒否
+        // 管理者以外はアクセス不可
         if (employee.getEmployeeType() != 2) {
 
             throw new AccessDeniedException(
@@ -53,27 +88,36 @@ public class AdminController {
             );
         }
 
-        // 管理者情報をadmin.htmlへ渡す
+        // 未承認の勤怠申請件数を取得
+        int attendanceRequestCount =
+                adminAttendanceRequestService
+                    .countPendingRequests();
+
+        // 未承認の有給申請件数を取得
+        int paidHolidayRequestCount =
+                paidHolidayRequestRepository
+                    .countByRequestFlag(
+                        PAID_HOLIDAY_REQUESTING
+                    );
+
+        // 管理者情報をHTMLへ渡す
         model.addAttribute(
                 "employee",
                 employee
         );
 
-        // 未承認の勤怠申請数
-        // 件数を取得する機能は後で追加
+        // 勤怠申請の未承認件数をHTMLへ渡す
         model.addAttribute(
                 "attendanceRequestCount",
-                0
+                attendanceRequestCount
         );
 
-        // 未承認の有給申請数
-        // 件数を取得する機能は後で追加
+        // 有給申請の未承認件数をHTMLへ渡す
         model.addAttribute(
                 "paidHolidayRequestCount",
-                0
+                paidHolidayRequestCount
         );
 
-        // admin.htmlを表示
         return "admin";
     }
 }

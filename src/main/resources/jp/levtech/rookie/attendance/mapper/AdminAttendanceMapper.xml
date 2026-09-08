@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace=
+        "jp.levtech.rookie.attendance.mapper.AdminAttendanceMapper">
+
+
+    <!--
+        DBの検索結果とAdminAttendanceViewの項目を対応させる
+    -->
+    <resultMap id="adminAttendanceViewResultMap"
+               type=
+               "jp.levtech.rookie.attendance.dto.AdminAttendanceView">
+
+        <result column="working_day"
+                property="workingDay"/>
+
+        <result column="employee_id"
+                property="employeeId"/>
+
+        <result column="employee_name"
+                property="employeeName"/>
+
+        <result column="department_name"
+                property="departmentName"/>
+
+        <result column="working_start_time"
+                property="workingStartTime"/>
+
+        <result column="working_end_time"
+                property="workingEndTime"/>
+
+    </resultMap>
+
+
+    <!--
+        対象月・部署・社員ID・社員名から
+        管理者用の勤怠実績を検索する
+    -->
+    <select id="findByConditions"
+            resultMap="adminAttendanceViewResultMap">
+
+        SELECT
+            attendance.working_day,
+
+            employee.employee_id,
+
+            employee.employee_name,
+
+            CASE employee.department_id
+                WHEN 1 THEN '営業部'
+                WHEN 2 THEN '総務部'
+                WHEN 3 THEN '人事部'
+            END AS department_name,
+
+            attendance.actual_working_start_time
+                AS working_start_time,
+
+            attendance.actual_working_end_time
+                AS working_end_time
+
+        FROM
+            tb_trn_attendance attendance
+
+        INNER JOIN
+            tb_mst_employee employee
+
+        ON
+            attendance.user_id =
+            employee.employee_id
+
+        WHERE
+            attendance.working_day
+                BETWEEN #{startDate}
+                AND #{endDate}
+
+
+        <!-- 部署が選択された場合だけ部署で絞り込む -->
+        <if test="departmentId != null">
+
+            AND
+                employee.department_id =
+                #{departmentId}
+
+        </if>
+
+
+        <!-- 検索文字が入力された場合だけ検索する -->
+        <if test="keyword != null and keyword != ''">
+
+            AND
+                (
+                    employee.employee_id
+                        ILIKE
+                        CONCAT(
+                            '%',
+                            #{keyword},
+                            '%'
+                        )
+
+                    OR
+
+                    employee.employee_name
+                        ILIKE
+                        CONCAT(
+                            '%',
+                            #{keyword},
+                            '%'
+                        )
+                )
+
+        </if>
+
+
+        ORDER BY
+            attendance.working_day ASC,
+            employee.employee_id ASC
+
+    </select>
+
+
+</mapper>

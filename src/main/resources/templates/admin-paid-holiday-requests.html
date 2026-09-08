@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>有給申請一覧</title>
+
+</head>
+
+<body>
+
+
+    <!-- 上部の管理者情報 -->
+    <header>
+
+        <div>
+            会社名：株式会社アテンダンス
+        </div>
+
+        <div>
+
+            管理者名：
+
+            <span th:text="${admin.employeeName}">
+            </span>
+
+        </div>
+
+
+        <!-- ログアウト -->
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit">
+                ログアウト
+            </button>
+
+        </form>
+
+    </header>
+
+
+    <!-- 画面タイトル -->
+    <h1>有給申請一覧</h1>
+
+
+    <!-- 承認完了メッセージ -->
+    <p th:if="${message}"
+       th:text="${message}">
+
+        有給申請を承認しました
+
+    </p>
+
+
+    <!-- エラーメッセージ -->
+    <p th:if="${errorMessage}"
+       th:text="${errorMessage}">
+
+        承認する有給申請を選択してください
+
+    </p>
+
+
+    <!-- 申請が存在しない場合 -->
+    <p th:if=
+       "${paidHolidayRequests == null
+          or paidHolidayRequests.isEmpty()}">
+
+        承認待ちの有給申請はありません。
+
+    </p>
+
+
+    <!--
+        有給申請承認フォーム
+
+        通常の送信先は一括承認。
+        各行の承認ボタンはformactionによって
+        1件承認のURLへ送信する。
+    -->
+    <form th:if=
+          "${paidHolidayRequests != null
+             and !paidHolidayRequests.isEmpty()}"
+          th:action=
+          "@{/admin/paid-holiday-requests/approve-selected}"
+          method="post">
+
+
+        <!-- 一括承認 -->
+        <div>
+
+            <button type="submit"
+                    onclick=
+                    "return confirm(
+                        '選択した有給申請を一括承認しますか？'
+                    );">
+
+                一括承認
+
+            </button>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- 有給申請一覧 -->
+        <table border="1">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        選択
+                    </th>
+
+                    <th>
+                        社員ID
+                    </th>
+
+                    <th>
+                        社員名
+                    </th>
+
+                    <th>
+                        部署名
+                    </th>
+
+                    <th>
+                        休暇区分
+                    </th>
+
+                    <th>
+                        取得日
+                    </th>
+
+                    <th>
+                        申請理由
+                    </th>
+
+                    <th>
+                        承認
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+
+                <!-- DBから受け取った有給申請を1件ずつ表示 -->
+                <tr th:each=
+                    "request : ${paidHolidayRequests}">
+
+
+                    <!-- 一括承認用チェックボックス -->
+                    <td>
+
+                        <input type="checkbox"
+                               name="requestIds"
+                               th:value=
+                               "${request.paidHolidayRequestId}">
+
+                    </td>
+
+
+                    <!-- 社員ID -->
+                    <td th:text="${request.employeeId}">
+                    </td>
+
+
+                    <!-- 社員名 -->
+                    <td th:text="${request.employeeName}">
+                    </td>
+
+
+                    <!-- 部署名 -->
+                    <td th:text="${request.departmentName}">
+                    </td>
+
+
+                    <!-- 休暇区分 -->
+                    <td th:text="${request.holidayTypeName}">
+                    </td>
+
+
+                    <!-- 取得日 -->
+                    <td th:text=
+                        "${#temporals.format(
+                            request.holidayDate,
+                            'M月d日'
+                        )}">
+                    </td>
+
+
+                    <!-- 申請理由 -->
+                    <td th:text="${request.requestReason}">
+                    </td>
+
+
+                    <!-- 1件承認 -->
+                    <td>
+
+                        <button type="submit"
+                                th:formaction=
+                                "@{/admin/paid-holiday-requests/{requestId}/approve(
+                                    requestId=${request.paidHolidayRequestId}
+                                )}"
+                                onclick=
+                                "return confirm(
+                                    'この有給申請を承認しますか？'
+                                );">
+
+                            承認
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </form>
+
+
+    <hr>
+
+
+    <!-- 管理者ホームへ戻る -->
+    <div>
+
+        <a th:href="@{/admin}">
+            管理者ホームへ
+        </a>
+
+    </div>
+
+</body>
+
+</html>

@@ -5,11 +5,15 @@
  */-->
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>ログイン</title>
+    <meta charset="UTF-8">
+
+    <title>ログイン</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/login.css}">
 </head>
 <body>
-	<h1>ログイン</h1>
+	<h1>アテンダンス株式会社</h1>
 	<!--/* ログインエラーがある場合はエラー内容を表示する。 */-->
 	<span th:if="${param.error}" style="color: red;">ユーザ名またはパスワードが間違っています</span>
 	<!--/* ログインボタンをクリックした際に /login に対してPOSTメソッドでHTTPリクエストするためのフォーム。 */-->

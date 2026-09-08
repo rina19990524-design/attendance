@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace=
+        "jp.levtech.rookie.attendance.mapper.AdminAttendanceRequestMapper">
+
+
+    <!--
+        SQLの取得結果と
+        AdminAttendanceRequestViewの項目を対応させる
+    -->
+    <resultMap id="adminAttendanceRequestViewResultMap"
+               type=
+               "jp.levtech.rookie.attendance.dto.AdminAttendanceRequestView">
+
+        <result column="attendance_request_id"
+                property="attendanceRequestId"/>
+
+        <result column="employee_id"
+                property="employeeId"/>
+
+        <result column="employee_name"
+                property="employeeName"/>
+
+        <result column="department_name"
+                property="departmentName"/>
+
+        <result column="before_start_time"
+                property="beforeStartTime"/>
+
+        <result column="before_end_time"
+                property="beforeEndTime"/>
+
+        <result column="after_start_time"
+                property="afterStartTime"/>
+
+        <result column="after_end_time"
+                property="afterEndTime"/>
+
+        <result column="request_type"
+                property="requestType"/>
+
+        <result column="request_reason"
+                property="requestReason"/>
+
+    </resultMap>
+
+
+    <!--
+        指定した申請フラグの勤怠申請を取得する
+    -->
+    <select id="findByRequestFlag"
+            resultMap=
+            "adminAttendanceRequestViewResultMap">
+
+        SELECT
+            request.attendance_request_id,
+
+            employee.employee_id,
+
+            employee.employee_name,
+
+            CASE employee.department_id
+                WHEN 1 THEN '営業部'
+                WHEN 2 THEN '総務部'
+                WHEN 3 THEN '人事部'
+            END AS department_name,
+
+            attendance.actual_working_start_time
+                AS before_start_time,
+
+            attendance.actual_working_end_time
+                AS before_end_time,
+
+            request.requested_working_start_time
+                AS after_start_time,
+
+            request.requested_working_end_time
+                AS after_end_time,
+
+            request.request_type,
+
+            request.request_reason
+
+        FROM
+            tb_trn_attendance_request request
+
+        INNER JOIN
+            tb_trn_attendance attendance
+
+        ON
+            request.attendance_id =
+            attendance.attendance_id
+
+        INNER JOIN
+            tb_mst_employee employee
+
+        ON
+            attendance.user_id =
+            employee.employee_id
+
+        WHERE
+            request.request_flag =
+            #{requestFlag}
+
+        ORDER BY
+            attendance.working_day ASC,
+            employee.employee_id ASC,
+            request.attendance_request_id ASC
+
+    </select>
+
+
+    <!--
+        指定した申請フラグの勤怠申請件数を取得する
+    -->
+    <select id="countByRequestFlag"
+            resultType="int">
+
+        SELECT
+            COUNT(*)
+        FROM
+            tb_trn_attendance_request
+        WHERE
+            request_flag = #{requestFlag}
+
+    </select>
+
+
+    <!--
+        申請された時刻を元の勤怠実績へ反映する
+    -->
+    <update id="updateAttendanceFromRequest">
+
+        UPDATE
+            tb_trn_attendance AS attendance
+
+        SET
+            actual_working_start_time =
+                request.requested_working_start_time,
+
+            actual_working_end_time =
+                request.requested_working_end_time
+
+        FROM
+            tb_trn_attendance_request AS request
+
+        WHERE
+            attendance.attendance_id =
+                request.attendance_id
+
+        AND
+            request.attendance_request_id =
+                #{requestId}
+
+        AND
+            request.request_flag =
+                #{requestingFlag}
+
+    </update>
+
+
+    <!--
+        勤怠申請の申請フラグを承認済みに変更する
+    -->
+    <update id="updateRequestFlag">
+
+        UPDATE
+            tb_trn_attendance_request
+
+        SET
+            request_flag =
+                #{newFlag}
+
+        WHERE
+            attendance_request_id =
+                #{requestId}
+
+        AND
+            request_flag =
+                #{currentFlag}
+
+    </update>
+
+
+</mapper>

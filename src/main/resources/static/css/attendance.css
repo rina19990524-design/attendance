@@ -1,0 +1,961 @@
+/* ========================================
+   勤怠実績一覧画面
+   ======================================== */
+
+/* 全要素共通 */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+
+/* ========================================
+   画面全体
+   ======================================== */
+
+body {
+    position: relative;
+
+    min-height: 100vh;
+    padding: 40px 24px 70px;
+
+    color: #172b4d;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Meiryo,
+        sans-serif;
+
+    /* 他の画面と共通の水色背景 */
+    background:
+        radial-gradient(
+            circle at 12% 30%,
+            rgba(255, 255, 255, 0.8) 0 35px,
+            transparent 36px
+        ),
+        radial-gradient(
+            circle at 88% 22%,
+            rgba(255, 255, 255, 0.55) 0 90px,
+            transparent 91px
+        ),
+        radial-gradient(
+            circle at 78% 60%,
+            rgba(255, 255, 255, 0.35) 0 55px,
+            transparent 56px
+        ),
+        linear-gradient(
+            135deg,
+            #f8fdff 0%,
+            #e7f8ff 35%,
+            #d3f2ff 70%,
+            #edfaff 100%
+        );
+
+    overflow-x: hidden;
+}
+
+
+/* ========================================
+   背景の波
+   ======================================== */
+
+/* 背景の大きな波 */
+body::before {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -10%;
+    bottom: -32%;
+
+    width: 120%;
+    height: 65%;
+
+    border-radius:
+        45% 55% 0 0 /
+        35% 40% 0 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(80, 210, 235, 0.34),
+            rgba(55, 164, 239, 0.42)
+        );
+
+    transform: rotate(-3deg);
+
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, 0.42),
+        0 -70px 0 rgba(117, 220, 240, 0.17);
+
+    pointer-events: none;
+}
+
+/* 手前の透明な波 */
+body::after {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -15%;
+    bottom: -44%;
+
+    width: 130%;
+    height: 68%;
+
+    border-radius:
+        50% 50% 0 0 /
+        32% 38% 0 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0.66),
+            rgba(93, 201, 246, 0.27),
+            rgba(255, 255, 255, 0.58)
+        );
+
+    transform: rotate(4deg);
+
+    pointer-events: none;
+}
+
+
+/* ========================================
+   ページ全体の白い枠
+   ======================================== */
+
+.page-container {
+    position: relative;
+    z-index: 1;
+
+    width: 1380px;
+    max-width: 100%;
+
+    margin: 0 auto;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+
+    box-shadow:
+        0 22px 55px rgba(42, 114, 158, 0.2);
+
+    overflow: hidden;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* ========================================
+   上部
+   ======================================== */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 120px;
+    padding: 25px 35px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #062654 0%,
+            #0a3975 100%
+        );
+}
+
+.header h1 {
+    margin: 0 0 12px;
+
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+.header p {
+    margin: 0;
+
+    color: #e0f0ff;
+
+    font-size: 16px;
+}
+
+.header p span {
+    color: #ffffff;
+
+    font-weight: 700;
+}
+
+
+/* ========================================
+   ログアウト
+   ======================================== */
+
+.logout-form {
+    margin: 0;
+}
+
+.logout-button {
+    min-width: 125px;
+    padding: 12px 20px;
+
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 7px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.22);
+
+    transform: translateY(-2px);
+}
+
+
+/* ========================================
+   メイン部分
+   ======================================== */
+
+main {
+    padding: 38px 45px 50px;
+}
+
+
+/* ========================================
+   メッセージ
+   ======================================== */
+
+.success-message,
+.error-message {
+    width: 100%;
+
+    margin: 0 0 25px;
+    padding: 13px 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* 成功メッセージ */
+.success-message {
+    color: #146c43;
+    background: #dff5e9;
+
+    border: 1px solid #9dd7b8;
+}
+
+/* エラーメッセージ */
+.error-message {
+    color: #b42318;
+    background: #fff0ee;
+
+    border: 1px solid #f0b3ad;
+}
+
+
+/* ========================================
+   勤務予定登録
+   ======================================== */
+
+.registration-section {
+    margin-bottom: 38px;
+    padding: 28px 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(231, 248, 255, 0.98)
+        );
+
+    border: 1px solid #c5e4f4;
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 25px rgba(45, 119, 166, 0.1);
+}
+
+.registration-section h2 {
+    margin: 0 0 24px;
+
+    color: #123764;
+
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+
+/* ========================================
+   登録フォーム
+   ======================================== */
+
+.registration-form {
+    display: grid;
+    grid-template-columns:
+        minmax(150px, 1fr)
+        minmax(150px, 1fr)
+        minmax(130px, 0.8fr)
+        minmax(140px, 0.8fr)
+        minmax(140px, 0.8fr);
+    align-items: end;
+    gap: 20px;
+}
+
+.form-item {
+    min-width: 0;
+}
+
+.form-item label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #17335c;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* 日付・時刻入力 */
+.form-item input,
+.form-item select {
+    width: 100%;
+    min-height: 45px;
+
+    padding: 8px 12px;
+
+    color: #17335c;
+    background: #ffffff;
+
+    border: 1px solid #c5d4e3;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+/* 勤務区分 */
+.form-item select {
+    cursor: pointer;
+}
+
+/* 入力欄を選択した場合 */
+.form-item input:focus,
+.form-item select:focus {
+    border-color: #2385e8;
+
+    box-shadow:
+        0 0 0 4px rgba(35, 133, 232, 0.13);
+}
+
+/* 公休選択時の入力欄 */
+.form-item input:disabled {
+    color: #8a959e;
+    background: #e5e9ed;
+
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   土日除外
+   ======================================== */
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    min-height: 45px;
+
+    color: #17335c;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    width: 18px;
+    height: 18px;
+
+    accent-color: #147ee6;
+
+    cursor: pointer;
+}
+
+
+/* ========================================
+   登録ボタン
+   ======================================== */
+
+.register-button {
+    grid-column: 1 / -1;
+
+    width: 180px;
+    min-height: 48px;
+
+    margin: 5px auto 0;
+    padding: 11px 22px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2795ef 0%,
+            #0969df 100%
+        );
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(9, 105, 223, 0.23);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+.register-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 11px 23px rgba(9, 105, 223, 0.3);
+}
+
+.register-button:active {
+    transform: translateY(0);
+}
+
+
+/* ========================================
+   勤怠実績一覧
+   ======================================== */
+
+.list-section {
+    padding: 28px 30px 32px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border: 1px solid #c5e4f4;
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 25px rgba(45, 119, 166, 0.1);
+}
+
+.list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+
+    margin-bottom: 23px;
+}
+
+.list-header h2 {
+    margin: 0;
+
+    color: #123764;
+
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+
+/* ========================================
+   前月・翌月
+   ======================================== */
+
+.month-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+
+    padding: 9px 16px;
+
+    color: #17335c;
+    background: #edf8ff;
+
+    border: 1px solid #c5e4f4;
+    border-radius: 8px;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.month-navigation a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    color: #0873da;
+    background: #ffffff;
+
+    border: 1px solid #badcf0;
+    border-radius: 50%;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s,
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+.month-navigation a:hover {
+    color: #ffffff;
+    background: #1687e8;
+
+    transform: translateY(-2px);
+}
+
+
+/* ========================================
+   テーブル
+   ======================================== */
+
+.table-wrapper {
+    width: 100%;
+
+    border: 1px solid #bddbea;
+    border-radius: 9px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+table {
+    width: 100%;
+    min-width: 950px;
+
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    background: #ffffff;
+}
+
+/* 列幅 */
+table th:nth-child(1),
+table td:nth-child(1) {
+    width: 115px;
+}
+
+table th:nth-child(2),
+table td:nth-child(2) {
+    width: 210px;
+}
+
+table th:nth-child(3),
+table td:nth-child(3),
+table th:nth-child(4),
+table td:nth-child(4) {
+    width: 105px;
+}
+
+table th:nth-child(5),
+table td:nth-child(5),
+table th:nth-child(6),
+table td:nth-child(6) {
+    width: 125px;
+}
+
+table th:nth-child(7),
+table td:nth-child(7) {
+    width: 160px;
+}
+
+/* 見出し */
+table thead {
+    color: #17335c;
+
+    background:
+        linear-gradient(
+            180deg,
+            #e9f7ff 0%,
+            #d9effb 100%
+        );
+}
+
+table th {
+    padding: 15px 10px;
+
+    border-right: 1px solid #bddbea;
+    border-bottom: 1px solid #bddbea;
+
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+table th:last-child {
+    border-right: none;
+}
+
+/* データ */
+table td {
+    padding: 13px 10px;
+
+    color: #263f5c;
+    background: transparent;
+
+    border-right: 1px solid #d5e5ee;
+    border-bottom: 1px solid #d5e5ee;
+
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+table td:last-child {
+    border-right: none;
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 偶数行 */
+table tbody tr:nth-child(even) {
+    background: #f8fcff;
+}
+
+/* 通常行にカーソルを合わせた場合 */
+table tbody tr:hover {
+    background: #edf8ff;
+}
+
+
+/* ========================================
+   土曜日・日曜日
+   ======================================== */
+
+/*
+ * 現時点のHTMLには曜日用のクラスがないため、
+ * 公休とは別に曜日の色を付ける場合は後から追加する。
+ */
+
+
+/* ========================================
+   公休
+   ======================================== */
+
+/* 公休の行 */
+table tbody tr.holiday-row {
+    color: #6f7b86;
+    background: #e5e9ed;
+}
+
+/*
+ * 偶数行の背景より公休を優先する
+ */
+table tbody tr.holiday-row:nth-child(even) {
+    background: #e5e9ed;
+}
+
+/* 公休の各セル */
+table tbody tr.holiday-row td {
+    color: #6f7b86;
+}
+
+/* 公休の行にカーソルを合わせた場合 */
+table tbody tr.holiday-row:hover {
+    background: #d8dfe4;
+}
+
+/* 公休バッジ */
+.holiday-badge {
+    display: inline-block;
+
+    padding: 4px 13px;
+
+    color: #596570;
+    background: #d0d8de;
+
+    border: 1px solid #bdc7ce;
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   将来使用する申請状況
+   ======================================== */
+
+/* 勤怠修正申請中 */
+.requesting-badge {
+    display: inline-block;
+
+    padding: 4px 12px;
+
+    color: #8a5900;
+    background: #fff1c7;
+
+    border: 1px solid #f0cf6a;
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* 勤怠修正申請中の行 */
+table tbody tr.requesting-row {
+    background: #fff9e8;
+}
+
+/* 承認済み */
+.approved-badge {
+    display: inline-block;
+
+    padding: 4px 12px;
+
+    color: #12625d;
+    background: #d8f3f0;
+
+    border: 1px solid #a4dcd6;
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   ヘッダー右側
+   ======================================== */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+/* ホームへ戻る */
+.header-home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 165px;
+    min-height: 45px;
+    padding: 10px 20px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2795ef 0%,
+            #0969df 100%
+        );
+
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+
+    box-shadow:
+        0 8px 18px rgba(9, 105, 223, 0.25);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+.header-home-link:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+
+    box-shadow:
+        0 11px 23px rgba(9, 105, 223, 0.32);
+}
+
+/* ========================================
+   タブレット
+   ======================================== */
+
+@media screen and (max-width: 1100px) {
+    .registration-form {
+        grid-template-columns:
+            repeat(3, minmax(150px, 1fr));
+    }
+
+    .register-button {
+        grid-column: auto;
+
+        width: 100%;
+    }
+}
+
+
+@media screen and (max-width: 800px) {
+    body {
+        padding: 20px 12px 50px;
+    }
+    
+    .header-actions {
+	    gap: 10px;
+	}
+	
+	.header-home-link {
+	    min-width: auto;
+	    padding: 10px 13px;
+	    font-size: 13px;
+	}
+
+    .header {
+        align-items: flex-start;
+
+        padding: 22px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .logout-button {
+        min-width: auto;
+        padding: 10px 13px;
+    }
+
+    main {
+        padding: 28px 20px 35px;
+    }
+
+    .registration-section,
+    .list-section {
+        padding: 23px 20px;
+    }
+
+    .registration-form {
+        grid-template-columns:
+            repeat(2, minmax(140px, 1fr));
+    }
+
+    .register-button {
+        grid-column: 1 / -1;
+
+        width: 180px;
+    }
+
+    .list-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+/* ========================================
+   スマートフォン
+   ======================================== */
+
+@media screen and (max-width: 550px) {
+    .header {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .logout-form,
+    .logout-button {
+        width: 100%;
+    }
+
+    .registration-form {
+        grid-template-columns: 1fr;
+    }
+
+    .register-button {
+        grid-column: auto;
+
+        width: 100%;
+    }
+
+    .month-navigation {
+        width: 100%;
+    }
+
+    .list-header h2,
+    .registration-section h2 {
+        font-size: 21px;
+    }
+    
+    .header-actions {
+	    width: 100%;
+	}
+	
+	.header-home-link,
+	.logout-form {
+	    width: 50%;
+	}
+	
+	.header-home-link,
+	.logout-button {
+	    min-height: 44px;
+	}
+
+}

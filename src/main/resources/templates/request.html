@@ -4,27 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <title>勤怠申請</title>
+    <link rel="stylesheet"
+          th:href="@{/css/request.css}">
 </head>
 
 <body>
+    <divdiv class="page-container">
 
-    <h1>株式会社アテンダンス</h1>
+        <!-- 上部 -->
+        <header class="header">
+            <div class="header-information">
+                <h1>
+                    株式会社アテンダンス
+                </h1>
 
-    <!-- ログイン中の社員名 -->
-    <p>
-        社員名：
-        <span th:text="${employee.employeeName}">山田太郎</span>
-    </p>
-	<form th:action="@{/logout}"
-	      method="post">
-	
-	    <button type="submit">
-	        ログアウト
-	    </button>
-	</form>
+                <p>
+                    社員名：
+                    <span th:text="${employee.employeeName}">
+                        山田太郎
+                    </span>
+                </p>
+            </div>
+            
+            <!-- 右側のボタン -->
+		    <div class="header-actions">
+		
+		        <a class="header-home-link"
+		           th:href="@{/home}">
+		            ◀ ホームへ戻る
+		        </a>
+		
+		        <form th:action="@{/logout}"
+	      			method="post">
+		
+		            <button class="logout-button"
+		                    type="submit">
+		                ログアウト
+		            </button>
+		        </form>
+		
+		    </div>
+        </header>
 
-    <hr>
-
+    <!-- 画面タイトル -->
     <h2>勤怠申請</h2>
 
     <form th:action="@{/request/register}" method="post">
@@ -90,6 +112,19 @@
                       cols="60"
                       required></textarea>
         </p>
+        
+        <!-- 申請完了メッセージ -->
+		<p th:if="${message}"
+		   th:text="${message}"
+		   style="color: red;">
+		    申請しました
+		</p>
+		
+		<p th:if="${errorMessage}"
+		   th:text="${errorMessage}"
+		   style="color: red;">
+		    エラーメッセージ
+		</p>
 
 
         <!-- 申請ボタン -->
@@ -98,14 +133,8 @@
         </button>
 
     </form>
-
-
-    <!-- 戻る -->
-    <p>
-        <a th:href="@{/home}">
-            戻る
-        </a>
-    </p>
+    
+    </div>
 
 </body>
 

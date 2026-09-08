@@ -1,0 +1,560 @@
+/* 全要素共通 */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+/* 画面全体 */
+body {
+    position: relative;
+
+    min-height: 100vh;
+    padding: 40px 24px;
+
+    color: #172b4d;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Meiryo,
+        sans-serif;
+
+    /* ログイン画面と同じ水色背景 */
+    background:
+        radial-gradient(
+            circle at 12% 30%,
+            rgba(255, 255, 255, 0.8) 0 35px,
+            transparent 36px
+        ),
+        radial-gradient(
+            circle at 88% 22%,
+            rgba(255, 255, 255, 0.55) 0 90px,
+            transparent 91px
+        ),
+        radial-gradient(
+            circle at 78% 60%,
+            rgba(255, 255, 255, 0.35) 0 55px,
+            transparent 56px
+        ),
+        linear-gradient(
+            135deg,
+            #f8fdff 0%,
+            #e7f8ff 35%,
+            #d3f2ff 70%,
+            #edfaff 100%
+        );
+
+    overflow-x: hidden;
+}
+
+/* 背景の大きな波 */
+body::before {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -10%;
+    bottom: -32%;
+
+    width: 120%;
+    height: 65%;
+
+    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(80, 210, 235, 0.34),
+            rgba(55, 164, 239, 0.42)
+        );
+
+    transform: rotate(-3deg);
+
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, 0.42),
+        0 -70px 0 rgba(117, 220, 240, 0.17);
+
+    pointer-events: none;
+}
+
+/* 手前の透明な波 */
+body::after {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -15%;
+    bottom: -44%;
+
+    width: 130%;
+    height: 68%;
+
+    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0.66),
+            rgba(93, 201, 246, 0.27),
+            rgba(255, 255, 255, 0.58)
+        );
+
+    transform: rotate(4deg);
+
+    pointer-events: none;
+}
+
+/* ホーム画面全体 */
+.home-container {
+    position: relative;
+    z-index: 1;
+
+    width: 1100px;
+    max-width: 100%;
+
+    margin: 0 auto;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+
+    box-shadow:
+        0 22px 55px rgba(42, 114, 158, 0.2);
+
+    overflow: hidden;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* 上部 */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 120px;
+    padding: 25px 35px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #062654 0%,
+            #0a3975 100%
+        );
+}
+
+.header h1 {
+    margin: 0 0 12px;
+
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+.header p {
+    margin: 0;
+
+    color: #e0f0ff;
+
+    font-size: 16px;
+}
+
+/* ログアウトフォーム */
+.logout-form {
+    margin: 0;
+}
+
+/* ログアウトボタン */
+.logout-button {
+    min-width: 125px;
+    padding: 12px 20px;
+
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 7px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+}
+
+/* メイン部分 */
+main {
+    padding: 40px 55px 50px;
+}
+
+/* 日付・現在時刻 */
+.clock-section {
+    width: 430px;
+    max-width: 100%;
+
+    margin: 0 auto 35px;
+}
+
+/* 日付 */
+.today {
+    margin: 0;
+    padding: 14px 20px;
+
+    color: #17335c;
+    background: #edf8ff;
+
+    border: 1px solid #c8e5f5;
+    border-radius: 9px 9px 0 0;
+
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* 時計の白い枠 */
+.clock-panel {
+    padding: 22px 20px 25px;
+
+    background: #ffffff;
+
+    border-right: 1px solid #c8e5f5;
+    border-bottom: 1px solid #c8e5f5;
+    border-left: 1px solid #c8e5f5;
+    border-radius: 0 0 9px 9px;
+
+    text-align: center;
+
+    box-shadow:
+        0 10px 25px rgba(45, 119, 166, 0.1);
+}
+
+.clock-label {
+    margin: 0 0 8px;
+
+    color: #6a7f96;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* 現在時刻 */
+#currentTime {
+    margin: 0;
+
+    color: #082e63;
+
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+}
+
+/* 出勤・退勤全体 */
+.attendance-section {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+
+    margin-bottom: 45px;
+}
+
+/* 出勤・退勤のカード */
+.attendance-card {
+    width: 220px;
+    padding: 20px;
+
+    background: #f9fdff;
+
+    border: 1px solid #d1e8f5;
+    border-radius: 11px;
+
+    text-align: center;
+
+    box-shadow:
+        0 8px 20px rgba(45, 119, 166, 0.09);
+}
+
+.attendance-card form {
+    margin: 0;
+}
+
+/* 出勤・退勤ボタン */
+.attendance-button {
+    width: 100%;
+    min-height: 60px;
+
+    padding: 12px 20px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2795ef 0%,
+            #0969df 100%
+        );
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(9, 105, 223, 0.23);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+.attendance-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 11px 23px rgba(9, 105, 223, 0.3);
+}
+
+/* 打刻された時刻 */
+.attendance-time {
+    margin: 16px 0 0;
+
+    color: #62758a;
+
+    font-size: 14px;
+}
+
+.attendance-time span {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #17335c;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* 下部メニュー */
+.menu {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* メニューカード */
+.menu-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 145px;
+    padding: 24px 18px;
+
+    color: #123764;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(222, 245, 255, 0.98)
+        );
+
+    border: 1px solid #bee2f5;
+    border-radius: 12px;
+
+    text-align: center;
+    text-decoration: none;
+
+    box-shadow:
+        0 10px 25px rgba(45, 119, 166, 0.1);
+
+    transition:
+        transform 0.2s,
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    border-color: #55afe9;
+
+    box-shadow:
+        0 15px 30px rgba(45, 119, 166, 0.18);
+}
+
+/* メニュー名 */
+.menu-title {
+    font-size: 21px;
+    font-weight: 700;
+}
+
+/* メニュー説明 */
+.menu-description {
+    margin-top: 10px;
+
+    color: #67809a;
+
+    font-size: 13px;
+}
+
+/* タブレット・スマートフォン */
+@media screen and (max-width: 750px) {
+    body {
+        padding: 20px 12px;
+    }
+
+    .header {
+        align-items: flex-start;
+        padding: 22px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .logout-button {
+        min-width: auto;
+        padding: 10px 13px;
+    }
+
+    main {
+        padding: 30px 20px 35px;
+    }
+
+    #currentTime {
+        font-size: 35px;
+    }
+
+    .attendance-section {
+        gap: 15px;
+    }
+
+    .attendance-card {
+        width: 50%;
+        padding: 14px;
+    }
+
+    .menu {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-card {
+        min-height: 105px;
+    }
+}
+
+/* 小さいスマートフォン */
+@media screen and (max-width: 450px) {
+    .header {
+        gap: 15px;
+    }
+
+    .attendance-section {
+        flex-direction: column;
+    }
+
+    .attendance-card {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   打刻できないボタン
+   ======================================== */
+
+/* 出勤済み・退勤済み・出勤前の退勤ボタン */
+.attendance-button:disabled {
+    color: #718096;
+
+    background: #dbe5ec;
+
+    box-shadow: none;
+
+    cursor: not-allowed;
+
+    transform: none;
+    filter: none;
+
+    opacity: 0.8;
+}
+
+/* 無効なボタンにカーソルを合わせても動かさない */
+.attendance-button:disabled:hover {
+    color: #718096;
+
+    background: #dbe5ec;
+
+    box-shadow: none;
+
+    transform: none;
+    filter: none;
+}
+
+/* 成功メッセージ */
+.success-message {
+    width: 430px;
+    max-width: 100%;
+
+    margin: 0 auto 20px;
+    padding: 12px 18px;
+
+    color: #146c43;
+    background: #dff5e9;
+
+    border: 1px solid #9dd7b8;
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* エラーメッセージ */
+.error-message {
+    width: 430px;
+    max-width: 100%;
+
+    margin: 0 auto 20px;
+    padding: 12px 18px;
+
+    color: #b42318;
+    background: #fff0ee;
+
+    border: 1px solid #f0b3ad;
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}

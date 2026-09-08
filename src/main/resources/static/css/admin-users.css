@@ -1,0 +1,837 @@
+@charset "UTF-8";
+
+/* ========================================
+   管理者用 社員管理画面
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+/* ========================================
+   画面全体
+   ======================================== */
+
+body {
+    position: relative;
+
+    min-height: 100vh;
+    padding: 40px 24px 70px;
+
+    color: #24493f;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Meiryo,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 12% 30%,
+            rgba(255, 255, 255, 0.8) 0 35px,
+            transparent 36px
+        ),
+        radial-gradient(
+            circle at 88% 22%,
+            rgba(255, 255, 255, 0.55) 0 90px,
+            transparent 91px
+        ),
+        radial-gradient(
+            circle at 78% 60%,
+            rgba(255, 255, 255, 0.35) 0 55px,
+            transparent 56px
+        ),
+        linear-gradient(
+            135deg,
+            #f8fdff 0%,
+            #e7f8ff 35%,
+            #d3f2ff 70%,
+            #edfaff 100%
+        );
+
+    overflow-x: hidden;
+}
+
+/* 背景の波 */
+body::before {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -10%;
+    bottom: -32%;
+
+    width: 120%;
+    height: 65%;
+
+    border-radius:
+        45% 55% 0 0 /
+        35% 40% 0 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(64, 203, 190, 0.23),
+            rgba(35, 160, 142, 0.3)
+        );
+
+    transform: rotate(-3deg);
+
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, 0.42),
+        0 -70px 0 rgba(95, 211, 195, 0.12);
+
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -15%;
+    bottom: -44%;
+
+    width: 130%;
+    height: 68%;
+
+    border-radius:
+        50% 50% 0 0 /
+        32% 38% 0 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0.66),
+            rgba(73, 192, 175, 0.2),
+            rgba(255, 255, 255, 0.58)
+        );
+
+    transform: rotate(4deg);
+
+    pointer-events: none;
+}
+
+/* ========================================
+   中央の画面枠
+   ======================================== */
+
+.page-container {
+    position: relative;
+    z-index: 1;
+
+    width: 1200px;
+    max-width: 100%;
+    margin: 0 auto;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+
+    box-shadow:
+        0 22px 55px rgba(30, 112, 95, 0.18);
+
+    overflow: hidden;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ========================================
+   ヘッダー
+   ======================================== */
+
+.header {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+
+    min-height: 110px;
+    padding: 25px 35px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #074238 0%,
+            #096451 55%,
+            #117a62 100%
+        );
+}
+
+/* 会社名 */
+.company-information {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 20px;
+    white-space: nowrap;
+}
+
+/* ADMINラベル */
+.admin-label {
+    display: inline-block;
+
+    margin-right: 8px;
+    padding: 5px 11px;
+
+    color: #075345;
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+/* 管理者名 */
+.administrator-information {
+    padding: 12px 18px;
+
+    color: #e6fff8;
+    background: rgba(255, 255, 255, 0.12);
+
+    border-radius: 7px;
+
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.administrator-information span {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* ヘッダー右側 */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+/* ログアウト */
+.logout-button {
+    min-width: 125px;
+    min-height: 45px;
+    padding: 10px 20px;
+
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+}
+
+/* ログアウトの右隣 */
+.header-home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 150px;
+    min-height: 45px;
+    padding: 10px 18px;
+
+    color: #075345;
+    background: #ffffff;
+
+    border: 1px solid #ffffff;
+    border-radius: 7px;
+
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.header-home-link:hover {
+    background: #e7f8f2;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(1, 55, 44, 0.25);
+}
+
+/* ========================================
+   メイン
+   ======================================== */
+
+main {
+    padding: 38px 45px 50px;
+}
+
+/* ========================================
+   タイトル
+   ======================================== */
+
+.title-section {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid #cce7df;
+}
+
+.title-section h1 {
+    margin: 0 0 8px;
+
+    color: #075345;
+
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.title-section p {
+    margin: 0;
+
+    color: #688078;
+
+    font-size: 14px;
+}
+
+/* ========================================
+   検索・新規登録
+   ======================================== */
+
+.operation-section {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+
+    margin-bottom: 30px;
+    padding: 24px 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #edf9f5 100%
+        );
+
+    border: 1px solid #b9dfd3;
+    border-radius: 11px;
+
+    box-shadow:
+        0 9px 22px rgba(30, 112, 95, 0.09);
+}
+
+/* 検索フォーム */
+.search-form {
+    flex: 1;
+    max-width: 650px;
+}
+
+.search-form label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #155b4c;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.search-controls {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+}
+
+.search-controls input {
+    width: 100%;
+    min-height: 45px;
+    padding: 9px 13px;
+
+    color: #194d42;
+    background: #ffffff;
+
+    border: 1px solid #b8d4cc;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    outline: none;
+}
+
+.search-controls input:focus {
+    border-color: #198a6e;
+
+    box-shadow:
+        0 0 0 4px rgba(25, 138, 110, 0.13);
+}
+
+/* 検索ボタン */
+.search-controls button {
+    min-width: 90px;
+    min-height: 45px;
+    padding: 10px 18px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #168d70 0%,
+            #076b57 100%
+        );
+
+    border: none;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        filter 0.2s;
+}
+
+.search-controls button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+}
+
+/* クリア */
+.clear-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 85px;
+    min-height: 45px;
+    padding: 10px 14px;
+
+    color: #315f54;
+    background: #ffffff;
+
+    border: 1px solid #b2d2c8;
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.clear-button:hover {
+    color: #06705a;
+    background: #effbf7;
+    border-color: #279d7e;
+}
+
+/* 新規登録 */
+.new-user-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 145px;
+    min-height: 46px;
+    padding: 10px 20px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #28a681 0%,
+            #08745e 100%
+        );
+
+    border-radius: 7px;
+
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+
+    box-shadow:
+        0 7px 16px rgba(7, 107, 87, 0.22);
+
+    transition:
+        transform 0.2s,
+        filter 0.2s;
+}
+
+.new-user-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+}
+
+/* ========================================
+   社員一覧
+   ======================================== */
+
+.employee-section {
+    padding: 27px 28px 32px;
+
+    background: #ffffff;
+
+    border: 1px solid #b9dfd3;
+    border-radius: 11px;
+
+    box-shadow:
+        0 10px 25px rgba(30, 112, 95, 0.1);
+}
+
+.employee-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.employee-list-header h2 {
+    margin: 0;
+
+    color: #075345;
+
+    font-size: 23px;
+    font-weight: 700;
+}
+
+/* 件数 */
+.employee-count {
+    padding: 6px 13px;
+
+    color: #08745e;
+    background: #daf3eb;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ========================================
+   テーブル
+   ======================================== */
+
+.table-wrapper {
+    width: 100%;
+
+    border: 1px solid #afd3c8;
+    border-radius: 9px;
+
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 760px;
+
+    background: #ffffff;
+
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+table thead {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #096451 0%,
+            #074a3d 100%
+        );
+}
+
+table th {
+    padding: 15px 12px;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+table th:last-child {
+    border-right: none;
+}
+
+table td {
+    padding: 14px 12px;
+
+    color: #294b42;
+
+    border-right: 1px solid #d4e7e1;
+    border-bottom: 1px solid #d4e7e1;
+
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table td:last-child {
+    border-right: none;
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table tbody tr:nth-child(even) {
+    background: #f3faf7;
+}
+
+table tbody tr:hover {
+    background: #e8f7f1;
+}
+
+/* 状態 */
+.status-badge {
+    display: inline-block;
+
+    min-width: 65px;
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-active {
+    color: #08745e;
+    background: #d8f3ea;
+
+    border: 1px solid #a4dccc;
+}
+
+.status-retired {
+    color: #68746f;
+    background: #e7ecea;
+
+    border: 1px solid #ccd5d2;
+}
+
+.status-leave {
+    color: #8a6500;
+    background: #fff2c7;
+
+    border: 1px solid #ecd37e;
+}
+
+.status-unknown {
+    color: #68746f;
+    background: #edf1ef;
+}
+
+/* 編集 */
+.edit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 70px;
+    padding: 7px 14px;
+
+    color: #08745e;
+    background: #ffffff;
+
+    border: 1px solid #75bea9;
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.edit-button:hover {
+    color: #ffffff;
+    background: #08745e;
+}
+
+/* 検索結果なし */
+.empty-message {
+    height: 100px;
+
+    color: #688078;
+
+    font-weight: 600;
+}
+
+/* ========================================
+   ページ番号
+   ======================================== */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 25px;
+}
+
+.pagination a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 39px;
+    height: 39px;
+    padding: 0 12px;
+
+    color: #256454;
+    background: #ffffff;
+
+    border: 1px solid #b8d8cf;
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.pagination a:hover,
+.pagination .current-page {
+    color: #ffffff;
+    background: #08745e;
+    border-color: #08745e;
+}
+
+/* ========================================
+   タブレット
+   ======================================== */
+
+@media screen and (max-width: 900px) {
+    .header {
+        grid-template-columns: 1fr auto;
+    }
+
+    .company-information {
+        grid-column: 1 / 3;
+    }
+
+    .operation-section {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .search-form {
+        max-width: none;
+    }
+
+    .new-user-button {
+        align-self: flex-end;
+    }
+}
+
+/* ========================================
+   スマートフォン
+   ======================================== */
+
+@media screen and (max-width: 600px) {
+    body {
+        padding: 20px 12px 50px;
+    }
+
+    .header {
+        grid-template-columns: 1fr;
+        gap: 16px;
+
+        padding: 22px;
+    }
+
+    .company-information {
+        grid-column: auto;
+        align-items: flex-start;
+        flex-wrap: wrap;
+
+        font-size: 18px;
+    }
+
+    .administrator-information {
+        width: 100%;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .logout-form,
+    .header-home-link {
+        width: 50%;
+    }
+
+    .logout-button {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .header-home-link {
+        min-width: auto;
+    }
+
+    main {
+        padding: 28px 18px 35px;
+    }
+
+    .title-section h1 {
+        font-size: 24px;
+    }
+
+    .operation-section,
+    .employee-section {
+        padding: 22px 18px;
+    }
+
+    .search-controls {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .search-controls input {
+        grid-column: 1 / 3;
+    }
+
+    .new-user-button {
+        width: 100%;
+    }
+}

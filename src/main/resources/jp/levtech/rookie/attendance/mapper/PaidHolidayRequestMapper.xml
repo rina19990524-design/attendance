@@ -7,7 +7,41 @@
 <mapper namespace=
         "jp.levtech.rookie.attendance.mapper.PaidHolidayRequestMapper">
 
+
+    <!--
+        SQLの取得結果とDTOの項目を対応させる
+    -->
+    <resultMap id="adminPaidHolidayRequestViewResultMap"
+               type=
+               "jp.levtech.rookie.attendance.dto.AdminPaidHolidayRequestView">
+
+        <result column="paid_holiday_request_id"
+                property="paidHolidayRequestId"/>
+
+        <result column="employee_id"
+                property="employeeId"/>
+
+        <result column="employee_name"
+                property="employeeName"/>
+
+        <result column="department_name"
+                property="departmentName"/>
+
+        <result column="holiday_type"
+                property="holidayType"/>
+
+        <result column="holiday"
+                property="holidayDate"/>
+
+        <result column="request_reason"
+                property="requestReason"/>
+
+    </resultMap>
+
+
+    <!-- 有給申請を登録する -->
     <insert id="insert">
+
         INSERT INTO tb_trn_paid_holiday_request (
             paid_holiday_request_id,
             holiday_type,
@@ -24,6 +58,89 @@
             #{requestReason},
             #{requestFlag}
         )
+
     </insert>
+
+
+    <!-- 指定した申請フラグの件数を取得する -->
+    <select id="countByRequestFlag"
+            resultType="int">
+
+        SELECT
+            COUNT(*)
+        FROM
+            tb_trn_paid_holiday_request
+        WHERE
+            request_flag = #{requestFlag}
+
+    </select>
+
+
+    <!-- 指定した申請フラグの一覧を取得する -->
+    <select id="findByRequestFlag"
+            resultMap=
+            "adminPaidHolidayRequestViewResultMap">
+
+        SELECT
+            request.paid_holiday_request_id,
+
+            employee.employee_id,
+
+            employee.employee_name,
+
+            CASE employee.department_id
+                WHEN 1 THEN '営業部'
+                WHEN 2 THEN '総務部'
+                WHEN 3 THEN '人事部'
+            END AS department_name,
+
+            request.holiday_type,
+
+            request.holiday,
+
+            request.request_reason
+
+        FROM
+            tb_trn_paid_holiday_request request
+
+        INNER JOIN
+            tb_mst_employee employee
+
+        ON
+            request.employee_id =
+            employee.employee_id
+
+        WHERE
+            request.request_flag =
+            #{requestFlag}
+
+        ORDER BY
+            request.holiday ASC,
+            employee.employee_id ASC,
+            request.paid_holiday_request_id ASC
+
+    </select>
+
+
+    <!-- 有給申請を承認済みに変更する -->
+    <update id="updateRequestFlag">
+
+        UPDATE
+            tb_trn_paid_holiday_request
+
+        SET
+            request_flag =
+                #{newFlag}
+
+        WHERE
+            paid_holiday_request_id =
+                #{requestId}
+
+        AND
+            request_flag =
+                #{currentFlag}
+
+    </update>
+
 
 </mapper>

@@ -1,0 +1,311 @@
+/* すべての要素に共通する設定 */
+* {
+    box-sizing: border-box;
+}
+
+/* 画面全体 */
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100vh;
+    padding: 40px 20px;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Meiryo,
+        sans-serif;
+
+    color: #172b4d;
+
+    /* 水色の背景 */
+    background:
+        radial-gradient(
+            circle at 12% 32%,
+            rgba(255, 255, 255, 0.8) 0 35px,
+            transparent 36px
+        ),
+        radial-gradient(
+            circle at 88% 25%,
+            rgba(255, 255, 255, 0.55) 0 90px,
+            transparent 91px
+        ),
+        radial-gradient(
+            circle at 78% 60%,
+            rgba(255, 255, 255, 0.35) 0 55px,
+            transparent 56px
+        ),
+        linear-gradient(
+            135deg,
+            #f8fdff 0%,
+            #e7f8ff 35%,
+            #d3f2ff 70%,
+            #edfaff 100%
+        );
+
+    overflow: hidden;
+}
+
+/* 背景の大きな波 */
+body::before {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -10%;
+    bottom: -30%;
+    width: 120%;
+    height: 65%;
+
+    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(80, 210, 235, 0.34),
+            rgba(55, 164, 239, 0.42)
+        );
+
+    transform: rotate(-3deg);
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, 0.42),
+        0 -70px 0 rgba(117, 220, 240, 0.17);
+
+    pointer-events: none;
+}
+
+/* 背景の手前の透明な波 */
+body::after {
+    content: "";
+
+    position: fixed;
+    z-index: 0;
+    left: -15%;
+    bottom: -42%;
+    width: 130%;
+    height: 68%;
+
+    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0.66),
+            rgba(93, 201, 246, 0.27),
+            rgba(255, 255, 255, 0.58)
+        );
+
+    transform: rotate(4deg);
+
+    pointer-events: none;
+}
+
+/* ログイン画面の見出し */
+h1 {
+    position: relative;
+    z-index: 1;
+
+    width: 480px;
+    max-width: 100%;
+    margin: 0;
+
+    padding: 26px 30px;
+
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #062654 0%,
+            #0a3975 100%
+        );
+
+    border-radius: 14px 14px 0 0;
+
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.08em;
+
+    box-shadow:
+        0 12px 30px rgba(23, 91, 138, 0.16);
+}
+
+/* ログインフォーム */
+form {
+    position: relative;
+    z-index: 1;
+
+    width: 480px;
+    max-width: 100%;
+
+    padding: 38px 42px 42px;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 0 0 14px 14px;
+
+    box-shadow:
+        0 20px 45px rgba(42, 114, 158, 0.18);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* 入力欄のまとまり */
+form div {
+    margin-bottom: 24px;
+}
+
+/* 入力欄の項目名 */
+label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #17335c;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* ユーザー名・パスワード入力欄 */
+input {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 16px;
+
+    color: #172b4d;
+    background-color: #ffffff;
+
+    border: 1px solid #c5d4e3;
+    border-radius: 7px;
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+/* 入力欄を選択したとき */
+input:focus {
+    background-color: #fbfdff;
+    border-color: #2385e8;
+
+    box-shadow:
+        0 0 0 4px rgba(35, 133, 232, 0.13);
+}
+
+/* 入力例の文字 */
+input::placeholder {
+    color: #9aa9b8;
+}
+
+/* ログインボタン */
+button {
+    width: 100%;
+    min-height: 52px;
+
+    margin-top: 5px;
+    padding: 12px 20px;
+
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #2795ef 0%,
+            #0969df 100%
+        );
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(9, 105, 223, 0.24);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+/* ボタンにカーソルを乗せたとき */
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 11px 23px rgba(9, 105, 223, 0.3);
+}
+
+/* ボタンを押しているとき */
+button:active {
+    transform: translateY(0);
+}
+
+/* ログイン失敗時のエラー */
+body > span {
+    position: relative;
+    z-index: 2;
+
+    width: 480px;
+    max-width: 100%;
+
+    padding: 12px 42px 0;
+
+    color: #d93025 !important;
+    background: rgba(255, 255, 255, 0.94);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* スマートフォン表示 */
+@media screen and (max-width: 600px) {
+    body {
+        justify-content: flex-start;
+        padding-top: 70px;
+    }
+
+    h1 {
+        width: 92%;
+        padding: 21px 20px;
+        font-size: 25px;
+    }
+
+    form {
+        width: 92%;
+        padding: 30px 25px 34px;
+    }
+
+    body > span {
+        width: 92%;
+        padding-right: 25px;
+        padding-left: 25px;
+    }
+}

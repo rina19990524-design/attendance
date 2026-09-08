@@ -1,73 +1,268 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>ホーム</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/home.css}">
 </head>
+
 <body>
 
-    <h1>株式会社アテンダンス</h1>
+    <div class="home-container">
 
-    <p>
-        社員名：
-        <span th:text="${employee.employeeName}">社員名</span>
-    </p>
-    
-    <form th:action="@{/logout}"
-      method="post">
+        <!-- 上部 -->
+        <header class="header">
 
-    <button type="submit">
-        ログアウト
-    </button>
+            <div class="header-information">
 
-</form>
+                <h1>
+                    株式会社アテンダンス
+                </h1>
 
-    <p>
-        日付：
-        <span th:text="${today}">2026年8月19日</span>
-    </p>
+                <p>
+                    社員名：
 
-    <h2 id="currentTime">現在時刻</h2>
+                    <span th:text="${employee.employeeName}">
+                        社員名
+                    </span>
+                </p>
 
-    <form th:action="@{/attendance/start}" method="post">
-        <button type="submit">出勤</button>
-    </form>
+            </div>
 
-    <p>
-        出勤時間：
-        <span th:text="${actualWorkingStartTime}">--:--</span>
-    </p>
 
-    <form th:action="@{/attendance/end}" method="post">
-        <button type="submit">退勤</button>
-    </form>
+            <!-- ログアウト -->
+            <form class="logout-form"
+                  th:action="@{/logout}"
+                  method="post">
 
-    <p>
-        退勤時間：
-        <span th:text="${actualWorkingEndTime}">--:--</span>
-    </p>
+                <button class="logout-button"
+                        type="submit">
 
-    <hr>
+                    ログアウト
 
-    <a th:href="@{/attendance}">勤怠実績一覧</a>
-    <a th:href="@{/request}">勤怠修正</a>
-    <a th:href="@{/paid-holiday}">有給申請</a>
+                </button>
 
+            </form>
+
+        </header>
+
+
+        <main>
+
+            <!-- 成功メッセージ -->
+            <p class="success-message"
+               th:if="${message != null}"
+               th:text="${message}">
+                打刻しました
+            </p>
+
+
+            <!-- エラーメッセージ -->
+            <p class="error-message"
+               th:if="${errorMessage != null}"
+               th:text="${errorMessage}">
+                エラーが発生しました
+            </p>
+
+
+            <!-- 日付と現在時刻 -->
+            <section class="clock-section">
+
+                <p class="today">
+                    日付：
+
+                    <span th:text="${today}">
+                        2026年8月19日
+                    </span>
+                </p>
+
+
+                <div class="clock-panel">
+
+                    <p class="clock-label">
+                        現在時刻
+                    </p>
+
+                    <h2 id="currentTime">
+                        00:00:00
+                    </h2>
+
+                </div>
+
+            </section>
+
+
+            <!-- 出勤・退勤 -->
+            <section class="attendance-section">
+
+                <!-- 出勤 -->
+                <div class="attendance-card">
+
+                    <form th:action="@{/attendance/start}"
+                          method="post">
+
+                        <button class="attendance-button"
+                                type="submit"
+                                th:disabled="${actualWorkingStartTime != null}">
+
+                            <span th:if="${actualWorkingStartTime == null}">
+                                出勤
+                            </span>
+
+                            <span th:if="${actualWorkingStartTime != null}">
+                                出勤済み
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <p class="attendance-time">
+                        出勤時間
+
+                        <span th:if="${actualWorkingStartTime != null}"
+                              th:text="${actualWorkingStartTime}">
+                            09:00
+                        </span>
+
+                        <span th:if="${actualWorkingStartTime == null}">
+                            --:--
+                        </span>
+                    </p>
+
+                </div>
+
+
+                <!-- 退勤 -->
+                <div class="attendance-card">
+
+                    <form th:action="@{/attendance/end}"
+                          method="post">
+
+                        <button class="attendance-button"
+                                type="submit"
+                                th:disabled="${actualWorkingStartTime == null or actualWorkingEndTime != null}">
+
+                            <span th:if="${actualWorkingEndTime == null}">
+                                退勤
+                            </span>
+
+                            <span th:if="${actualWorkingEndTime != null}">
+                                退勤済み
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <p class="attendance-time">
+                        退勤時間
+
+                        <span th:if="${actualWorkingEndTime != null}"
+                              th:text="${actualWorkingEndTime}">
+                            18:00
+                        </span>
+
+                        <span th:if="${actualWorkingEndTime == null}">
+                            --:--
+                        </span>
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- メニュー -->
+            <nav class="menu">
+
+                <a class="menu-card"
+                   th:href="@{/attendance}">
+
+                    <span class="menu-title">
+                        勤怠実績一覧
+                    </span>
+
+                    <span class="menu-description">
+                        月ごとの勤務実績を確認
+                    </span>
+
+                </a>
+
+
+                <a class="menu-card"
+                   th:href="@{/request}">
+
+                    <span class="menu-title">
+                        勤怠修正
+                    </span>
+
+                    <span class="menu-description">
+                        打刻時間の修正を申請
+                    </span>
+
+                </a>
+
+
+                <a class="menu-card"
+                   th:href="@{/paid-holiday}">
+
+                    <span class="menu-title">
+                        有給申請
+                    </span>
+
+                    <span class="menu-description">
+                        有給休暇を申請
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </main>
+
+    </div>
+
+
+    <!-- 現在時刻を更新 -->
     <script>
         function updateTime() {
+
             const now = new Date();
 
-            const time =
-                String(now.getHours()).padStart(2, '0') + ':' +
-                String(now.getMinutes()).padStart(2, '0') + ':' +
-                String(now.getSeconds()).padStart(2, '0');
+            const hours =
+                String(now.getHours()).padStart(2, "0");
 
-            document.getElementById('currentTime').textContent = time;
+            const minutes =
+                String(now.getMinutes()).padStart(2, "0");
+
+            const seconds =
+                String(now.getSeconds()).padStart(2, "0");
+
+            const time =
+                hours + ":" + minutes + ":" + seconds;
+
+            document
+                .getElementById("currentTime")
+                .textContent = time;
         }
 
         updateTime();
+
         setInterval(updateTime, 1000);
     </script>
 
 </body>
+
 </html>

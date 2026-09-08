@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.levtech.rookie.attendance.model.TbMstEmployee;
 import jp.levtech.rookie.attendance.model.TbTrnAttendance;
@@ -21,7 +22,9 @@ import jp.levtech.rookie.attendance.repository.TestRepository;
 public class HomeController {
 
     private final TestRepository testRepository;
+
     private final AttendanceRepository attendanceRepository;
+
 
     public HomeController(
             TestRepository testRepository,
@@ -32,66 +35,107 @@ public class HomeController {
     }
 
 
+    /**
+     * 従業員ホーム画面を表示する
+     */
     @GetMapping("/home")
     public String home(
             Principal principal,
             Model model) {
 
-        String employeeId = principal.getName();
+        // ログイン中の社員IDを取得
+        String employeeId =
+                principal.getName();
 
-        Optional<TbMstEmployee> employee =
-                testRepository.findByEmployeeId(employeeId);
+
+        // ログイン中の社員情報を取得
+        TbMstEmployee employee =
+                testRepository
+                    .findByEmployeeId(employeeId)
+                    .orElseThrow(() ->
+                        new IllegalStateException(
+                            "ログイン中の社員情報が見つかりません"
+                        )
+                    );
 
         model.addAttribute(
                 "employee",
-                employee.get()
+                employee
         );
 
-        LocalDate today = LocalDate.now();
+
+        // 本日の日付を取得
+        LocalDate today =
+                LocalDate.now();
 
         DateTimeFormatter dateFormatter =
-                DateTimeFormatter.ofPattern("yyyy年M月d日");
+                DateTimeFormatter.ofPattern(
+                        "yyyy年M月d日"
+                );
 
         model.addAttribute(
                 "today",
                 today.format(dateFormatter)
         );
 
-        Optional<TbTrnAttendance> attendance =
-                attendanceRepository.findByUserIdAndWorkingDay(
-                        employeeId,
-                        today
-                );
 
-        if (attendance.isPresent()) {
+        // 初期状態では出勤・退勤時刻をnullにする
+        model.addAttribute(
+                "actualWorkingStartTime",
+                null
+        );
 
-            TbTrnAttendance todayAttendance =
-                    attendance.get();
+        model.addAttribute(
+                "actualWorkingEndTime",
+                null
+        );
+
+
+        // 本日の勤怠情報を取得
+        Optional<TbTrnAttendance> attendanceOptional =
+                attendanceRepository
+                    .findByUserIdAndWorkingDay(
+                            employeeId,
+                            today
+                    );
+
+
+        // 本日の勤怠情報が存在する場合
+        if (attendanceOptional.isPresent()) {
+
+            TbTrnAttendance attendance =
+                    attendanceOptional.get();
 
             DateTimeFormatter timeFormatter =
-                    DateTimeFormatter.ofPattern("HH:mm");
+                    DateTimeFormatter.ofPattern(
+                            "HH:mm"
+                    );
 
 
-            // 実際の出勤時間
-            if (todayAttendance.getActualWorkingStartTime() != null) {
+            // 出勤時刻が登録されている場合
+            if (attendance
+                    .getActualWorkingStartTime()
+                    != null) {
 
                 model.addAttribute(
                         "actualWorkingStartTime",
-                        todayAttendance
-                                .getActualWorkingStartTime()
-                                .format(timeFormatter)
+                        attendance
+                            .getActualWorkingStartTime()
+                            .format(timeFormatter)
                 );
             }
 
 
-            // 実際の退勤時間
-            if (todayAttendance.getActualWorkingEndTime() != null) {
+            // 退勤時刻が登録されている場合
+            if (attendance
+                    .getActualWorkingEndTime()
+                    != null) {
 
                 model.addAttribute(
                         "actualWorkingEndTime",
-                        todayAttendance
-                                .getActualWorkingEndTime()
-                                .format(timeFormatter)
+                        attendance
+                            .getActualWorkingEndTime()
+                            .format(timeFormatter)
                 );
             }
         }
@@ -100,85 +144,199 @@ public class HomeController {
     }
 
 
-    // 出勤
+    /**
+     * 出勤を打刻する
+     */
     @PostMapping("/attendance/start")
-    public String start(Principal principal) {
+    public String start(
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
 
-        String employeeId = principal.getName();
+        // ログイン中の社員IDを取得
+        String employeeId =
+                principal.getName();
 
-        LocalDate today = LocalDate.now();
 
-        LocalTime nowTime = LocalTime.now();
+        // 本日の日付を取得
+        LocalDate today =
+                LocalDate.now();
 
+
+        // 現在時刻を取得
+        LocalTime nowTime =
+                LocalTime.now()
+                    .withNano(0);
+
+
+        // 本日の勤怠情報を取得
         Optional<TbTrnAttendance> existingAttendance =
-                attendanceRepository.findByUserIdAndWorkingDay(
-                        employeeId,
-                        today
-                );
+                attendanceRepository
+                    .findByUserIdAndWorkingDay(
+                            employeeId,
+                            today
+                    );
 
 
+        // 本日の勤怠情報がすでに存在する場合
         if (existingAttendance.isPresent()) {
 
             TbTrnAttendance attendance =
                     existingAttendance.get();
 
-            // 実際の出勤時間を保存
-            attendance.setActualWorkingStartTime(nowTime);
 
-            attendanceRepository.update(attendance);
+            // すでに出勤済みの場合は更新しない
+            if (attendance
+                    .getActualWorkingStartTime()
+                    != null) {
+
+                redirectAttributes.addFlashAttribute(
+                        "errorMessage",
+                        "本日の出勤打刻はすでに完了しています"
+                );
+
+                return "redirect:/home";
+            }
+
+
+            // 出勤時刻を保存
+            attendance.setActualWorkingStartTime(
+                    nowTime
+            );
+
+            attendanceRepository.update(
+                    attendance
+            );
 
         } else {
 
+            // 本日の勤怠情報が存在しない場合は新規作成
             TbTrnAttendance attendance =
                     new TbTrnAttendance();
 
             attendance.setAttendanceId(
                     UUID.randomUUID()
-                            .toString()
-                            .substring(0, 10)
+                        .toString()
+                        .substring(0, 10)
             );
 
-            attendance.setUserId(employeeId);
+            attendance.setUserId(
+                    employeeId
+            );
 
-            attendance.setWorkingDay(today);
+            attendance.setWorkingDay(
+                    today
+            );
 
-            // 実際の出勤時間
-            attendance.setActualWorkingStartTime(nowTime);
+            attendance.setActualWorkingStartTime(
+                    nowTime
+            );
 
-            attendanceRepository.insert(attendance);
+            attendanceRepository.insert(
+                    attendance
+            );
         }
+
+
+        redirectAttributes.addFlashAttribute(
+                "message",
+                "出勤を打刻しました"
+        );
 
         return "redirect:/home";
     }
 
 
-    // 退勤
+    /**
+     * 退勤を打刻する
+     */
     @PostMapping("/attendance/end")
-    public String end(Principal principal) {
+    public String end(
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
 
-        String employeeId = principal.getName();
+        // ログイン中の社員IDを取得
+        String employeeId =
+                principal.getName();
 
-        LocalDate today = LocalDate.now();
 
-        LocalTime nowTime = LocalTime.now();
+        // 本日の日付を取得
+        LocalDate today =
+                LocalDate.now();
 
+
+        // 現在時刻を取得
+        LocalTime nowTime =
+                LocalTime.now()
+                    .withNano(0);
+
+
+        // 本日の勤怠情報を取得
         Optional<TbTrnAttendance> existingAttendance =
-                attendanceRepository.findByUserIdAndWorkingDay(
-                        employeeId,
-                        today
-                );
+                attendanceRepository
+                    .findByUserIdAndWorkingDay(
+                            employeeId,
+                            today
+                    );
 
 
-        if (existingAttendance.isPresent()) {
+        // 本日の勤怠情報が存在しない場合
+        if (existingAttendance.isEmpty()) {
 
-            TbTrnAttendance attendance =
-                    existingAttendance.get();
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "出勤打刻を先に行ってください"
+            );
 
-            // 実際の退勤時間を保存
-            attendance.setActualWorkingEndTime(nowTime);
-
-            attendanceRepository.update(attendance);
+            return "redirect:/home";
         }
+
+
+        TbTrnAttendance attendance =
+                existingAttendance.get();
+
+
+        // 出勤時刻が登録されていない場合
+        if (attendance
+                .getActualWorkingStartTime()
+                == null) {
+
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "出勤打刻を先に行ってください"
+            );
+
+            return "redirect:/home";
+        }
+
+
+        // すでに退勤済みの場合
+        if (attendance
+                .getActualWorkingEndTime()
+                != null) {
+
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "本日の退勤打刻はすでに完了しています"
+            );
+
+            return "redirect:/home";
+        }
+
+
+        // 退勤時刻を保存
+        attendance.setActualWorkingEndTime(
+                nowTime
+        );
+
+        attendanceRepository.update(
+                attendance
+        );
+
+
+        redirectAttributes.addFlashAttribute(
+                "message",
+                "退勤を打刻しました"
+        );
 
         return "redirect:/home";
     }

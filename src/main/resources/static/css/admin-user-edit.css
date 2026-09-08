@@ -1,0 +1,681 @@
+@charset "UTF-8";
+
+/* ========================================
+   社員編集画面
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+/* ========================================
+   画面全体
+   ======================================== */
+
+body {
+    position: relative;
+    min-height: 100vh;
+    padding: 40px 24px 70px;
+    color: #183b35;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Meiryo,
+        sans-serif;
+    background:
+        radial-gradient(
+            circle at 12% 28%,
+            rgba(255, 255, 255, 0.8) 0 45px,
+            transparent 46px
+        ),
+        radial-gradient(
+            circle at 89% 20%,
+            rgba(255, 255, 255, 0.58) 0 105px,
+            transparent 106px
+        ),
+        linear-gradient(
+            135deg,
+            #f7fffd 0%,
+            #e7f8f3 40%,
+            #d4f1e9 72%,
+            #effbf8 100%
+        );
+    overflow-x: hidden;
+}
+
+/* 背景の波 */
+
+body::before {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    left: -10%;
+    bottom: -35%;
+    width: 120%;
+    height: 65%;
+    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(69, 190, 155, 0.27),
+            rgba(20, 128, 101, 0.35)
+        );
+    transform: rotate(-3deg);
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, 0.42),
+        0 -70px 0 rgba(106, 203, 174, 0.15);
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    left: -15%;
+    bottom: -47%;
+    width: 130%;
+    height: 68%;
+    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0.65),
+            rgba(72, 177, 146, 0.22),
+            rgba(255, 255, 255, 0.56)
+        );
+    transform: rotate(4deg);
+    pointer-events: none;
+}
+
+/* ========================================
+   ヘッダー
+   ======================================== */
+
+.header {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    width: 1050px;
+    max-width: 100%;
+    min-height: 110px;
+    margin: 0 auto;
+    padding: 25px 34px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #043c32 0%,
+            #075748 55%,
+            #08705b 100%
+        );
+    border-radius: 16px 16px 0 0;
+    box-shadow:
+        0 16px 35px rgba(6, 72, 59, 0.22);
+}
+
+.company-information {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.admin-information {
+    padding: 12px 18px;
+    color: #def8f0;
+    background: rgba(255, 255, 255, 0.11);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.admin-information span {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* ========================================
+   ヘッダー右側
+   ======================================== */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+/* ========================================
+   ホームへ戻る
+   白背景
+   ======================================== */
+
+.header-home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 165px;
+    min-height: 45px;
+    padding: 10px 18px;
+    color: #075748;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow:
+        0 7px 16px rgba(0, 38, 30, 0.2);
+    transition:
+        transform 0.2s,
+        color 0.2s,
+        background-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.header-home-link:hover {
+    color: #043c32;
+    background: #e8f8f3;
+    transform: translateY(-2px);
+    box-shadow:
+        0 10px 20px rgba(0, 38, 30, 0.27);
+}
+
+/* ========================================
+   ログアウト
+   ======================================== */
+
+.logout-button {
+    min-width: 120px;
+    min-height: 45px;
+    padding: 10px 18px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        background-color 0.2s;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+}
+
+/* ========================================
+   画面タイトル
+   ======================================== */
+
+body > h1 {
+    position: relative;
+    z-index: 1;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 23px 36px;
+    color: #174b40;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid #c9e6dd;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================
+   更新メッセージ
+   ======================================== */
+
+body > p {
+    position: relative;
+    z-index: 1;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 14px 30px;
+    color: #12624f;
+    background: #dff5ed;
+    border-right: 1px solid #a7daca;
+    border-bottom: 1px solid #a7daca;
+    border-left: 1px solid #a7daca;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* ========================================
+   社員編集フォーム
+   ======================================== */
+
+.employee-edit-form {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 24px 30px;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 40px 55px 45px;
+    background: rgba(255, 255, 255, 0.93);
+    box-shadow:
+        0 18px 40px rgba(38, 105, 87, 0.14);
+}
+
+.employee-edit-form > div {
+    min-width: 0;
+}
+
+.employee-edit-form label {
+    display: block;
+    margin-bottom: 9px;
+    color: #174b40;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.employee-edit-form input,
+.employee-edit-form select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 13px;
+    color: #173f37;
+    background: #ffffff;
+    border: 1px solid #b9d4cc;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.employee-edit-form select {
+    cursor: pointer;
+}
+
+.employee-edit-form input:focus,
+.employee-edit-form select:focus {
+    border-color: #0c846a;
+    box-shadow:
+        0 0 0 4px rgba(12, 132, 106, 0.13);
+}
+
+/* 変更できない社員ID */
+
+#employeeId {
+    color: #5f756f;
+    background: #edf3f1;
+    cursor: not-allowed;
+}
+
+#employeeId + span {
+    display: block;
+    margin-top: 7px;
+    color: #687d77;
+    font-size: 12px;
+}
+
+/* 在籍状況 */
+
+.employee-edit-form > div:last-child {
+    grid-column: 1 / -1;
+}
+
+/* 区切り線を消す */
+
+body > hr {
+    display: none;
+}
+
+/* ========================================
+   パスワード再設定
+   ======================================== */
+
+body > section {
+    position: relative;
+    z-index: 1;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 35px 55px 45px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.97),
+            rgba(231, 248, 242, 0.97)
+        );
+    border-top: 1px solid #c7e5dc;
+}
+
+body > section h2 {
+    margin: 0 0 12px;
+    color: #174b40;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+body > section > p {
+    margin: 0 0 22px;
+    color: #5b736c;
+    font-size: 14px;
+}
+
+/* 発行されたパスワード情報 */
+
+body > section > div {
+    margin-bottom: 25px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #c4e2d9;
+    border-radius: 10px;
+}
+
+body > section > div p {
+    margin: 16px 0 8px;
+    color: #174b40;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+body > section > div p:first-child {
+    margin-top: 0;
+}
+
+body > section > div input {
+    width: calc(100% - 120px);
+    min-height: 45px;
+    padding: 10px 12px;
+    color: #174b40;
+    background: #f2f7f5;
+    border: 1px solid #b9d4cc;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+body > section > div button {
+    min-width: 95px;
+    min-height: 45px;
+    margin-left: 10px;
+    color: #ffffff;
+    background: #397a69;
+    border: none;
+    border-radius: 7px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        background-color 0.2s;
+}
+
+body > section > div button:hover {
+    background: #286655;
+    transform: translateY(-2px);
+}
+
+/* 注意メッセージ */
+
+.password-warning {
+    margin-top: 20px !important;
+    padding: 11px 14px;
+    color: #9c4f13 !important;
+    background: #fff3e6;
+    border: 1px solid #edc397;
+    border-radius: 7px;
+}
+
+/* ========================================
+   パスワード再設定ボタン
+   ======================================== */
+
+body > section > form {
+    margin: 0;
+}
+
+body > section > form button {
+    min-height: 47px;
+    padding: 11px 22px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #b86824,
+            #995019
+        );
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+        0 8px 18px rgba(153, 80, 25, 0.2);
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+body > section > form button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow:
+        0 11px 22px rgba(153, 80, 25, 0.27);
+}
+
+/* ========================================
+   画面一番下の操作ボタン
+   ======================================== */
+
+.bottom-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 28px 30px 35px;
+    background: rgba(255, 255, 255, 0.93);
+    border-top: 1px solid #c7e5dc;
+    border-radius: 0 0 16px 16px;
+    box-shadow:
+        0 22px 55px rgba(38, 105, 87, 0.18);
+}
+
+/* 更新・社員一覧へ戻る共通 */
+
+.update-button,
+.employee-list-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 190px;
+    min-height: 50px;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+/* 更新 */
+
+.update-button {
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #159b7c 0%,
+            #08705a 100%
+        );
+    border: none;
+    box-shadow:
+        0 8px 18px rgba(8, 112, 90, 0.25);
+}
+
+.update-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow:
+        0 11px 23px rgba(8, 112, 90, 0.32);
+}
+
+/* 社員一覧へ戻る */
+
+.employee-list-link {
+    color: #315d53;
+    background: #ffffff;
+    border: 1px solid #a9c9c0;
+    box-shadow:
+        0 7px 16px rgba(35, 91, 77, 0.09);
+}
+
+.employee-list-link:hover {
+    color: #086b56;
+    background: #f3fcf9;
+    border-color: #0d9273;
+    transform: translateY(-2px);
+}
+
+/* ========================================
+   タブレット
+   ======================================== */
+
+@media screen and (max-width: 850px) {
+
+    body {
+        padding: 20px 14px 50px;
+    }
+
+    .header {
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        padding: 22px;
+    }
+
+    .company-information {
+        grid-column: 1 / -1;
+    }
+
+    .header-home-link,
+    .logout-button {
+        min-width: auto;
+        padding: 10px 13px;
+        font-size: 13px;
+    }
+
+    body > h1 {
+        padding: 21px 24px;
+        font-size: 22px;
+    }
+
+    .employee-edit-form,
+    body > section {
+        padding: 30px 25px 35px;
+    }
+}
+
+/* ========================================
+   スマートフォン
+   ======================================== */
+
+@media screen and (max-width: 600px) {
+
+    .header {
+        grid-template-columns: 1fr;
+    }
+
+    .company-information {
+        grid-column: auto;
+        font-size: 19px;
+    }
+
+    .admin-information {
+        width: 100%;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-home-link,
+    .logout-form {
+        width: 50%;
+    }
+
+    .logout-button {
+        width: 100%;
+    }
+
+    .employee-edit-form {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 25px 18px 30px;
+    }
+
+    .employee-edit-form > div:last-child {
+        grid-column: auto;
+    }
+
+    body > section {
+        padding: 28px 18px 32px;
+    }
+
+    body > section > div {
+        padding: 18px;
+    }
+
+    body > section > div input {
+        width: 100%;
+    }
+
+    body > section > div button {
+        width: 100%;
+        margin: 8px 0 0;
+    }
+
+    .bottom-actions {
+        flex-direction: column;
+        padding: 24px 20px 30px;
+    }
+
+    .update-button,
+    .employee-list-link {
+        width: 100%;
+    }
+}
