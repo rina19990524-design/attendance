@@ -16,14 +16,14 @@ CREATE TABLE tb_mst_employee (
 
 CREATE TABLE tb_trn_attendance (
     attendance_id VARCHAR(10) PRIMARY KEY,
-    employee_id VARCHAR(10) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
     working_day DATE NOT NULL,
     working_start_time TIME,
     working_end_time TIME,
     actual_working_start_time TIME,
     actual_working_end_time TIME,
 
-    FOREIGN KEY (employee_id)
+    FOREIGN KEY (user_id)
         REFERENCES tb_mst_employee(employee_id)
 );
 

@@ -1,19 +1,23 @@
 package jp.levtech.rookie.attendance.controller;
 
 import java.security.Principal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +36,8 @@ public class AttendanceController {
 
     private final TestRepository testRepository;
 
-    private final AttendanceRepository attendanceRepository;
+    private final AttendanceRepository
+            attendanceRepository;
 
     private final AttendanceRequestRepository
             attendanceRequestRepository;
@@ -59,18 +64,16 @@ public class AttendanceController {
      * 勤怠実績一覧を表示する
      */
     @GetMapping("/attendance")
+    @Transactional(readOnly = true)
     public String attendance(
             Principal principal,
             Model model,
             @RequestParam(required = false)
             String month) {
 
-        // ログイン中の社員ID
         String employeeId =
                 principal.getName();
 
-
-        // ログイン中の社員情報
         TbMstEmployee employee =
                 testRepository
                     .findByEmployeeId(employeeId)
@@ -86,7 +89,6 @@ public class AttendanceController {
         );
 
 
-        // 表示対象月
         YearMonth targetMonth;
 
         if (month == null
@@ -97,30 +99,34 @@ public class AttendanceController {
 
         } else {
 
-            targetMonth =
-                    YearMonth.parse(month);
+            try {
+
+                targetMonth =
+                        YearMonth.parse(month);
+
+            } catch (DateTimeParseException exception) {
+
+                targetMonth =
+                        YearMonth.now();
+            }
         }
 
 
-        // 表示月の開始日
         LocalDate startDate =
                 targetMonth.atDay(1);
 
-        // 表示月の終了日
         LocalDate endDate =
                 targetMonth.atEndOfMonth();
 
 
-        // ログイン中の社員の勤怠情報を取得
         List<TbTrnAttendance> allAttendanceList =
                 attendanceRepository
                     .findByUserId(employeeId);
 
 
-        /*
-         * 選択月の勤怠情報を
-         * 日付をキーにしたMapへ変換する
-         */
+        YearMonth selectedMonth =
+                targetMonth;
+
         Map<LocalDate, TbTrnAttendance> attendanceMap =
                 allAttendanceList
                     .stream()
@@ -128,7 +134,7 @@ public class AttendanceController {
                         attendance.getWorkingDay() != null
                         && YearMonth
                             .from(attendance.getWorkingDay())
-                            .equals(targetMonth)
+                            .equals(selectedMonth)
                     )
                     .collect(
                         Collectors.toMap(
@@ -139,9 +145,6 @@ public class AttendanceController {
                     );
 
 
-        /*
-         * 表示月の勤怠修正申請状態を取得する
-         */
         List<TbTrnAttendanceRequest> requestStatusList =
                 attendanceRequestRepository
                     .findStatusesByUserIdAndPeriod(
@@ -151,15 +154,6 @@ public class AttendanceController {
                     );
 
 
-        /*
-         * 勤怠IDと申請フラグのMapを作成する
-         *
-         * キー：
-         * attendanceId
-         *
-         * 値：
-         * requestFlag
-         */
         Map<String, Integer> requestStatusMap =
                 requestStatusList
                     .stream()
@@ -179,9 +173,6 @@ public class AttendanceController {
                     );
 
 
-        /*
-         * 表示月の1日から月末まで作成する
-         */
         List<TbTrnAttendance> monthlyAttendanceList =
                 IntStream
                     .rangeClosed(
@@ -191,7 +182,7 @@ public class AttendanceController {
                     .mapToObj(day -> {
 
                         LocalDate workingDay =
-                                targetMonth.atDay(day);
+                                selectedMonth.atDay(day);
 
                         TbTrnAttendance attendance =
                                 attendanceMap.get(
@@ -199,13 +190,8 @@ public class AttendanceController {
                                 );
 
 
-                        // DBに勤怠情報が存在する場合
                         if (attendance != null) {
 
-                            /*
-                             * この勤怠に対応する
-                             * 申請状態を設定する
-                             */
                             Integer requestFlag =
                                     requestStatusMap.get(
                                             attendance
@@ -220,10 +206,6 @@ public class AttendanceController {
                         }
 
 
-                        /*
-                         * DBに勤怠情報が存在しない場合は
-                         * 日付だけ設定した表示用データを作る
-                         */
                         TbTrnAttendance emptyAttendance =
                                 new TbTrnAttendance();
 
@@ -249,25 +231,21 @@ public class AttendanceController {
                     .toList();
 
 
-        // 勤怠一覧
         model.addAttribute(
                 "attendanceList",
                 monthlyAttendanceList
         );
 
-        // 表示月
         model.addAttribute(
                 "targetMonth",
                 targetMonth
         );
 
-        // 前月
         model.addAttribute(
                 "previousMonth",
                 targetMonth.minusMonths(1)
         );
 
-        // 翌月
         model.addAttribute(
                 "nextMonth",
                 targetMonth.plusMonths(1)
@@ -279,147 +257,327 @@ public class AttendanceController {
 
 
     /**
-     * 勤務時間または公休をまとめて登録する
+     * 複数の勤務予定を登録・変更する
      */
     @PostMapping("/attendance/register")
+    @Transactional
     public String register(
             Principal principal,
 
-            @RequestParam
-            LocalDate startDate,
+            @RequestParam(
+                name = "workingDates",
+                required = false
+            )
+            List<String> workingDateValues,
 
-            @RequestParam
-            LocalDate endDate,
+            @RequestParam(
+                name = "workTypes",
+                required = false
+            )
+            List<String> workTypeValues,
 
-            @RequestParam(required = false)
-            LocalTime workingStartTime,
+            @RequestParam(
+                name = "workingStartTimes",
+                required = false
+            )
+            List<String> workingStartTimeValues,
 
-            @RequestParam(required = false)
-            LocalTime workingEndTime,
-
-            @RequestParam(defaultValue = "false")
-            boolean excludeWeekend,
-
-            @RequestParam(defaultValue = "1")
-            int workType,
+            @RequestParam(
+                name = "workingEndTimes",
+                required = false
+            )
+            List<String> workingEndTimeValues,
 
             RedirectAttributes redirectAttributes) {
 
-        YearMonth redirectMonth =
-                YearMonth.from(startDate);
+        if (workingDateValues == null
+                || workingDateValues.isEmpty()) {
 
-
-        // 開始日と終了日の確認
-        if (startDate.isAfter(endDate)) {
-
-            redirectAttributes.addFlashAttribute(
-                    "errorMessage",
-                    "開始日は終了日以前の日付にしてください"
+            return redirectWithError(
+                    YearMonth.now(),
+                    "登録する勤務日を入力してください",
+                    redirectAttributes
             );
-
-            return "redirect:/attendance?month="
-                    + redirectMonth;
         }
 
 
-        // 勤務区分の確認
-        if (workType
-                != TbTrnAttendance.WORK_TYPE_WORKING_DAY
-                && workType
-                != TbTrnAttendance.WORK_TYPE_HOLIDAY) {
+        int scheduleCount =
+                workingDateValues.size();
 
-            redirectAttributes.addFlashAttribute(
-                    "errorMessage",
-                    "勤務区分が正しくありません"
+        if (workTypeValues == null
+                || workingStartTimeValues == null
+                || workingEndTimeValues == null
+                || workTypeValues.size() != scheduleCount
+                || workingStartTimeValues.size()
+                    != scheduleCount
+                || workingEndTimeValues.size()
+                    != scheduleCount) {
+
+            return redirectWithError(
+                    YearMonth.now(),
+                    "勤務予定の入力内容が正しくありません",
+                    redirectAttributes
             );
-
-            return "redirect:/attendance?month="
-                    + redirectMonth;
         }
 
 
-        /*
-         * 出勤日の場合だけ
-         * 勤務開始・終了時刻を確認する
-         */
-        if (workType
-                == TbTrnAttendance.WORK_TYPE_WORKING_DAY) {
+        YearMonth redirectMonth;
 
-            if (workingStartTime == null
-                    || workingEndTime == null) {
+        try {
 
-                redirectAttributes.addFlashAttribute(
-                        "errorMessage",
-                        "勤務開始時間と勤務終了時間を入力してください"
+            redirectMonth =
+                    YearMonth.from(
+                            LocalDate.parse(
+                                    workingDateValues.get(0)
+                            )
+                    );
+
+        } catch (RuntimeException exception) {
+
+            redirectMonth =
+                    YearMonth.now();
+        }
+
+
+        List<WorkSchedule> schedules =
+                new ArrayList<>();
+
+        Set<LocalDate> selectedDates =
+                new HashSet<>();
+
+
+        for (int index = 0;
+                index < scheduleCount;
+                index++) {
+
+            LocalDate workingDate;
+
+            try {
+
+                workingDate =
+                        LocalDate.parse(
+                                workingDateValues.get(index)
+                        );
+
+            } catch (RuntimeException exception) {
+
+                return redirectWithError(
+                        redirectMonth,
+                        (index + 1)
+                            + "行目の勤務日が正しくありません",
+                        redirectAttributes
                 );
-
-                return "redirect:/attendance?month="
-                        + redirectMonth;
             }
 
 
-            if (!workingStartTime.isBefore(
-                    workingEndTime
-            )) {
+            if (!selectedDates.add(workingDate)) {
 
-                redirectAttributes.addFlashAttribute(
-                        "errorMessage",
-                        "勤務開始時間は勤務終了時間より前にしてください"
+                return redirectWithError(
+                        redirectMonth,
+                        workingDate
+                            + "が複数入力されています",
+                        redirectAttributes
                 );
-
-                return "redirect:/attendance?month="
-                        + redirectMonth;
             }
+
+
+            int workType;
+
+            try {
+
+                workType =
+                        Integer.parseInt(
+                                workTypeValues.get(index)
+                        );
+
+            } catch (NumberFormatException exception) {
+
+                return redirectWithError(
+                        redirectMonth,
+                        (index + 1)
+                            + "行目の勤務区分が正しくありません",
+                        redirectAttributes
+                );
+            }
+
+
+            if (workType
+                    != TbTrnAttendance
+                        .WORK_TYPE_WORKING_DAY
+                    && workType
+                    != TbTrnAttendance
+                        .WORK_TYPE_HOLIDAY) {
+
+                return redirectWithError(
+                        redirectMonth,
+                        (index + 1)
+                            + "行目の勤務区分が正しくありません",
+                        redirectAttributes
+                );
+            }
+
+
+            LocalTime workingStartTime =
+                    null;
+
+            LocalTime workingEndTime =
+                    null;
+
+
+            if (workType
+                    == TbTrnAttendance
+                        .WORK_TYPE_WORKING_DAY) {
+
+                String startTimeValue =
+                        workingStartTimeValues.get(index);
+
+                String endTimeValue =
+                        workingEndTimeValues.get(index);
+
+
+                if (startTimeValue == null
+                        || startTimeValue.isBlank()
+                        || endTimeValue == null
+                        || endTimeValue.isBlank()) {
+
+                    return redirectWithError(
+                            redirectMonth,
+                            (index + 1)
+                                + "行目の勤務時間を入力してください",
+                            redirectAttributes
+                    );
+                }
+
+
+                try {
+
+                    workingStartTime =
+                            LocalTime.parse(
+                                    startTimeValue
+                            );
+
+                    workingEndTime =
+                            LocalTime.parse(
+                                    endTimeValue
+                            );
+
+                } catch (DateTimeParseException exception) {
+
+                    return redirectWithError(
+                            redirectMonth,
+                            (index + 1)
+                                + "行目の勤務時間が正しくありません",
+                            redirectAttributes
+                    );
+                }
+
+
+                if (!workingStartTime.isBefore(
+                        workingEndTime
+                )) {
+
+                    return redirectWithError(
+                            redirectMonth,
+                            (index + 1)
+                                + "行目の勤務開始時間は"
+                                + "勤務終了時間より前にしてください",
+                            redirectAttributes
+                    );
+                }
+            }
+
+
+            schedules.add(
+                    new WorkSchedule(
+                            workingDate,
+                            workType,
+                            workingStartTime,
+                            workingEndTime
+                    )
+            );
         }
 
 
         String employeeId =
                 principal.getName();
 
-        LocalDate date =
-                startDate;
 
+        /*
+         * 保存前に打刻済みデータが含まれていないか確認する
+         */
+        for (WorkSchedule schedule : schedules) {
 
-        // 開始日から終了日まで繰り返す
-        while (!date.isAfter(endDate)) {
+            Optional<TbTrnAttendance> existingAttendance =
+                    attendanceRepository
+                        .findByUserIdAndWorkingDay(
+                                employeeId,
+                                schedule.workingDate()
+                        );
 
-            boolean isWeekend =
-                    date.getDayOfWeek()
-                        == DayOfWeek.SATURDAY
-                    || date.getDayOfWeek()
-                        == DayOfWeek.SUNDAY;
+            if (existingAttendance.isPresent()
+                    && isClocked(
+                        existingAttendance.get()
+                    )) {
 
-
-            if (!excludeWeekend
-                    || !isWeekend) {
-
-                saveWorkSchedule(
-                        employeeId,
-                        date,
-                        workingStartTime,
-                        workingEndTime,
-                        workType
+                return redirectWithError(
+                        redirectMonth,
+                        schedule.workingDate()
+                            + "は打刻済みのため変更できません",
+                        redirectAttributes
                 );
             }
-
-
-            date =
-                    date.plusDays(1);
         }
 
 
-        String message;
+        int insertedCount =
+                0;
 
-        if (workType
-                == TbTrnAttendance.WORK_TYPE_HOLIDAY) {
+        int updatedCount =
+                0;
+
+
+        for (WorkSchedule schedule : schedules) {
+
+            boolean inserted =
+                    saveWorkSchedule(
+                            employeeId,
+                            schedule
+                    );
+
+            if (inserted) {
+
+                insertedCount++;
+
+            } else {
+
+                updatedCount++;
+            }
+        }
+
+
+        String message =
+                "勤務予定を登録しました";
+
+        if (insertedCount > 0
+                && updatedCount > 0) {
 
             message =
-                    "公休を登録しました";
+                    insertedCount
+                    + "件を登録し、"
+                    + updatedCount
+                    + "件を変更しました";
 
-        } else {
+        } else if (updatedCount > 0) {
 
             message =
-                    "勤務時間を登録しました";
+                    updatedCount
+                    + "件の勤務予定を変更しました";
+
+        } else if (insertedCount > 0) {
+
+            message =
+                    insertedCount
+                    + "件の勤務予定を登録しました";
         }
 
 
@@ -435,62 +593,136 @@ public class AttendanceController {
 
 
     /**
-     * 1日分の勤務予定を保存する
+     * 打刻済みか確認する
      */
-    private void saveWorkSchedule(
+    private boolean isClocked(
+            TbTrnAttendance attendance) {
+
+        return attendance.getActualWorkingStartTime()
+                    != null
+                || attendance.getActualWorkingEndTime()
+                    != null;
+    }
+
+
+    /**
+     * 1日分の勤務予定を保存する
+     *
+     * @return 新規登録の場合true、更新の場合false
+     */
+    private boolean saveWorkSchedule(
             String employeeId,
-            LocalDate workingDay,
-            LocalTime workingStartTime,
-            LocalTime workingEndTime,
-            int workType) {
+            WorkSchedule schedule) {
 
         Optional<TbTrnAttendance> existingAttendance =
                 attendanceRepository
                     .findByUserIdAndWorkingDay(
                             employeeId,
-                            workingDay
+                            schedule.workingDate()
                     );
 
 
-        TbTrnAttendance attendance;
-
-
-        // 既存データがある場合
         if (existingAttendance.isPresent()) {
 
-            attendance =
+            TbTrnAttendance attendance =
                     existingAttendance.get();
 
-        } else {
 
-            // 既存データがない場合
-            attendance =
-                    new TbTrnAttendance();
+            if (isClocked(attendance)) {
 
-            attendance.setAttendanceId(
-                    UUID.randomUUID()
-                        .toString()
-                        .substring(0, 10)
+                throw new IllegalStateException(
+                        schedule.workingDate()
+                            + "は打刻済みのため変更できません"
+                );
+            }
+
+
+            setWorkSchedule(
+                    attendance,
+                    schedule
             );
 
-            attendance.setUserId(
-                    employeeId
-            );
 
-            attendance.setWorkingDay(
-                    workingDay
-            );
+            int updatedCount =
+                    attendanceRepository
+                        .updateWorkSchedule(
+                                attendance
+                        );
+
+
+            /*
+             * SQL側でも打刻済み更新を防止している。
+             * 更新件数が0件なら更新直前に打刻された可能性がある。
+             */
+            if (updatedCount != 1) {
+
+                throw new IllegalStateException(
+                        schedule.workingDate()
+                            + "は打刻済みのため変更できません"
+                );
+            }
+
+
+            return false;
         }
 
 
-        attendance.setWorkType(
-                workType
+        TbTrnAttendance attendance =
+                new TbTrnAttendance();
+
+        attendance.setAttendanceId(
+                UUID.randomUUID()
+                    .toString()
+                    .substring(0, 10)
+        );
+
+        attendance.setUserId(
+                employeeId
+        );
+
+        attendance.setWorkingDay(
+                schedule.workingDate()
+        );
+
+        attendance.setActualWorkingStartTime(
+                null
+        );
+
+        attendance.setActualWorkingEndTime(
+                null
         );
 
 
-        // 公休の場合
-        if (workType
-                == TbTrnAttendance.WORK_TYPE_HOLIDAY) {
+        setWorkSchedule(
+                attendance,
+                schedule
+        );
+
+
+        attendanceRepository.insert(
+                attendance
+        );
+
+
+        return true;
+    }
+
+
+    /**
+     * 勤務予定を勤怠モデルへ設定する
+     */
+    private void setWorkSchedule(
+            TbTrnAttendance attendance,
+            WorkSchedule schedule) {
+
+        attendance.setWorkType(
+                schedule.workType()
+        );
+
+
+        if (schedule.workType()
+                == TbTrnAttendance
+                    .WORK_TYPE_HOLIDAY) {
 
             attendance.setWorkingStartTime(
                     null
@@ -502,29 +734,42 @@ public class AttendanceController {
 
         } else {
 
-            // 出勤日の場合
             attendance.setWorkingStartTime(
-                    workingStartTime
+                    schedule.workingStartTime()
             );
 
             attendance.setWorkingEndTime(
-                    workingEndTime
+                    schedule.workingEndTime()
             );
         }
+    }
 
 
-        // 更新または登録
-        if (existingAttendance.isPresent()) {
+    /**
+     * エラーを設定して勤怠画面へ戻す
+     */
+    private String redirectWithError(
+            YearMonth redirectMonth,
+            String errorMessage,
+            RedirectAttributes redirectAttributes) {
 
-            attendanceRepository.update(
-                    attendance
-            );
+        redirectAttributes.addFlashAttribute(
+                "errorMessage",
+                errorMessage
+        );
 
-        } else {
+        return "redirect:/attendance?month="
+                + redirectMonth;
+    }
 
-            attendanceRepository.insert(
-                    attendance
-            );
-        }
+
+    /**
+     * 画面から受け取った勤務予定
+     */
+    private record WorkSchedule(
+            LocalDate workingDate,
+            int workType,
+            LocalTime workingStartTime,
+            LocalTime workingEndTime) {
     }
 }

@@ -4,7 +4,6 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -12,244 +11,435 @@
 
     <title>勤怠申請一覧</title>
 
+    <link rel="stylesheet"
+          th:href="@{/css/admin-attendance-requests.css}">
 </head>
 
 <body>
 
+    <div class="page-container">
 
-    <!-- 上部の管理者情報 -->
-    <header>
+        <!-- ========================================
+             上部の管理者情報
+             ======================================== -->
+        <header class="page-header">
 
-        <div>
-            会社名：株式会社アテンダンス
-        </div>
+            <div class="company-info">
+                会社名：株式会社アテンダンス
+            </div>
 
-        <div>
+            <div class="header-right">
 
-            管理者名：
+                <div class="admin-info">
+                    管理者名：
 
-            <span th:text="${admin.employeeName}">
-            </span>
+                    <span th:text="${admin.employeeName}">
+                        山田太郎
+                    </span>
+                </div>
 
-        </div>
+                <!-- ホームへ戻る -->
+                <a class="header-home-link"
+                   th:href="@{/admin}">
+                    ◀ ホームへ戻る
+                </a>
 
+                <!-- ログアウト -->
+                <form class="logout-form"
+                      th:action="@{/logout}"
+                      method="post">
 
-        <!-- ログアウト -->
-        <form th:action="@{/logout}"
-              method="post">
+                    <button class="logout-button"
+                            type="submit">
+                        ログアウト
+                    </button>
 
-            <button type="submit">
-                ログアウト
-            </button>
+                </form>
 
-        </form>
+            </div>
 
-    </header>
+        </header>
 
 
-    <!-- 画面タイトル -->
-    <h1>勤怠申請一覧</h1>
+        <!-- ========================================
+             メイン部分
+             ======================================== -->
+        <main class="main-content">
 
+            <!-- 画面タイトル -->
+            <section class="page-title">
 
-    <!-- 承認完了メッセージ -->
-    <p th:if="${message}"
-       th:text="${message}">
+                <h1>勤怠申請一覧</h1>
 
-        承認しました
+                <p>
+                    社員から申請された勤怠修正を確認・承認します
+                </p>
 
-    </p>
+            </section>
 
 
-    <!-- エラーメッセージ -->
-    <p th:if="${errorMessage}"
-       th:text="${errorMessage}">
+            <!-- ========================================
+                 メッセージ
+                 ======================================== -->
 
-        承認する申請を選択してください
+            <!-- 承認完了メッセージ -->
+            <div class="message success-message"
+                 th:if="${message}"
+                 th:text="${message}">
 
-    </p>
+                承認しました
 
+            </div>
 
-    <!-- 申請が存在しない場合 -->
-    <p th:if=
-       "${attendanceRequests == null or attendanceRequests.isEmpty()}">
 
-        承認待ちの勤怠申請はありません。
+            <!-- エラーメッセージ -->
+            <div class="message error-message"
+                 th:if="${errorMessage}"
+                 th:text="${errorMessage}">
 
-    </p>
+                承認する申請を選択してください
 
+            </div>
 
-    <!--
-        勤怠申請承認フォーム
 
-        通常の送信先は一括承認。
-        各行の承認ボタンではformactionを使って、
-        1件承認用のURLへ送信する。
-    -->
-    <form th:if=
-          "${attendanceRequests != null and !attendanceRequests.isEmpty()}"
-          th:action="@{/admin/attendance-requests/approve-selected}"
-          method="post">
+            <!-- ========================================
+                 申請が存在しない場合
+                 ======================================== -->
+            <section class="request-list-card"
+                     th:if="${attendanceRequests == null
+                         or attendanceRequests.isEmpty()}">
 
+                <div class="list-heading">
 
-        <!-- 一括承認ボタン -->
-        <div>
+                    <h2>承認待ちの申請</h2>
 
-            <button type="submit"
-                    onclick=
-                    "return confirm(
-                        '選択した申請を一括承認しますか？'
-                    );">
+                    <span class="result-count">
+                        0件
+                    </span>
 
-                一括承認
+                </div>
 
-            </button>
+                <div class="no-data">
+                    承認待ちの勤怠申請はありません。
+                </div>
 
-        </div>
+            </section>
 
 
-        <br>
+            <!-- ========================================
+                 勤怠申請承認フォーム
+                 ======================================== -->
+            <form class="approval-form"
+                  th:if="${attendanceRequests != null
+                      and !attendanceRequests.isEmpty()}"
+                  th:action=
+                  "@{/admin/attendance-requests/approve-selected}"
+                  method="post">
 
+                <section class="request-list-card">
 
-        <!-- 勤怠申請一覧 -->
-        <table border="1">
+                    <div class="list-heading">
 
-            <thead>
+                        <div>
 
-                <tr>
+                            <h2>承認待ちの申請</h2>
 
-                    <th>
-                        選択
-                    </th>
+                            <p class="list-description">
+                                内容を確認して承認してください
+                            </p>
 
-                    <th>
-                        社員ID
-                    </th>
+                        </div>
 
-                    <th>
-                        社員名
-                    </th>
+                        <span class="result-count"
+                              th:text="${#lists.size(attendanceRequests)
+                                  + '件'}">
+                            1件
+                        </span>
 
-                    <th>
-                        部署名
-                    </th>
+                    </div>
 
-                    <th>
-                        変更前
-                    </th>
 
-                    <th>
-                        変更後
-                    </th>
+                    <!-- 一括承認ボタン -->
+                    <div class="bulk-actions">
 
-                    <th>
-                        申請種別
-                    </th>
-
-                    <th>
-                        申請理由
-                    </th>
-
-                    <th>
-                        承認
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-
-                <!-- DBから取得した申請を1件ずつ表示 -->
-                <tr th:each=
-                    "request : ${attendanceRequests}">
-
-
-                    <!-- 一括承認で使用するチェックボックス -->
-                    <td>
-
-                        <input type="checkbox"
-                               name="requestIds"
-                               th:value=
-                               "${request.attendanceRequestId}">
-
-                    </td>
-
-
-                    <!-- 社員ID -->
-                    <td th:text="${request.employeeId}">
-                    </td>
-
-
-                    <!-- 社員名 -->
-                    <td th:text="${request.employeeName}">
-                    </td>
-
-
-                    <!-- 部署名 -->
-                    <td th:text="${request.departmentName}">
-                    </td>
-
-
-                    <!-- 変更前 -->
-                    <td th:text="${request.beforeTime}">
-                    </td>
-
-
-                    <!-- 変更後 -->
-                    <td th:text="${request.afterTime}">
-                    </td>
-
-
-                    <!-- 申請種別 -->
-                    <td th:text="${request.requestTypeName}">
-                    </td>
-
-
-                    <!-- 申請理由 -->
-                    <td th:text="${request.requestReason}">
-                    </td>
-
-
-                    <!-- 1件承認 -->
-                    <td>
-
-                        <button type="submit"
-                                th:formaction=
-                                "@{/admin/attendance-requests/{requestId}/approve(
-                                    requestId=${request.attendanceRequestId}
-                                )}"
+                        <button class="bulk-approve-button"
+                                type="submit"
                                 onclick=
                                 "return confirm(
-                                    'この申請を承認しますか？'
+                                    '選択した申請を一括承認しますか？'
                                 );">
 
-                            承認
+                            選択した申請を一括承認
 
                         </button>
 
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </form>
+                    </div>
 
 
-    <hr>
+                    <!-- ========================================
+                         勤怠申請一覧
+                         ======================================== -->
+                    <div class="table-scroll">
+
+                        <table class="request-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <!-- 全選択 -->
+                                    <th class="select-column">
+
+                                        <label class="select-all-label">
+
+                                            <input id="selectAll"
+                                                   class="request-checkbox"
+                                                   type="checkbox"
+                                                   aria-label=
+                                                   "すべての勤怠申請を選択">
+
+                                            <span>選択</span>
+
+                                        </label>
+
+                                    </th>
+
+                                    <th>社員ID</th>
+
+                                    <th>社員名</th>
+
+                                    <th>部署名</th>
+
+                                    <th>変更前</th>
+
+                                    <th>変更後</th>
+
+                                    <th>申請種別</th>
+
+                                    <th class="reason-column">
+                                        申請理由
+                                    </th>
+
+                                    <th class="approve-column">
+                                        承認
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <!-- DBから取得した申請を表示 -->
+                                <tr th:each=
+                                    "request : ${attendanceRequests}">
+
+                                    <!-- 選択 -->
+                                    <td class="select-cell">
+
+                                        <input class=
+                                               "request-checkbox request-checkbox-item"
+                                               type="checkbox"
+                                               name="requestIds"
+                                               th:value="${request.attendanceRequestId}"
+                                               aria-label=
+                                               "この勤怠申請を選択">
+
+                                    </td>
 
 
-    <!-- 管理者ホームへ戻る -->
-    <div>
+                                    <!-- 社員ID -->
+                                    <td th:text="${request.employeeId}">
+                                        E0001
+                                    </td>
 
-        <a th:href="@{/admin}">
-            管理者ホームへ
-        </a>
+
+                                    <!-- 社員名 -->
+                                    <td th:text="${request.employeeName}">
+                                        山田太郎
+                                    </td>
+
+
+                                    <!-- 部署名 -->
+                                    <td th:text="${request.departmentName}">
+                                        営業部
+                                    </td>
+
+
+                                    <!-- 変更前 -->
+                                    <td class="time-cell"
+                                        th:text="${request.beforeTime}">
+                                        --:--～--:--
+                                    </td>
+
+
+                                    <!-- 変更後 -->
+                                    <td class="time-cell"
+                                        th:text="${request.afterTime}">
+                                        09:00～18:00
+                                    </td>
+
+
+                                    <!-- 申請種別 -->
+                                    <td>
+
+                                        <span class="request-type"
+                                              th:text="${request.requestTypeName}">
+                                            打刻漏れ
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- 申請理由 -->
+                                    <td class="reason-cell"
+                                        th:text="${request.requestReason}">
+                                        打刻漏れのため。
+                                    </td>
+
+
+                                    <!-- 1件承認 -->
+                                    <td>
+
+                                        <button class="approve-button"
+                                                type="submit"
+                                                th:formaction=
+                                                "@{/admin/attendance-requests/{requestId}/approve(requestId=${request.attendanceRequestId})}"
+                                                onclick=
+                                                "return confirm(
+                                                    'この申請を承認しますか？'
+                                                );">
+
+                                            承認
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </form>
+
+        </main>
 
     </div>
+
+
+    <!-- ========================================
+         全選択の処理
+         ======================================== -->
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                /*
+                 * 見出しの全選択チェックボックス
+                 */
+                const selectAll =
+                    document.getElementById(
+                        "selectAll"
+                    );
+
+
+                /*
+                 * 各申請行のチェックボックス
+                 */
+                const requestCheckboxes =
+                    document.querySelectorAll(
+                        ".request-checkbox-item"
+                    );
+
+
+                /*
+                 * 申請が0件の場合は処理しない
+                 */
+                if (selectAll === null) {
+
+                    return;
+                }
+
+
+                /*
+                 * 見出しのチェックボックスを変更した場合
+                 */
+                selectAll.addEventListener(
+                    "change",
+                    function () {
+
+                        requestCheckboxes.forEach(
+                            function (checkbox) {
+
+                                checkbox.checked =
+                                    selectAll.checked;
+                            }
+                        );
+
+                        selectAll.indeterminate =
+                            false;
+                    }
+                );
+
+
+                /*
+                 * 各行のチェック状態が変更された場合
+                 */
+                requestCheckboxes.forEach(
+                    function (checkbox) {
+
+                        checkbox.addEventListener(
+                            "change",
+                            updateSelectAll
+                        );
+                    }
+                );
+
+
+                /*
+                 * 見出しのチェック状態を更新する
+                 */
+                function updateSelectAll() {
+
+                    const checkedCheckboxes =
+                        document.querySelectorAll(
+                            ".request-checkbox-item:checked"
+                        );
+
+                    const checkedCount =
+                        checkedCheckboxes.length;
+
+                    const totalCount =
+                        requestCheckboxes.length;
+
+
+                    /*
+                     * 全件チェックされている場合
+                     */
+                    selectAll.checked =
+                        totalCount > 0
+                        && checkedCount === totalCount;
+
+
+                    /*
+                     * 一部だけチェックされている場合
+                     */
+                    selectAll.indeterminate =
+                        checkedCount > 0
+                        && checkedCount < totalCount;
+                }
+            }
+        );
+
+    </script>
 
 </body>
 

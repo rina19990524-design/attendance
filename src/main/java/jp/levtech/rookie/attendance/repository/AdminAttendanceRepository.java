@@ -11,7 +11,7 @@ import jp.levtech.rookie.attendance.dto.AdminAttendanceView;
 public interface AdminAttendanceRepository {
 
     /**
-     * 検索条件に一致する勤怠実績をHardされた検索条件に一致する勤怠実績を取得する
+     * 指定された検索条件に一致する勤怠実績を取得する
      *
      * @param startDate 検索開始日
      * @param endDate 検索終了日

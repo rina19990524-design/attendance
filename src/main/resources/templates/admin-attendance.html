@@ -4,218 +4,369 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
     <title>勤怠実績一覧</title>
-      <link rel="stylesheet"
-      th:href="@{/css/admin-attendance.css}">
 
+    <link rel="stylesheet"
+          th:href="@{/css/admin-attendance.css}">
 </head>
 
 <body>
-	<!-- 上部の管理者情報 -->
-	<header>
-	
-	    <div>
-	        会社名：株式会社アテンダンス
-	    </div>
-	
-	    <div>
-	        管理者名：
-	        <span th:text="${admin.employeeName}">
-	            山田太郎
-	        </span>
-	    </div>
-	
-	    <!-- 右側のボタン -->
-	    <div class="header-actions">
-	
-	        <a class="header-home-link"
-	           th:href="@{/admin}">
-	            ◀ ホームへ戻る
-	        </a>
-	
-	        <form th:action="@{/logout}"
-	              method="post">
-	
-	            <button type="submit">
-	                ログアウト
-	            </button>
-	        </form>
-	
-	    </div>
-	
-	</header>
 
-    <h1>勤怠実績一覧</h1>
+    <div class="page-container">
 
+        <!-- ========================================
+             上部の管理者情報
+             ======================================== -->
+        <header class="page-header">
 
-    <!-- 検索フォーム -->
-    <form th:action="@{/admin/attendance}"
-          method="get">
+            <div class="company-info">
+                会社名：株式会社アテンダンス
+            </div>
 
+            <div class="header-right">
 
-        <!-- 対象月 -->
-        <div>
+                <div class="admin-info">
+                    管理者名：
 
-            <label for="targetMonth">
-                対象月
-            </label>
+                    <span th:text="${admin.employeeName}">
+                        山田太郎
+                    </span>
+                </div>
 
-            <input type="month"
-                   id="targetMonth"
-                   name="targetMonth"
-                   th:value="${targetMonth}"
-                   required>
+                <a class="header-home-link"
+                   th:href="@{/admin}">
+                    ◀ ホームへ戻る
+                </a>
 
-        </div>
+                <form class="logout-form"
+                      th:action="@{/logout}"
+                      method="post">
+
+                    <button class="logout-button"
+                            type="submit">
+                        ログアウト
+                    </button>
+
+                </form>
+
+            </div>
+
+        </header>
 
 
-        <!-- 部署 -->
-        <div>
+        <!-- ========================================
+             メイン部分
+             ======================================== -->
+        <main class="main-content">
 
-            <label for="departmentId">
-                部署
-            </label>
+            <!-- 画面タイトル -->
+            <section class="page-title">
 
-            <select id="departmentId"
-                    name="departmentId">
+                <h1>勤怠実績一覧</h1>
 
-                <option value=""
-                        th:selected="${departmentId == null}">
-                    すべて
-                </option>
+                <p>
+                    社員の勤怠状況を確認できます
+                </p>
 
-                <option value="1"
-                        th:selected="${departmentId == 1}">
-                    営業部
-                </option>
-
-                <option value="2"
-                        th:selected="${departmentId == 2}">
-                    総務部
-                </option>
-
-                <option value="3"
-                        th:selected="${departmentId == 3}">
-                    人事部
-                </option>
-
-            </select>
-
-        </div>
+            </section>
 
 
-        <!-- 社員ID・社員名 -->
-        <div>
+            <!-- ========================================
+                 検索エリア
+                 ======================================== -->
+            <section class="search-card">
 
-            <label for="keyword">
-                社員ID・社員名
-            </label>
+                <form class="search-form"
+                      th:action="@{/admin/attendance}"
+                      method="get">
 
-            <input type="text"
-                   id="keyword"
-                   name="keyword"
-                   th:value="${keyword}"
-                   placeholder="社員IDまたは社員名を入力">
+                    <!-- 対象月 -->
+                    <div class="search-item month-item">
 
-        </div>
+                        <label for="targetMonth">
+                            対象月
+                        </label>
 
+                        <input type="month"
+                               id="targetMonth"
+                               name="targetMonth"
+                               th:value="${targetMonth}"
+                               required>
 
-        <div>
-
-            <button type="submit">
-                検索
-            </button>
-
-            <a th:href="@{/admin/attendance}">
-                条件をクリア
-            </a>
-
-        </div>
-
-    </form>
+                    </div>
 
 
-    <hr>
+                    <!-- 部署 -->
+                    <div class="search-item department-item">
+
+                        <label for="departmentId">
+                            部署
+                        </label>
+
+                        <select id="departmentId"
+                                name="departmentId">
+
+                            <option value=""
+                                    th:selected="${departmentId == null}">
+                                すべて
+                            </option>
+
+                            <option value="1"
+                                    th:selected="${departmentId == 1}">
+                                営業部
+                            </option>
+
+                            <option value="2"
+                                    th:selected="${departmentId == 2}">
+                                総務部
+                            </option>
+
+                            <option value="3"
+                                    th:selected="${departmentId == 3}">
+                                人事部
+                            </option>
+
+                        </select>
+
+                    </div>
 
 
-    <!-- データが0件の場合 -->
-    <p th:if="${attendances == null or attendances.isEmpty()}">
-        該当する勤怠実績はありません。
-    </p>
+                    <!-- 社員ID・社員名 -->
+                    <div class="search-item keyword-item">
+
+                        <label for="keyword">
+                            社員ID・社員名
+                        </label>
+
+                        <input type="text"
+                               id="keyword"
+                               name="keyword"
+                               th:value="${keyword}"
+                               placeholder="社員IDまたは社員名を入力">
+
+                    </div>
 
 
-    <!-- 勤怠一覧 -->
-    <table border="1">
+                    <!-- 検索ボタン -->
+                    <div class="search-actions">
 
-        <thead>
+                        <button class="search-button"
+                                type="submit">
+                            検索
+                        </button>
 
-            <tr>
-                <th>日付</th>
-                <th>社員ID</th>
-                <th>社員名</th>
-                <th>部署名</th>
-                <th>出勤</th>
-                <th>退勤</th>
-                <th>勤務時間</th>
-                <th>状態</th>
-            </tr>
+                        <a class="clear-button"
+                           th:href="@{/admin/attendance}">
+                            条件をクリア
+                        </a>
 
-        </thead>
+                    </div>
 
-        <tbody>
+                </form>
 
-            <tr th:each="attendance : ${attendances}">
-
-                <!-- 日付 -->
-                <td th:text="${#temporals.format(attendance.workingDay, 'M月d日')}">
-                </td>
+            </section>
 
 
-                <!-- 社員ID -->
-                <td th:text="${attendance.employeeId}">
-                </td>
+            <!-- ========================================
+                 勤怠実績一覧
+                 ======================================== -->
+            <section class="attendance-list-card">
+
+                <div class="list-heading">
+
+                    <h2>勤怠実績</h2>
+
+                    <span class="result-count"
+                          th:text="${attendances != null
+                              ? #lists.size(attendances) + '件'
+                              : '0件'}">
+                        0件
+                    </span>
+
+                </div>
 
 
-                <!-- 社員名 -->
-                <td th:text="${attendance.employeeName}">
-                </td>
+                <!-- データが0件の場合 -->
+                <div class="no-data"
+                     th:if="${attendances == null
+                         or attendances.isEmpty()}">
+
+                    該当する勤怠実績はありません。
+
+                </div>
 
 
-                <!-- 部署名 -->
-                <td th:text="${attendance.departmentName}">
-                </td>
+                <!-- データが存在する場合 -->
+                <div class="table-scroll"
+                     th:if="${attendances != null
+                         and !attendances.isEmpty()}">
+
+                    <table class="attendance-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>日付</th>
+                                <th>社員ID</th>
+                                <th>社員名</th>
+                                <th>部署名</th>
+                                <th>出勤時刻</th>
+                                <th>退勤時刻</th>
+                                <th>実働時間</th>
+                                <th>状態</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="attendance : ${attendances}">
+
+                                <!-- 日付 -->
+                                <td th:text="${#temporals.format(
+                                        attendance.workingDay,
+                                        'M月d日'
+                                    )}">
+                                    9月1日
+                                </td>
 
 
-                <!-- 出勤 -->
-                <td th:text="${attendance.workingStartTime != null ? #temporals.format(attendance.workingStartTime, 'HH:mm') : '--:--'}">
-                </td>
+                                <!-- 社員ID -->
+                                <td th:text="${attendance.employeeId}">
+                                    E0001
+                                </td>
 
 
-                <!-- 退勤 -->
-                <td th:text="${attendance.workingEndTime != null ? #temporals.format(attendance.workingEndTime, 'HH:mm') : '--:--'}">
-                </td>
+                                <!-- 社員名 -->
+                                <td th:text="${attendance.employeeName}">
+                                    山田太郎
+                                </td>
 
 
-                <!-- 勤務時間 -->
-                <td th:text="${attendance.workingTime}">
-                </td>
+                                <!-- 部署名 -->
+                                <td th:text="${attendance.departmentName}">
+                                    営業部
+                                </td>
 
 
-                <!-- 状態 -->
-                <td th:text="${attendance.status}">
-                </td>
+                                <!-- 実際の出勤時刻 -->
+                                <td th:text="${attendance.actualWorkingStartTime
+                                        != null
+                                        ? #temporals.format(
+                                            attendance.actualWorkingStartTime,
+                                            'HH:mm'
+                                          )
+                                        : '--:--'}">
+                                    09:00
+                                </td>
 
-            </tr>
 
-        </tbody>
+                                <!-- 実際の退勤時刻 -->
+                                <td th:text="${attendance.actualWorkingEndTime
+                                        != null
+                                        ? #temporals.format(
+                                            attendance.actualWorkingEndTime,
+                                            'HH:mm'
+                                          )
+                                        : '--:--'}">
+                                    18:00
+                                </td>
 
-    </table>
+
+                                <!-- 実働時間 -->
+                                <td th:text="${attendance.workingTime != null
+                                        ? attendance.workingTime
+                                        : '--:--'}">
+                                    8時間00分
+                                </td>
+
+
+                                <!-- 状態 -->
+                                <td class="status-cell">
+
+                                    <th:block th:switch="${attendance.status}">
+
+                                        <!-- 正常 -->
+                                        <span th:case="'正常'"
+                                              class=
+                                              "status-badge status-normal">
+                                            正常
+                                        </span>
+
+
+                                        <!-- 勤務中 -->
+                                        <span th:case="'勤務中'"
+                                              class=
+                                              "status-badge status-working">
+                                            勤務中
+                                        </span>
+
+
+                                        <!-- 打刻漏れ -->
+                                        <span th:case="'打刻漏れ'"
+                                              class=
+                                              "status-badge status-missing">
+                                            打刻漏れ
+                                        </span>
+
+
+                                        <!-- 休日 -->
+                                        <span th:case="'休日'"
+                                              class=
+                                              "status-badge status-holiday">
+                                            休日
+                                        </span>
+
+
+                                        <!-- 有給 -->
+                                        <span th:case="'有給'"
+                                              class=
+                                              "status-badge status-paid-leave">
+                                            有給
+                                        </span>
+
+
+                                        <!-- 未来の勤務予定日 -->
+                                        <span th:case="'予定'"
+                                              class=
+                                              "status-badge status-scheduled">
+                                            予定
+                                        </span>
+
+
+                                        <!-- 上記以外 -->
+                                        <span th:case="*"
+                                              class=
+                                              "status-badge status-other"
+                                              th:text="${attendance.status
+                                                  != null
+                                                  ? attendance.status
+                                                  : '未設定'}">
+                                            未設定
+                                        </span>
+
+                                    </th:block>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
 

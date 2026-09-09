@@ -15,23 +15,45 @@
                type=
                "jp.levtech.rookie.attendance.dto.AdminAttendanceView">
 
+        <!-- 勤務日 -->
         <result column="working_day"
                 property="workingDay"/>
 
+        <!-- 社員ID -->
         <result column="employee_id"
                 property="employeeId"/>
 
+        <!-- 社員名 -->
         <result column="employee_name"
                 property="employeeName"/>
 
+        <!-- 部署名 -->
         <result column="department_name"
                 property="departmentName"/>
 
+        <!-- 出勤予定時刻 -->
         <result column="working_start_time"
                 property="workingStartTime"/>
 
+        <!-- 退勤予定時刻 -->
         <result column="working_end_time"
                 property="workingEndTime"/>
+
+        <!-- 実際の出勤時刻 -->
+        <result column="actual_working_start_time"
+                property="actualWorkingStartTime"/>
+
+        <!-- 実際の退勤時刻 -->
+        <result column="actual_working_end_time"
+                property="actualWorkingEndTime"/>
+
+        <!-- 勤務区分 -->
+        <result column="work_type"
+                property="workType"/>
+
+        <!-- 承認済み有給の有無 -->
+        <result column="paid_leave"
+                property="paidLeave"/>
 
     </resultMap>
 
@@ -54,23 +76,43 @@
                 WHEN 1 THEN '営業部'
                 WHEN 2 THEN '総務部'
                 WHEN 3 THEN '人事部'
+                ELSE ''
             END AS department_name,
 
-            attendance.actual_working_start_time
-                AS working_start_time,
+            attendance.working_start_time,
 
-            attendance.actual_working_end_time
-                AS working_end_time
+            attendance.working_end_time,
+
+            attendance.actual_working_start_time,
+
+            attendance.actual_working_end_time,
+
+            attendance.work_type,
+
+            EXISTS (
+                SELECT
+                    1
+                FROM
+                    tb_trn_paid_holiday_request
+                        paid_holiday
+                WHERE
+                    paid_holiday.employee_id =
+                        employee.employee_id
+                AND
+                    paid_holiday.holiday =
+                        attendance.working_day
+                AND
+                    paid_holiday.request_flag = 2
+            ) AS paid_leave
 
         FROM
             tb_trn_attendance attendance
 
         INNER JOIN
             tb_mst_employee employee
-
         ON
             attendance.user_id =
-            employee.employee_id
+                employee.employee_id
 
         WHERE
             attendance.working_day
@@ -83,7 +125,7 @@
 
             AND
                 employee.department_id =
-                #{departmentId}
+                    #{departmentId}
 
         </if>
 
@@ -117,9 +159,9 @@
 
         ORDER BY
             attendance.working_day ASC,
+
             employee.employee_id ASC
 
     </select>
-
 
 </mapper>

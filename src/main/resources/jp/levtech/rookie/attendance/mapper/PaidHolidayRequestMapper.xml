@@ -50,6 +50,7 @@
             request_reason,
             request_flag
         )
+
         VALUES (
             #{paidHolidayRequestId},
             #{holidayType},
@@ -68,8 +69,10 @@
 
         SELECT
             COUNT(*)
+
         FROM
             tb_trn_paid_holiday_request
+
         WHERE
             request_flag = #{requestFlag}
 
@@ -92,6 +95,7 @@
                 WHEN 1 THEN '営業部'
                 WHEN 2 THEN '総務部'
                 WHEN 3 THEN '人事部'
+                ELSE ''
             END AS department_name,
 
             request.holiday_type,
@@ -105,18 +109,19 @@
 
         INNER JOIN
             tb_mst_employee employee
-
         ON
             request.employee_id =
-            employee.employee_id
+                employee.employee_id
 
         WHERE
             request.request_flag =
-            #{requestFlag}
+                #{requestFlag}
 
         ORDER BY
             request.holiday ASC,
+
             employee.employee_id ASC,
+
             request.paid_holiday_request_id ASC
 
     </select>
@@ -141,6 +146,5 @@
                 #{currentFlag}
 
     </update>
-
 
 </mapper>

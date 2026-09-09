@@ -15,6 +15,12 @@ import jp.levtech.rookie.attendance.repository.AdminAttendanceRepository;
 @Service
 public class AdminAttendanceService {
 
+    /**
+     * 固定休憩時間
+     */
+    private static final long BREAK_MINUTES = 60;
+
+
     private final AdminAttendanceRepository
             adminAttendanceRepository;
 
@@ -64,7 +70,7 @@ public class AdminAttendanceService {
                         trimmedKeyword
                     );
 
-        // 各勤怠に勤務時間と状態を設定
+        // 各勤怠に実働時間と状態を設定
         for (AdminAttendanceView attendance
                 : attendances) {
 
@@ -78,29 +84,35 @@ public class AdminAttendanceService {
 
 
     /**
-     * 勤務時間と状態を設定する
+     * 実働時間と勤怠状態を設定する
      */
     private void setWorkingTimeAndStatus(
             AdminAttendanceView attendance) {
 
-        LocalTime startTime =
-                attendance.getWorkingStartTime();
+        LocalDate workingDay =
+                attendance.getWorkingDay();
 
-        LocalTime endTime =
-                attendance.getWorkingEndTime();
+        /*
+         * 実際の出勤・退勤打刻を取得する
+         */
+        LocalTime actualStartTime =
+                attendance.getActualWorkingStartTime();
+
+        LocalTime actualEndTime =
+                attendance.getActualWorkingEndTime();
 
 
         /*
-         * 出勤時刻がない場合
+         * 公休の場合
          */
-        if (startTime == null) {
+        if (attendance.isHoliday()) {
 
             attendance.setWorkingTime(
-                    "0時間00分"
+                    "―"
             );
 
             attendance.setStatus(
-                    "未出勤"
+                    "休日"
             );
 
             return;
@@ -108,16 +120,51 @@ public class AdminAttendanceService {
 
 
         /*
-         * 出勤済みだが退勤していない場合
+         * 承認済みの有給申請がある場合
          */
-        if (endTime == null) {
+        if (Boolean.TRUE.equals(
+                attendance.getPaidLeave())) {
+
+            /*
+             * 半休などで出退勤している場合は、
+             * 実働時間も表示する
+             */
+            if (actualStartTime != null
+                    && actualEndTime != null) {
+
+                attendance.setWorkingTime(
+                        calculateWorkingTime(
+                                actualStartTime,
+                                actualEndTime
+                        )
+                );
+
+            } else {
+
+                attendance.setWorkingTime(
+                        "―"
+                );
+            }
+
+            attendance.setStatus(
+                    "有給"
+            );
+
+            return;
+        }
+
+
+        /*
+         * 勤務日が取得できない場合
+         */
+        if (workingDay == null) {
 
             attendance.setWorkingTime(
-                    "勤務中"
+                    "--:--"
             );
 
             attendance.setStatus(
-                    "勤務中"
+                    "打刻漏れ"
             );
 
             return;
@@ -127,6 +174,85 @@ public class AdminAttendanceService {
         /*
          * 出勤時刻と退勤時刻が両方ある場合
          */
+        if (actualStartTime != null
+                && actualEndTime != null) {
+
+            attendance.setWorkingTime(
+                    calculateWorkingTime(
+                            actualStartTime,
+                            actualEndTime
+                    )
+            );
+
+            attendance.setStatus(
+                    "正常"
+            );
+
+            return;
+        }
+
+
+        /*
+         * 今日、出勤済みで退勤していない場合
+         */
+        if (workingDay.isEqual(LocalDate.now())
+                && actualStartTime != null
+                && actualEndTime == null) {
+
+            attendance.setWorkingTime(
+                    "--:--"
+            );
+
+            attendance.setStatus(
+                    "勤務中"
+            );
+
+            return;
+        }
+
+
+        /*
+         * 未来の出勤予定日で、
+         * 出勤・退勤がまだない場合
+         */
+        if (workingDay.isAfter(LocalDate.now())
+                && actualStartTime == null
+                && actualEndTime == null) {
+
+            attendance.setWorkingTime(
+                    "--:--"
+            );
+
+            attendance.setStatus(
+                    "予定"
+            );
+
+            return;
+        }
+
+
+        /*
+         * 過去または当日の勤務日で、
+         * 必要な打刻が不足している場合
+         */
+        attendance.setWorkingTime(
+                "--:--"
+        );
+
+        attendance.setStatus(
+                "打刻漏れ"
+        );
+    }
+
+
+    /**
+     * 実際の出勤時刻と退勤時刻から
+     * 実働時間を計算する
+     */
+    private String calculateWorkingTime(
+            LocalTime startTime,
+            LocalTime endTime) {
+
         Duration duration =
                 Duration.between(
                         startTime,
@@ -134,7 +260,7 @@ public class AdminAttendanceService {
                 );
 
         /*
-         * 日をまたぐ勤務の場合に対応する
+         * 日をまたぐ勤務の場合
          *
          * 例：
          * 出勤 22:00
@@ -146,25 +272,28 @@ public class AdminAttendanceService {
                     duration.plusDays(1);
         }
 
+        long totalMinutes =
+                duration.toMinutes();
+
+        /*
+         * 勤務時間が60分を超えている場合、
+         * 固定休憩時間を引く
+         */
+        if (totalMinutes > BREAK_MINUTES) {
+
+            totalMinutes -= BREAK_MINUTES;
+        }
+
         long hours =
-                duration.toHours();
+                totalMinutes / 60;
 
         long minutes =
-                duration.toMinutes() % 60;
+                totalMinutes % 60;
 
-        String workingTime =
-                String.format(
-                        "%d時間%02d分",
-                        hours,
-                        minutes
-                );
-
-        attendance.setWorkingTime(
-                workingTime
-        );
-
-        attendance.setStatus(
-                "正常"
+        return String.format(
+                "%d時間%02d分",
+                hours,
+                minutes
         );
     }
 }

@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>勤怠申請</title>
+
     <link rel="stylesheet"
+          href="/css/request.css"
           th:href="@{/css/request.css}">
 </head>
 
 <body>
-    <divdiv class="page-container">
+    <div class="page-container">
 
-        <!-- 上部 -->
+        <!-- ヘッダー -->
         <header class="header">
             <div class="header-information">
                 <h1>
@@ -20,122 +27,200 @@
 
                 <p>
                     社員名：
+
                     <span th:text="${employee.employeeName}">
                         山田太郎
                     </span>
                 </p>
             </div>
-            
-            <!-- 右側のボタン -->
-		    <div class="header-actions">
-		
-		        <a class="header-home-link"
-		           th:href="@{/home}">
-		            ◀ ホームへ戻る
-		        </a>
-		
-		        <form th:action="@{/logout}"
-	      			method="post">
-		
-		            <button class="logout-button"
-		                    type="submit">
-		                ログアウト
-		            </button>
-		        </form>
-		
-		    </div>
+
+            <div class="header-actions">
+                <!-- ホームへ戻る -->
+                <a class="header-home-link"
+                   th:href="@{/home}">
+                    ◀ ホームへ戻る
+                </a>
+
+                <!-- ログアウト -->
+                <form class="logout-form"
+                      th:action="@{/logout}"
+                      method="post">
+
+                    <button class="logout-button"
+                            type="submit">
+                        ログアウト
+                    </button>
+                </form>
+            </div>
         </header>
 
-    <!-- 画面タイトル -->
-    <h2>勤怠申請</h2>
 
-    <form th:action="@{/request/register}" method="post">
+        <!-- メイン部分 -->
+        <main class="main-content">
 
-        <!-- 申請種別 -->
-        <p>
-            <label for="requestType">申請種別</label>
+            <!-- 申請完了メッセージ -->
+            <div class="message success-message"
+                 th:if="${message != null}"
+                 th:text="${message}">
+                申請しました
+            </div>
 
-            <select id="requestType"
-                    name="requestType"
-                    required>
-
-                <option value="">選択してください</option>
-                <option value="1">勤怠修正</option>
-                <option value="2">打刻漏れ</option>
-
-            </select>
-        </p>
+            <!-- エラーメッセージ -->
+            <div class="message error-message"
+                 th:if="${errorMessage != null}"
+                 th:text="${errorMessage}">
+                入力内容を確認してください
+            </div>
 
 
-        <!-- 日付 -->
-        <p>
-            <label for="workingDay">日付</label>
+            <!-- 画面タイトル -->
+            <section class="page-title">
+                <h1>
+                    勤怠申請
+                </h1>
 
-            <input type="date"
-                   id="workingDay"
-                   name="workingDay"
-                   required>
-        </p>
-
-
-        <!-- 出勤時刻 -->
-        <p>
-            <label for="workingStartTime">出勤時刻</label>
-
-            <input type="time"
-                   id="workingStartTime"
-                   name="workingStartTime"
-                   required>
-        </p>
+                <p>
+                    打刻漏れや勤怠時間の修正を申請します
+                </p>
+            </section>
 
 
-        <!-- 退勤時刻 -->
-        <p>
-            <label for="workingEndTime">退勤時刻</label>
+            <!-- 勤怠申請フォーム -->
+            <section class="application-card">
+                <div class="card-heading">
+                    <h2>
+                        申請内容
+                    </h2>
 
-            <input type="time"
-                   id="workingEndTime"
-                   name="workingEndTime"
-                   required>
-        </p>
-
-
-        <!-- 申請理由 -->
-        <p>
-            <label for="reason">申請理由</label>
-        </p>
-
-        <p>
-            <textarea id="reason"
-                      name="reason"
-                      rows="8"
-                      cols="60"
-                      required></textarea>
-        </p>
-        
-        <!-- 申請完了メッセージ -->
-		<p th:if="${message}"
-		   th:text="${message}"
-		   style="color: red;">
-		    申請しました
-		</p>
-		
-		<p th:if="${errorMessage}"
-		   th:text="${errorMessage}"
-		   style="color: red;">
-		    エラーメッセージ
-		</p>
+                    <p>
+                        修正する日付と勤務時間を入力してください
+                    </p>
+                </div>
 
 
-        <!-- 申請ボタン -->
-        <button type="submit">
-            申請
-        </button>
+                <form class="application-form"
+                      th:action="@{/request/register}"
+                      method="post">
 
-    </form>
-    
+                    <!-- 申請種別 -->
+                    <div class="form-item">
+                        <label for="requestType">
+                            申請種別
+
+                            <span class="required-label">
+                                必須
+                            </span>
+                        </label>
+
+                        <select id="requestType"
+                                name="requestType"
+                                required>
+
+                            <option value="">
+                                選択してください
+                            </option>
+
+                            <option value="1">
+                                勤怠修正
+                            </option>
+
+                            <option value="2">
+                                打刻漏れ
+                            </option>
+                        </select>
+                    </div>
+
+
+                    <!-- 日付 -->
+                    <div class="form-item">
+                        <label for="workingDay">
+                            日付
+
+                            <span class="required-label">
+                                必須
+                            </span>
+                        </label>
+
+                        <input type="date"
+                               id="workingDay"
+                               name="workingDay"
+                               required>
+                    </div>
+
+
+                    <!-- 勤務時間 -->
+                    <div class="time-input-area">
+
+                        <!-- 出勤時刻 -->
+                        <div class="form-item">
+                            <label for="workingStartTime">
+                                出勤時刻
+
+                                <span class="required-label">
+                                    必須
+                                </span>
+                            </label>
+
+                            <input type="time"
+                                   id="workingStartTime"
+                                   name="workingStartTime"
+                                   required>
+                        </div>
+
+
+                        <!-- 退勤時刻 -->
+                        <div class="form-item">
+                            <label for="workingEndTime">
+                                退勤時刻
+
+                                <span class="required-label">
+                                    必須
+                                </span>
+                            </label>
+
+                            <input type="time"
+                                   id="workingEndTime"
+                                   name="workingEndTime"
+                                   required>
+                        </div>
+                    </div>
+
+
+                    <!-- 申請理由 -->
+                    <div class="form-item reason-item">
+                        <label for="reason">
+                            申請理由
+
+                            <span class="required-label">
+                                必須
+                            </span>
+                        </label>
+
+                        <textarea id="reason"
+                                  name="reason"
+                                  maxlength="500"
+                                  placeholder="申請理由を入力してください"
+                                  required></textarea>
+
+                        <p class="character-information">
+                            500文字以内
+                        </p>
+                    </div>
+
+
+                    <!-- 申請ボタン -->
+                    <div class="application-actions">
+                        <button class="application-button"
+                                type="submit"
+                                onclick="return confirm(
+                                    '入力した内容で勤怠申請を行いますか？'
+                                );">
+                            勤怠を申請
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
     </div>
-
 </body>
-
 </html>

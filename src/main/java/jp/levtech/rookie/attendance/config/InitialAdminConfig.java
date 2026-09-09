@@ -22,7 +22,7 @@ public class InitialAdminConfig {
             EmployeeService employeeService,
             TestRepository testRepository,
 
-            @Value("${INITIAL_ADMIN_PASSWORD:}")
+			@Value("${INITIAL_ADMIN_PASSWORD:}")
             String initialAdminPassword) {
 
         return args -> {

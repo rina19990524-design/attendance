@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja"
       xmlns:th="http://www.thymeleaf.org">
 
@@ -12,18 +11,17 @@
     <title>勤怠実績一覧</title>
 
     <link rel="stylesheet"
+          href="/css/attendance.css"
           th:href="@{/css/attendance.css}">
 </head>
 
 <body>
     <div class="page-container">
 
-        <!-- 上部 -->
+        <!-- ヘッダー -->
         <header class="header">
             <div class="header-information">
-                <h1>
-                    株式会社アテンダンス
-                </h1>
+                <h1>株式会社アテンダンス</h1>
 
                 <p>
                     社員名：
@@ -32,150 +30,192 @@
                     </span>
                 </p>
             </div>
-            
-            <!-- 右側のボタン -->
-		    <div class="header-actions">
-		
-		        <a class="header-home-link"
-		           th:href="@{/home}">
-		            ◀ ホームへ戻る
-		        </a>
-		
-		        <form class="logout-form"
-		              th:action="@{/logout}"
-		              method="post">
-		
-		            <button class="logout-button"
-		                    type="submit">
-		                ログアウト
-		            </button>
-		        </form>
-		
-		    </div>
+
+            <div class="header-actions">
+                <a class="header-home-link"
+                   th:href="@{/home}">
+                    ◀ ホームへ戻る
+                </a>
+
+                <form class="logout-form"
+                      th:action="@{/logout}"
+                      method="post">
+
+                    <button class="logout-button"
+                            type="submit">
+                        ログアウト
+                    </button>
+                </form>
+            </div>
         </header>
 
-        <main>
+
+        <!-- メイン部分 -->
+        <main class="main-content">
 
             <!-- 成功メッセージ -->
-            <p class="success-message"
-               th:if="${message != null}"
-               th:text="${message}">
+            <div class="message success-message"
+                 th:if="${message != null}"
+                 th:text="${message}">
                 登録しました
-            </p>
+            </div>
 
             <!-- エラーメッセージ -->
-            <p class="error-message"
-               th:if="${errorMessage != null}"
-               th:text="${errorMessage}">
+            <div class="message error-message"
+                 th:if="${errorMessage != null}"
+                 th:text="${errorMessage}">
                 入力内容を確認してください
-            </p>
+            </div>
 
-            <!-- 勤務時間・公休登録 -->
-            <section class="registration-section">
-                <h2>
-                    勤務予定登録
-                </h2>
 
-                <form class="registration-form"
+            <!-- 勤務予定登録・編集 -->
+            <section id="registrationSection"
+                     class="registration-section">
+
+                <div class="section-title">
+                    <div>
+                        <h2 id="registrationTitle">
+                            勤務予定登録
+                        </h2>
+
+                        <p id="registrationDescription">
+                            勤務日ごとに勤務区分と勤務時間を登録します
+                        </p>
+                    </div>
+
+                    <button id="addScheduleButton"
+                            class="add-schedule-button"
+                            type="button">
+                        ＋ 勤務日を追加
+                    </button>
+                </div>
+
+
+                <form id="registrationForm"
+                      class="registration-form"
                       th:action="@{/attendance/register}"
                       method="post">
 
-                    <!-- 開始日 -->
-                    <div class="form-item">
-                        <label for="startDate">
-                            開始日
-                        </label>
-
-                        <input type="date"
-                               id="startDate"
-                               name="startDate"
-                               required>
+                    <!-- 入力欄の見出し -->
+                    <div class="schedule-header">
+                        <div>番号</div>
+                        <div>勤務日</div>
+                        <div>勤務区分</div>
+                        <div>勤務開始時間</div>
+                        <div>勤務終了時間</div>
+                        <div>操作</div>
                     </div>
 
-                    <!-- 終了日 -->
-                    <div class="form-item">
-                        <label for="endDate">
-                            終了日
-                        </label>
 
-                        <input type="date"
-                               id="endDate"
-                               name="endDate"
-                               required>
+                    <!-- 勤務予定入力欄 -->
+                    <div id="scheduleList"
+                         class="schedule-list">
+
+                        <div class="schedule-row">
+                            <div class="schedule-number">
+                                1
+                            </div>
+
+                            <div class="schedule-field">
+                                <label class="mobile-label">
+                                    勤務日
+                                </label>
+
+                                <input class="working-date"
+                                       type="date"
+                                       name="workingDates"
+                                       required>
+                            </div>
+
+                            <div class="schedule-field">
+                                <label class="mobile-label">
+                                    勤務区分
+                                </label>
+
+                                <select class="work-type"
+                                        name="workTypes"
+                                        required>
+
+                                    <option value="1">
+                                        出勤日
+                                    </option>
+
+                                    <option value="2">
+                                        公休
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="schedule-field">
+                                <label class="mobile-label">
+                                    勤務開始時間
+                                </label>
+
+                                <input class="working-start-time"
+                                       type="time"
+                                       name="workingStartTimes"
+                                       value="09:00"
+                                       required>
+                            </div>
+
+                            <div class="schedule-field">
+                                <label class="mobile-label">
+                                    勤務終了時間
+                                </label>
+
+                                <input class="working-end-time"
+                                       type="time"
+                                       name="workingEndTimes"
+                                       value="18:00"
+                                       required>
+                            </div>
+
+                            <div class="schedule-operation">
+                                <button class="remove-schedule-button"
+                                        type="button"
+                                        disabled>
+                                    削除
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- 勤務区分 -->
-                    <div class="form-item">
-                        <label for="workType">
-                            勤務区分
-                        </label>
 
-                        <select id="workType"
-                                name="workType"
-                                onchange="changeWorkType()">
-
-                            <option value="1">
-                                出勤日
-                            </option>
-
-                            <option value="2">
-                                公休
-                            </option>
-                        </select>
+                    <!-- JavaScriptのエラー -->
+                    <div id="clientErrorMessage"
+                         class="client-error-message"
+                         role="alert">
                     </div>
 
-                    <!-- 勤務開始時間 -->
-                    <div class="form-item">
-                        <label for="workingStartTime">
-                            勤務開始時間
-                        </label>
 
-                        <input type="time"
-					       id="workingStartTime"
-					       name="workingStartTime"
-					       value="09:00"
-					       required>
-                   	 </div>
-
-                    <!-- 勤務終了時間 -->
-                    <div class="form-item">
-                        <label for="workingEndTime">
-                            勤務終了時間
-                        </label>
-
-                        <input type="time"
-                               id="workingEndTime"
-                               name="workingEndTime"
-                               value="18:00"
-                               required>
+                    <!-- 登録・変更ボタン -->
+                    <div class="register-action">
+                        <button id="registerButton"
+                                class="register-button"
+                                type="submit">
+                            勤務予定を登録
+                        </button>
                     </div>
-
-                    <!-- 土日除外 -->
-                    <label class="checkbox-label">
-                        <input type="checkbox"
-                               name="excludeWeekend"
-                               value="true">
-
-                        土日を除外する
-                    </label>
-
-                    <button class="register-button"
-                            type="submit">
-                        登録
-                    </button>
                 </form>
             </section>
+
 
             <!-- 勤怠実績一覧 -->
             <section class="list-section">
                 <div class="list-header">
-                    <h2>
-                        勤怠実績一覧
-                    </h2>
+                    <div>
+                        <h2>勤怠実績一覧</h2>
+
+                        <p>
+                            未打刻の勤務予定は、この画面から変更できます
+                        </p>
+                    </div>
 
                     <!-- 前月・翌月 -->
                     <div class="month-navigation">
-                        <a th:href="@{/attendance(month=${previousMonth})}">
+                        <a class="month-button"
+                           th:href="@{/attendance(month=${previousMonth})}"
+                           aria-label="前月">
                             ◀
                         </a>
 
@@ -186,14 +226,17 @@
                             2026年9月
                         </span>
 
-                        <a th:href="@{/attendance(month=${nextMonth})}">
+                        <a class="month-button"
+                           th:href="@{/attendance(month=${nextMonth})}"
+                           aria-label="翌月">
                             ▶
                         </a>
                     </div>
                 </div>
 
+
                 <div class="table-wrapper">
-                    <table>
+                    <table class="attendance-table">
                         <thead>
                             <tr>
                                 <th>日付</th>
@@ -203,6 +246,7 @@
                                 <th>実働時間</th>
                                 <th>残業時間</th>
                                 <th>備考</th>
+                                <th>予定操作</th>
                             </tr>
                         </thead>
 
@@ -226,20 +270,15 @@
                                     9月1日
                                 </td>
 
-                                <!-- 申告した勤務時間 -->
+
+                                <!-- 申告勤務時間 -->
                                 <td>
-                                    <!-- 公休 -->
                                     <span th:if="${attendance.holiday}">
                                         ―
                                     </span>
 
-                                    <!-- 出勤日 -->
                                     <span th:unless="${attendance.holiday}">
-
-                                        <span th:if="${
-                                                  attendance.workingStartTime
-                                                  != null
-                                              }"
+                                        <span th:if="${attendance.workingStartTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.workingStartTime,
                                                   'HH:mm'
@@ -247,19 +286,13 @@
                                             09:00
                                         </span>
 
-                                        <span th:if="${
-                                                  attendance.workingStartTime
-                                                  == null
-                                              }">
+                                        <span th:if="${attendance.workingStartTime == null}">
                                             --:--
                                         </span>
 
                                         ～
 
-                                        <span th:if="${
-                                                  attendance.workingEndTime
-                                                  != null
-                                              }"
+                                        <span th:if="${attendance.workingEndTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.workingEndTime,
                                                   'HH:mm'
@@ -267,29 +300,21 @@
                                             18:00
                                         </span>
 
-                                        <span th:if="${
-                                                  attendance.workingEndTime
-                                                  == null
-                                              }">
+                                        <span th:if="${attendance.workingEndTime == null}">
                                             --:--
                                         </span>
                                     </span>
                                 </td>
 
-                                <!-- 実際の出勤時間 -->
+
+                                <!-- 実際の出勤時刻 -->
                                 <td>
-                                    <!-- 公休 -->
                                     <span th:if="${attendance.holiday}">
                                         ―
                                     </span>
 
-                                    <!-- 出勤日 -->
                                     <span th:unless="${attendance.holiday}">
-
-                                        <span th:if="${
-                                                  attendance.actualWorkingStartTime
-                                                  != null
-                                              }"
+                                        <span th:if="${attendance.actualWorkingStartTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.actualWorkingStartTime,
                                                   'HH:mm'
@@ -297,29 +322,21 @@
                                             09:00
                                         </span>
 
-                                        <span th:if="${
-                                                  attendance.actualWorkingStartTime
-                                                  == null
-                                              }">
+                                        <span th:if="${attendance.actualWorkingStartTime == null}">
                                             --:--
                                         </span>
                                     </span>
                                 </td>
 
-                                <!-- 実際の退勤時間 -->
+
+                                <!-- 実際の退勤時刻 -->
                                 <td>
-                                    <!-- 公休 -->
                                     <span th:if="${attendance.holiday}">
                                         ―
                                     </span>
 
-                                    <!-- 出勤日 -->
                                     <span th:unless="${attendance.holiday}">
-
-                                        <span th:if="${
-                                                  attendance.actualWorkingEndTime
-                                                  != null
-                                              }"
+                                        <span th:if="${attendance.actualWorkingEndTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.actualWorkingEndTime,
                                                   'HH:mm'
@@ -327,62 +344,85 @@
                                             18:00
                                         </span>
 
-                                        <span th:if="${
-                                                  attendance.actualWorkingEndTime
-                                                  == null
-                                              }">
+                                        <span th:if="${attendance.actualWorkingEndTime == null}">
                                             --:--
                                         </span>
                                     </span>
                                 </td>
 
+
                                 <!-- 実働時間 -->
-                                <td th:text="${
-                                        attendance.actualWorkingHoursDisplay
-                                    }">
+                                <td th:text="${attendance.actualWorkingHoursDisplay}">
                                     --:--
                                 </td>
 
+
                                 <!-- 残業時間 -->
-                                <td th:text="${
-                                        attendance.overtimeDisplay
-                                    }">
+                                <td th:text="${attendance.overtimeDisplay}">
                                     --:--
                                 </td>
+
 
                                 <!-- 備考 -->
                                 <td>
-                                    <!-- 公休 -->
                                     <span class="holiday-badge"
                                           th:if="${attendance.holiday}">
                                         公休
                                     </span>
 
-                                    <!-- 勤怠修正申請中 -->
                                     <span class="requesting-badge"
-                                          th:if="${
-                                              !attendance.holiday
-                                              and attendance.requestPending
-                                          }">
+                                          th:if="${!attendance.holiday
+                                              and attendance.requestPending}">
                                         勤怠修正申請中
                                     </span>
 
-                                    <!-- 承認済み -->
                                     <span class="approved-badge"
-                                          th:if="${
-                                              !attendance.holiday
-                                              and attendance.requestApproved
-                                          }">
+                                          th:if="${!attendance.holiday
+                                              and attendance.requestApproved}">
                                         承認済み
                                     </span>
 
-                                    <!-- 申請なし -->
-                                    <span th:if="${
-                                              !attendance.holiday
+                                    <span th:if="${!attendance.holiday
                                               and !attendance.requestPending
-                                              and !attendance.requestApproved
-                                          }">
+                                              and !attendance.requestApproved}">
                                         ―
+                                    </span>
+                                </td>
+
+
+                                <!-- 予定操作 -->
+                                <td class="operation-cell">
+
+                                    <!-- 登録済みかつ未打刻 -->
+                                    <button class="edit-schedule-button"
+                                            type="button"
+                                            th:if="${attendance.attendanceId != null
+                                                and attendance.actualWorkingStartTime == null
+                                                and attendance.actualWorkingEndTime == null}"
+                                            th:attr="
+                                                data-working-date=${attendance.workingDay},
+                                                data-work-type=${attendance.workType},
+                                                data-start-time=${attendance.workingStartTime},
+                                                data-end-time=${attendance.workingEndTime}">
+                                        予定編集
+                                    </button>
+
+
+                                    <!-- 勤務予定が未登録 -->
+                                    <span class="unregistered-label"
+                                          th:if="${attendance.attendanceId == null}">
+                                        未登録
+                                    </span>
+
+
+                                    <!-- 出勤または退勤の打刻済み -->
+                                    <span class="locked-label"
+                                          th:if="${attendance.attendanceId != null
+                                              and (
+                                                  attendance.actualWorkingStartTime != null
+                                                  or attendance.actualWorkingEndTime != null
+                                              )}">
+                                        変更不可
                                     </span>
                                 </td>
                             </tr>
@@ -390,58 +430,718 @@
                     </table>
                 </div>
             </section>
-
         </main>
     </div>
 
-    <!-- 勤務区分を変更したときの処理 -->
+
+    <!-- 追加する勤務予定行のひな形 -->
+    <template id="scheduleRowTemplate">
+        <div class="schedule-row">
+            <div class="schedule-number">
+            </div>
+
+            <div class="schedule-field">
+                <label class="mobile-label">
+                    勤務日
+                </label>
+
+                <input class="working-date"
+                       type="date"
+                       name="workingDates"
+                       required>
+            </div>
+
+            <div class="schedule-field">
+                <label class="mobile-label">
+                    勤務区分
+                </label>
+
+                <select class="work-type"
+                        name="workTypes"
+                        required>
+
+                    <option value="1">
+                        出勤日
+                    </option>
+
+                    <option value="2">
+                        公休
+                    </option>
+                </select>
+            </div>
+
+            <div class="schedule-field">
+                <label class="mobile-label">
+                    勤務開始時間
+                </label>
+
+                <input class="working-start-time"
+                       type="time"
+                       name="workingStartTimes"
+                       value="09:00"
+                       required>
+            </div>
+
+            <div class="schedule-field">
+                <label class="mobile-label">
+                    勤務終了時間
+                </label>
+
+                <input class="working-end-time"
+                       type="time"
+                       name="workingEndTimes"
+                       value="18:00"
+                       required>
+            </div>
+
+            <div class="schedule-operation">
+                <button class="remove-schedule-button"
+                        type="button">
+                    削除
+                </button>
+            </div>
+        </div>
+    </template>
+
+
     <script>
-        function changeWorkType() {
-            const workType =
-                document.getElementById("workType").value;
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                const registrationForm =
+                    document.getElementById(
+                        "registrationForm"
+                    );
 
-            const workingStartTime =
-                document.getElementById("workingStartTime");
+                const registrationSection =
+                    document.getElementById(
+                        "registrationSection"
+                    );
 
-            const workingEndTime =
-                document.getElementById("workingEndTime");
+                const registrationTitle =
+                    document.getElementById(
+                        "registrationTitle"
+                    );
 
-            const isHoliday =
-                workType === "2";
+                const registrationDescription =
+                    document.getElementById(
+                        "registrationDescription"
+                    );
 
-            /*
-             * 公休の場合は勤務時間を入力できなくする
-             */
-            workingStartTime.disabled =
-                isHoliday;
+                const registerButton =
+                    document.getElementById(
+                        "registerButton"
+                    );
 
-            workingEndTime.disabled =
-                isHoliday;
+                const scheduleList =
+                    document.getElementById(
+                        "scheduleList"
+                    );
 
-            /*
-             * 出勤日の場合だけ入力必須にする
-             */
-            workingStartTime.required =
-                !isHoliday;
+                const scheduleRowTemplate =
+                    document.getElementById(
+                        "scheduleRowTemplate"
+                    );
 
-            workingEndTime.required =
-                !isHoliday;
+                const addScheduleButton =
+                    document.getElementById(
+                        "addScheduleButton"
+                    );
 
-            /*
-             * 公休へ変更した場合は、
-             * 入力済みの時刻を消す
-             */
-            if (isHoliday) {
-                workingStartTime.value = "";
-                workingEndTime.value = "";
+                const clientErrorMessage =
+                    document.getElementById(
+                        "clientErrorMessage"
+                    );
+
+
+                /*
+                 * 勤務予定を1行追加する
+                 */
+                addScheduleButton.addEventListener(
+                    "click",
+                    function () {
+                        const newRow =
+                            createScheduleRow();
+
+                        scheduleList.appendChild(
+                            newRow
+                        );
+
+                        setNextDate(
+                            newRow
+                        );
+
+                        updateScheduleRows();
+                        changeToRegisterMode();
+                        clearClientError();
+                    }
+                );
+
+
+                /*
+                 * 新しい入力行を作成する
+                 */
+                function createScheduleRow() {
+                    const templateContent =
+                        scheduleRowTemplate
+                            .content
+                            .cloneNode(true);
+
+                    const newRow =
+                        templateContent.querySelector(
+                            ".schedule-row"
+                        );
+
+                    initializeScheduleRow(
+                        newRow
+                    );
+
+                    return newRow;
+                }
+
+
+                /*
+                 * 入力行のイベントを設定する
+                 */
+                function initializeScheduleRow(
+                        scheduleRow) {
+
+                    const workType =
+                        scheduleRow.querySelector(
+                            ".work-type"
+                        );
+
+                    const removeButton =
+                        scheduleRow.querySelector(
+                            ".remove-schedule-button"
+                        );
+
+                    workType.addEventListener(
+                        "change",
+                        function () {
+                            changeRowWorkType(
+                                scheduleRow
+                            );
+
+                            clearClientError();
+                        }
+                    );
+
+                    removeButton.addEventListener(
+                        "click",
+                        function () {
+                            scheduleRow.remove();
+                            updateScheduleRows();
+                            clearClientError();
+                        }
+                    );
+
+                    changeRowWorkType(
+                        scheduleRow
+                    );
+                }
+
+
+			/**
+			 * 公休の場合は時刻入力を変更できなくする
+			 */
+			function changeRowWorkType(
+			        scheduleRow) {
+			
+			    const workType =
+			        scheduleRow.querySelector(
+			            ".work-type"
+			        );
+			
+			    const startTime =
+			        scheduleRow.querySelector(
+			            ".working-start-time"
+			        );
+			
+			    const endTime =
+			        scheduleRow.querySelector(
+			            ".working-end-time"
+			        );
+			
+			    const isHoliday =
+			        workType.value === "2";
+			
+			
+			    startTime.readOnly =
+			        isHoliday;
+			
+			    endTime.readOnly =
+			        isHoliday;
+			
+			    startTime.required =
+			        !isHoliday;
+			
+			    endTime.required =
+			        !isHoliday;
+			
+			
+			    if (isHoliday) {
+			
+			        /*
+			         * 空文字にするとController側のリスト件数が
+			         * 合わなくなるため、送信用の値を残す。
+			         *
+			         * Controllerは公休の場合、この時刻を使用せず
+			         * DBにはNULLを登録する。
+			         */
+			        if (startTime.value === "") {
+			
+			            startTime.value =
+			                "09:00";
+			        }
+			
+			        if (endTime.value === "") {
+			
+			            endTime.value =
+			                "18:00";
+			        }
+			
+			        startTime.classList.add(
+			            "is-disabled"
+			        );
+			
+			        endTime.classList.add(
+			            "is-disabled"
+			        );
+			
+			    } else {
+			
+			        if (startTime.value === "") {
+			
+			            startTime.value =
+			                "09:00";
+			        }
+			
+			        if (endTime.value === "") {
+			
+			            endTime.value =
+			                "18:00";
+			        }
+			
+			        startTime.classList.remove(
+			            "is-disabled"
+			        );
+			
+			        endTime.classList.remove(
+			            "is-disabled"
+			        );
+			    }
+			}
+
+
+                /*
+                 * 一覧の予定編集ボタン
+                 */
+                const editButtons =
+                    document.querySelectorAll(
+                        ".edit-schedule-button"
+                    );
+
+                editButtons.forEach(
+                    function (editButton) {
+                        editButton.addEventListener(
+                            "click",
+                            function () {
+                                scheduleList.innerHTML =
+                                    "";
+
+                                const editRow =
+                                    createScheduleRow();
+
+                                const dateInput =
+                                    editRow.querySelector(
+                                        ".working-date"
+                                    );
+
+                                const workType =
+                                    editRow.querySelector(
+                                        ".work-type"
+                                    );
+
+                                const startTime =
+                                    editRow.querySelector(
+                                        ".working-start-time"
+                                    );
+
+                                const endTime =
+                                    editRow.querySelector(
+                                        ".working-end-time"
+                                    );
+
+
+                                dateInput.value =
+                                    editButton.dataset
+                                        .workingDate;
+
+                                /*
+                                 * 編集時は勤務日を変更不可にする。
+                                 * readonlyなので値は送信される。
+                                 */
+                                dateInput.readOnly =
+                                    true;
+
+                                dateInput.classList.add(
+                                    "is-editing-date"
+                                );
+
+
+                                workType.value =
+                                    editButton.dataset
+                                        .workType;
+
+
+                                if (workType.value === "1") {
+                                    startTime.value =
+                                        normalizeTime(
+                                            editButton.dataset
+                                                .startTime
+                                        );
+
+                                    endTime.value =
+                                        normalizeTime(
+                                            editButton.dataset
+                                                .endTime
+                                        );
+                                }
+
+
+                                scheduleList.appendChild(
+                                    editRow
+                                );
+
+                                changeRowWorkType(
+                                    editRow
+                                );
+
+                                updateScheduleRows();
+
+
+                                registrationTitle.textContent =
+                                    "勤務予定編集";
+
+                                registrationDescription.textContent =
+                                    "未打刻の勤務予定を変更します";
+
+                                registerButton.textContent =
+                                    "勤務予定を変更";
+
+
+                                registrationSection.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "start"
+                                });
+                            }
+                        );
+                    }
+                );
+
+
+                /*
+                 * LocalTimeをHH:mmにする
+                 */
+                function normalizeTime(
+                        timeValue) {
+
+                    if (!timeValue
+                            || timeValue === "null") {
+
+                        return "";
+                    }
+
+                    return timeValue.substring(
+                        0,
+                        5
+                    );
+                }
+
+
+                /*
+                 * 新規登録表示へ戻す
+                 */
+                function changeToRegisterMode() {
+                    registrationTitle.textContent =
+                        "勤務予定登録";
+
+                    registrationDescription.textContent =
+                        "勤務日ごとに勤務区分と勤務時間を登録します";
+
+                    registerButton.textContent =
+                        "勤務予定を登録";
+                }
+
+
+                /*
+                 * 前の入力行の翌日を設定する
+                 */
+                function setNextDate(
+                        newRow) {
+
+                    const rows =
+                        scheduleList.querySelectorAll(
+                            ".schedule-row"
+                        );
+
+                    if (rows.length < 2) {
+                        return;
+                    }
+
+                    const previousRow =
+                        rows[rows.length - 2];
+
+                    const previousDateInput =
+                        previousRow.querySelector(
+                            ".working-date"
+                        );
+
+                    const newDateInput =
+                        newRow.querySelector(
+                            ".working-date"
+                        );
+
+
+                    if (previousDateInput.value === "") {
+                        return;
+                    }
+
+
+                    const nextDate =
+                        new Date(
+                            previousDateInput.value
+                            + "T00:00:00"
+                        );
+
+                    nextDate.setDate(
+                        nextDate.getDate() + 1
+                    );
+
+                    newDateInput.value =
+                        formatDate(nextDate);
+                }
+
+
+                /*
+                 * 日付をyyyy-MM-dd形式へ変換する
+                 */
+                function formatDate(
+                        date) {
+
+                    const year =
+                        date.getFullYear();
+
+                    const month =
+                        String(
+                            date.getMonth() + 1
+                        ).padStart(
+                            2,
+                            "0"
+                        );
+
+                    const day =
+                        String(
+                            date.getDate()
+                        ).padStart(
+                            2,
+                            "0"
+                        );
+
+                    return year
+                        + "-"
+                        + month
+                        + "-"
+                        + day;
+                }
+
+
+                /*
+                 * 行番号と削除ボタンを更新する
+                 */
+                function updateScheduleRows() {
+                    const rows =
+                        scheduleList.querySelectorAll(
+                            ".schedule-row"
+                        );
+
+                    rows.forEach(
+                        function (
+                                scheduleRow,
+                                index) {
+
+                            const number =
+                                scheduleRow.querySelector(
+                                    ".schedule-number"
+                                );
+
+                            const removeButton =
+                                scheduleRow.querySelector(
+                                    ".remove-schedule-button"
+                                );
+
+                            number.textContent =
+                                index + 1;
+
+                            removeButton.disabled =
+                                rows.length === 1;
+                        }
+                    );
+                }
+
+
+                /*
+                 * 送信前の入力確認
+                 */
+                registrationForm.addEventListener(
+                    "submit",
+                    function (event) {
+                        clearClientError();
+
+                        const rows =
+                            scheduleList.querySelectorAll(
+                                ".schedule-row"
+                            );
+
+                        const selectedDates =
+                            new Set();
+
+
+                        for (const scheduleRow of rows) {
+                            const dateInput =
+                                scheduleRow.querySelector(
+                                    ".working-date"
+                                );
+
+                            const workType =
+                                scheduleRow.querySelector(
+                                    ".work-type"
+                                );
+
+                            const startTime =
+                                scheduleRow.querySelector(
+                                    ".working-start-time"
+                                );
+
+                            const endTime =
+                                scheduleRow.querySelector(
+                                    ".working-end-time"
+                                );
+
+
+                            if (dateInput.value === "") {
+                                event.preventDefault();
+
+                                showClientError(
+                                    "勤務日を入力してください。"
+                                );
+
+                                dateInput.focus();
+                                return;
+                            }
+
+
+                            if (selectedDates.has(
+                                    dateInput.value
+                            )) {
+                                event.preventDefault();
+
+                                showClientError(
+                                    "同じ勤務日が複数選択されています。"
+                                );
+
+                                return;
+                            }
+
+
+                            selectedDates.add(
+                                dateInput.value
+                            );
+
+
+                            if (workType.value === "1") {
+                                if (startTime.value === ""
+                                        || endTime.value === "") {
+
+                                    event.preventDefault();
+
+                                    showClientError(
+                                        "出勤日の勤務時間を入力してください。"
+                                    );
+
+                                    return;
+                                }
+
+
+                                if (startTime.value
+                                        >= endTime.value) {
+
+                                    event.preventDefault();
+
+                                    showClientError(
+                                        "勤務開始時間は勤務終了時間より前にしてください。"
+                                    );
+
+                                    return;
+                                }
+                            }
+                        }
+
+
+                        const confirmed =
+                            window.confirm(
+                                "入力した勤務予定を登録・変更しますか？"
+                            );
+
+                        if (!confirmed) {
+                            event.preventDefault();
+                        }
+                    }
+                );
+
+
+                function showClientError(
+                        message) {
+
+                    clientErrorMessage.textContent =
+                        message;
+
+                    clientErrorMessage.classList.add(
+                        "is-visible"
+                    );
+                }
+
+
+                function clearClientError() {
+                    clientErrorMessage.textContent =
+                        "";
+
+                    clientErrorMessage.classList.remove(
+                        "is-visible"
+                    );
+                }
+
+
+                /*
+                 * 最初の入力行を初期化する
+                 */
+                const initialRows =
+                    scheduleList.querySelectorAll(
+                        ".schedule-row"
+                    );
+
+                initialRows.forEach(
+                    function (scheduleRow) {
+                        initializeScheduleRow(
+                            scheduleRow
+                        );
+                    }
+                );
+
+                updateScheduleRows();
             }
-        }
-
-        /*
-         * 画面を表示したときにも一度実行する
-         */
-        changeWorkType();
+        );
     </script>
 </body>
-
 </html>

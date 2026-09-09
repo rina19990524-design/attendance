@@ -4,31 +4,50 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="jp.levtech.rookie.attendance.mapper.AttendanceMapper">
+<mapper namespace=
+        "jp.levtech.rookie.attendance.mapper.AttendanceMapper">
 
 
     <!-- 社員IDと勤務日から勤怠情報を取得する -->
     <select id="findByUserIdAndWorkingDay"
-            resultType="jp.levtech.rookie.attendance.model.TbTrnAttendance">
+            resultType=
+            "jp.levtech.rookie.attendance.model.TbTrnAttendance">
 
         SELECT
-            attendance_id AS attendanceId,
-            user_id AS userId,
-            working_day AS workingDay,
-            working_start_time AS workingStartTime,
-            working_end_time AS workingEndTime,
-            actual_working_start_time AS actualWorkingStartTime,
-            actual_working_end_time AS actualWorkingEndTime,
-            work_type AS workType
+            attendance_id
+                AS attendanceId,
+
+            user_id
+                AS userId,
+
+            working_day
+                AS workingDay,
+
+            working_start_time
+                AS workingStartTime,
+
+            working_end_time
+                AS workingEndTime,
+
+            actual_working_start_time
+                AS actualWorkingStartTime,
+
+            actual_working_end_time
+                AS actualWorkingEndTime,
+
+            work_type
+                AS workType
 
         FROM
             tb_trn_attendance
 
         WHERE
-            user_id = #{employeeId}
+            user_id =
+                #{employeeId}
 
         AND
-            working_day = #{today}
+            working_day =
+                #{today}
 
     </select>
 
@@ -37,7 +56,6 @@
     <insert id="insert">
 
         INSERT INTO tb_trn_attendance (
-
             attendance_id,
             user_id,
             working_day,
@@ -46,9 +64,7 @@
             actual_working_start_time,
             actual_working_end_time,
             work_type
-
         ) VALUES (
-
             #{attendanceId},
             #{userId},
             #{workingDay},
@@ -57,13 +73,17 @@
             #{actualWorkingStartTime},
             #{actualWorkingEndTime},
             #{workType}
-
         )
 
     </insert>
 
 
-    <!-- 勤怠情報を更新する -->
+    <!--
+        出退勤を含む勤怠情報を更新する
+
+        HomeControllerなどの
+        出勤・退勤処理で使用する
+    -->
     <update id="update">
 
         UPDATE
@@ -92,25 +112,78 @@
     </update>
 
 
+    <!--
+        未打刻の場合だけ勤務予定を更新する
+
+        実際の出勤時刻または退勤時刻が存在する場合は
+        更新件数が0件になる
+    -->
+    <update id="updateWorkSchedule">
+
+        UPDATE
+            tb_trn_attendance
+
+        SET
+            working_start_time =
+                #{workingStartTime},
+
+            working_end_time =
+                #{workingEndTime},
+
+            work_type =
+                #{workType}
+
+        WHERE
+            attendance_id =
+                #{attendanceId}
+
+        AND
+            actual_working_start_time
+                IS NULL
+
+        AND
+            actual_working_end_time
+                IS NULL
+
+    </update>
+
+
     <!-- 社員IDからすべての勤怠情報を取得する -->
     <select id="findByUserId"
-            resultType="jp.levtech.rookie.attendance.model.TbTrnAttendance">
+            resultType=
+            "jp.levtech.rookie.attendance.model.TbTrnAttendance">
 
         SELECT
-            attendance_id AS attendanceId,
-            user_id AS userId,
-            working_day AS workingDay,
-            working_start_time AS workingStartTime,
-            working_end_time AS workingEndTime,
-            actual_working_start_time AS actualWorkingStartTime,
-            actual_working_end_time AS actualWorkingEndTime,
-            work_type AS workType
+            attendance_id
+                AS attendanceId,
+
+            user_id
+                AS userId,
+
+            working_day
+                AS workingDay,
+
+            working_start_time
+                AS workingStartTime,
+
+            working_end_time
+                AS workingEndTime,
+
+            actual_working_start_time
+                AS actualWorkingStartTime,
+
+            actual_working_end_time
+                AS actualWorkingEndTime,
+
+            work_type
+                AS workType
 
         FROM
             tb_trn_attendance
 
         WHERE
-            user_id = #{employeeId}
+            user_id =
+                #{employeeId}
 
         ORDER BY
             working_day ASC

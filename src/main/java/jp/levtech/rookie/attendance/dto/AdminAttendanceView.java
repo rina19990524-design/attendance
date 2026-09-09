@@ -40,29 +40,74 @@ public class AdminAttendanceView {
 
 
     /**
-     * 実際の出勤時刻
+     * 出勤予定時刻
      */
     private LocalTime workingStartTime;
 
 
     /**
-     * 実際の退勤時刻
+     * 退勤予定時刻
      */
     private LocalTime workingEndTime;
 
 
     /**
-     * 勤務時間
+     * 実際の出勤時刻
+     */
+    private LocalTime actualWorkingStartTime;
+
+
+    /**
+     * 実際の退勤時刻
+     */
+    private LocalTime actualWorkingEndTime;
+
+
+    /**
+     * 勤務区分
      *
-     * 例：8時間04分
+     * 1：出勤日
+     * 2：公休
+     */
+    private Integer workType;
+
+
+    /**
+     * 実働時間
+     *
+     * 例：8時間00分
      */
     private String workingTime;
 
 
     /**
+     * 承認済みの有給休暇か
+     *
+     * true：有給
+     * false：有給ではない
+     */
+    private Boolean paidLeave;
+
+
+    /**
      * 勤怠状態
      *
-     * 例：正常、勤務中、未出勤
+     * 正常
+     * 勤務中
+     * 打刻漏れ
+     * 休日
+     * 有給
+     * 予定
      */
     private String status;
+
+
+    /**
+     * 公休か判定する
+     */
+    public boolean isHoliday() {
+
+        return workType != null
+                && workType == 2;
+    }
 }
