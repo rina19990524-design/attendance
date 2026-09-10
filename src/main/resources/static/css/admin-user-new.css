@@ -49,8 +49,13 @@ body {
     overflow-x: hidden;
 }
 
-/* 背景の波 */
+button,
+input,
+select {
+    font: inherit;
+}
 
+/* 背景の波 */
 body::before {
     content: "";
     position: fixed;
@@ -59,7 +64,9 @@ body::before {
     bottom: -35%;
     width: 120%;
     height: 65%;
-    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
+    border-radius:
+        45% 55% 0 0 /
+        35% 40% 0 0;
     background:
         linear-gradient(
             135deg,
@@ -81,7 +88,9 @@ body::after {
     bottom: -47%;
     width: 130%;
     height: 68%;
-    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
+    border-radius:
+        50% 50% 0 0 /
+        32% 38% 0 0;
     background:
         linear-gradient(
             110deg,
@@ -94,20 +103,41 @@ body::after {
 }
 
 /* ========================================
+   画面全体
+   ======================================== */
+
+.page-container {
+    position: relative;
+    z-index: 1;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    background:
+        rgba(255, 255, 255, 0.91);
+    border: 1px solid
+        rgba(255, 255, 255, 0.92);
+    border-radius: 16px;
+    box-shadow:
+        0 22px 55px
+        rgba(38, 105, 87, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ========================================
    ヘッダー
    ======================================== */
 
 .header {
-    position: relative;
-    z-index: 1;
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns:
+        minmax(260px, 1fr)
+        auto
+        auto;
     align-items: center;
     gap: 24px;
-    width: 1050px;
-    max-width: 100%;
     min-height: 110px;
-    margin: 0 auto;
     padding: 25px 34px;
     color: #ffffff;
     background:
@@ -117,9 +147,6 @@ body::after {
             #075748 55%,
             #08705b 100%
         );
-    border-radius: 16px 16px 0 0;
-    box-shadow:
-        0 16px 35px rgba(6, 72, 59, 0.22);
 }
 
 .company-name {
@@ -132,7 +159,8 @@ body::after {
 .admin-information {
     padding: 12px 18px;
     color: #def8f0;
-    background: rgba(255, 255, 255, 0.11);
+    background:
+        rgba(255, 255, 255, 0.11);
     border-radius: 8px;
     font-size: 15px;
     white-space: nowrap;
@@ -142,8 +170,6 @@ body::after {
     color: #ffffff;
     font-weight: 700;
 }
-
-/* ヘッダー右側 */
 
 .header-actions {
     display: flex;
@@ -155,65 +181,67 @@ body::after {
     margin: 0;
 }
 
-/* ホームへ戻る */
-
-.header-home-link {
+.header-home-link,
+.logout-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 165px;
     min-height: 45px;
     padding: 10px 18px;
     color: #ffffff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        background-color 0.2s,
+        filter 0.2s,
+        box-shadow 0.2s;
+}
+
+.header-home-link {
+    min-width: 165px;
     background:
         linear-gradient(
             135deg,
             #159b7c 0%,
             #0a735d 100%
         );
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.24);
     text-decoration: none;
-    white-space: nowrap;
     box-shadow:
-        0 7px 16px rgba(0, 38, 30, 0.2);
-    transition:
-        transform 0.2s,
-        filter 0.2s,
-        box-shadow 0.2s;
+        0 7px 16px
+        rgba(0, 38, 30, 0.2);
 }
-
-.header-home-link:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.08);
-    box-shadow:
-        0 10px 20px rgba(0, 38, 30, 0.27);
-}
-
-/* ログアウト */
 
 .logout-button {
     min-width: 120px;
-    min-height: 45px;
-    padding: 10px 18px;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.58);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        transform 0.2s,
-        background-color 0.2s;
+    background:
+        rgba(255, 255, 255, 0.12);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.58);
+}
+
+.header-home-link:hover,
+.logout-button:hover {
+    transform: translateY(-2px);
+}
+
+.header-home-link:hover {
+    filter: brightness(1.08);
+    box-shadow:
+        0 10px 20px
+        rgba(0, 38, 30, 0.27);
 }
 
 .logout-button:hover {
-    background: rgba(255, 255, 255, 0.22);
-    transform: translateY(-2px);
+    background:
+        rgba(255, 255, 255, 0.22);
 }
 
 /* ========================================
@@ -221,15 +249,13 @@ body::after {
    ======================================== */
 
 .page-title {
-    position: relative;
-    z-index: 1;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
+    margin: 0;
     padding: 23px 36px;
     color: #174b40;
-    background: rgba(255, 255, 255, 0.96);
-    border-bottom: 1px solid #c9e6dd;
+    background:
+        rgba(255, 255, 255, 0.96);
+    border-bottom:
+        1px solid #c9e6dd;
     font-size: 25px;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -240,18 +266,7 @@ body::after {
    ======================================== */
 
 main {
-    position: relative;
-    z-index: 1;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
     padding: 42px 55px 55px;
-    background: rgba(255, 255, 255, 0.91);
-    border-radius: 0 0 16px 16px;
-    box-shadow:
-        0 22px 55px rgba(38, 105, 87, 0.18);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
 
 /* ========================================
@@ -274,7 +289,8 @@ main {
     border: 1px solid #c4e4da;
     border-radius: 14px;
     box-shadow:
-        0 12px 28px rgba(32, 105, 85, 0.1);
+        0 12px 28px
+        rgba(32, 105, 85, 0.1);
 }
 
 .form-item {
@@ -300,7 +316,6 @@ main {
     background: #ffffff;
     border: 1px solid #b9d4cc;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 15px;
     outline: none;
     transition:
@@ -317,11 +332,11 @@ main {
 .issued-item input:focus {
     border-color: #0c846a;
     box-shadow:
-        0 0 0 4px rgba(12, 132, 106, 0.13);
+        0 0 0 4px
+        rgba(12, 132, 106, 0.13);
 }
 
 /* 自動発行欄 */
-
 .automatic-value {
     display: flex;
     align-items: center;
@@ -329,7 +344,8 @@ main {
     padding: 10px 14px;
     color: #55736c;
     background: #edf4f2;
-    border: 1px dashed #adcac2;
+    border:
+        1px dashed #adcac2;
     border-radius: 8px;
     font-size: 14px;
 }
@@ -368,7 +384,6 @@ main {
     min-height: 48px;
     padding: 11px 24px;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
@@ -388,7 +403,8 @@ main {
         );
     border: none;
     box-shadow:
-        0 8px 18px rgba(8, 112, 90, 0.25);
+        0 8px 18px
+        rgba(8, 112, 90, 0.25);
 }
 
 .back-link {
@@ -404,7 +420,8 @@ main {
 
 .register-button:hover {
     box-shadow:
-        0 11px 23px rgba(8, 112, 90, 0.31);
+        0 11px 23px
+        rgba(8, 112, 90, 0.31);
 }
 
 .back-link:hover {
@@ -428,13 +445,14 @@ main {
     border: 1px solid #bfe2d7;
     border-radius: 14px;
     box-shadow:
-        0 12px 28px rgba(32, 105, 85, 0.11);
+        0 12px 28px
+        rgba(32, 105, 85, 0.11);
 }
 
 .success-message {
     margin: 0 0 28px;
     padding: 15px 18px;
-    color: #125b49 !important;
+    color: #125b49;
     background: #ddf5ec;
     border: 1px solid #9bd6c4;
     border-radius: 8px;
@@ -451,7 +469,9 @@ main {
 
 .copy-area {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
     gap: 12px;
 }
 
@@ -460,6 +480,8 @@ main {
     background: #f3f8f6;
     font-weight: 700;
     letter-spacing: 0.04em;
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 .copy-button {
@@ -469,23 +491,29 @@ main {
     background: #397a69;
     border: none;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
 }
 
 .copy-button:hover {
     background: #286655;
+    transform: translateY(-1px);
 }
 
 .copy-message {
     min-height: 24px;
     margin: 4px 0 20px;
-    color: #08705a;
     font-size: 14px;
     font-weight: 700;
     text-align: center;
+}
+
+.copy-message.copy-success {
+    color: #08705a;
 }
 
 .copy-message.copy-error {
@@ -512,7 +540,9 @@ main {
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
-    transition: transform 0.2s;
+    transition:
+        transform 0.2s,
+        background-color 0.2s;
 }
 
 .continue-link {
@@ -536,18 +566,24 @@ main {
     transform: translateY(-2px);
 }
 
+.users-link:hover {
+    color: #086b56;
+    background: #f3fcf9;
+    border-color: #0d9273;
+}
+
 /* ========================================
    タブレット
    ======================================== */
 
 @media screen and (max-width: 850px) {
-
     body {
         padding: 20px 14px 50px;
     }
 
     .header {
-        grid-template-columns: 1fr auto;
+        grid-template-columns:
+            1fr auto;
         gap: 16px;
         padding: 22px;
     }
@@ -582,6 +618,13 @@ main {
    ======================================== */
 
 @media screen and (max-width: 600px) {
+    body {
+        padding: 7px;
+    }
+
+    .page-container {
+        border-radius: 13px;
+    }
 
     .header {
         grid-template-columns: 1fr;
@@ -589,6 +632,10 @@ main {
 
     .company-information {
         grid-column: auto;
+    }
+
+    .company-name {
+        font-size: 19px;
     }
 
     .admin-information {
