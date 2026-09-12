@@ -15,10 +15,6 @@ body {
     margin: 0;
 }
 
-/* ========================================
-   画面全体
-   ======================================== */
-
 body {
     position: relative;
     min-height: 100vh;
@@ -53,8 +49,13 @@ body {
     overflow-x: hidden;
 }
 
-/* 背景の波 */
+button,
+input,
+select {
+    font: inherit;
+}
 
+/* 背景の波 */
 body::before {
     content: "";
     position: fixed;
@@ -63,7 +64,9 @@ body::before {
     bottom: -35%;
     width: 120%;
     height: 65%;
-    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
+    border-radius:
+        45% 55% 0 0 /
+        35% 40% 0 0;
     background:
         linear-gradient(
             135deg,
@@ -85,7 +88,9 @@ body::after {
     bottom: -47%;
     width: 130%;
     height: 68%;
-    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
+    border-radius:
+        50% 50% 0 0 /
+        32% 38% 0 0;
     background:
         linear-gradient(
             110deg,
@@ -98,20 +103,42 @@ body::after {
 }
 
 /* ========================================
+   画面全体
+   ======================================== */
+
+.page-container {
+    position: relative;
+    z-index: 1;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    background:
+        rgba(255, 255, 255, 0.93);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.92);
+    border-radius: 16px;
+    box-shadow:
+        0 22px 55px
+        rgba(38, 105, 87, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ========================================
    ヘッダー
    ======================================== */
 
 .header {
-    position: relative;
-    z-index: 1;
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns:
+        minmax(260px, 1fr)
+        auto
+        auto;
     align-items: center;
     gap: 24px;
-    width: 1050px;
-    max-width: 100%;
     min-height: 110px;
-    margin: 0 auto;
     padding: 25px 34px;
     color: #ffffff;
     background:
@@ -121,9 +148,6 @@ body::after {
             #075748 55%,
             #08705b 100%
         );
-    border-radius: 16px 16px 0 0;
-    box-shadow:
-        0 16px 35px rgba(6, 72, 59, 0.22);
 }
 
 .company-information {
@@ -135,8 +159,11 @@ body::after {
 .admin-information {
     padding: 12px 18px;
     color: #def8f0;
-    background: rgba(255, 255, 255, 0.11);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        rgba(255, 255, 255, 0.11);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     font-size: 15px;
     white-space: nowrap;
@@ -146,10 +173,6 @@ body::after {
     color: #ffffff;
     font-weight: 700;
 }
-
-/* ========================================
-   ヘッダー右側
-   ======================================== */
 
 .header-actions {
     display: flex;
@@ -161,107 +184,115 @@ body::after {
     margin: 0;
 }
 
-/* ========================================
-   ホームへ戻る
-   白背景
-   ======================================== */
-
-.header-home-link {
+.header-home-link,
+.logout-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 165px;
     min-height: 45px;
     padding: 10px 18px;
-    color: #075748;
-    background: #ffffff;
-    border: 1px solid #ffffff;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
-    text-decoration: none;
     white-space: nowrap;
-    box-shadow:
-        0 7px 16px rgba(0, 38, 30, 0.2);
+    cursor: pointer;
     transition:
         transform 0.2s,
-        color 0.2s,
         background-color 0.2s,
         box-shadow 0.2s;
+}
+
+.header-home-link {
+    min-width: 165px;
+    color: #075748;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    text-decoration: none;
+    box-shadow:
+        0 7px 16px
+        rgba(0, 38, 30, 0.2);
+}
+
+.logout-button {
+    min-width: 120px;
+    color: #ffffff;
+    background:
+        rgba(255, 255, 255, 0.12);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.58);
+}
+
+.header-home-link:hover,
+.logout-button:hover {
+    transform: translateY(-2px);
 }
 
 .header-home-link:hover {
     color: #043c32;
     background: #e8f8f3;
-    transform: translateY(-2px);
     box-shadow:
-        0 10px 20px rgba(0, 38, 30, 0.27);
-}
-
-/* ========================================
-   ログアウト
-   ======================================== */
-
-.logout-button {
-    min-width: 120px;
-    min-height: 45px;
-    padding: 10px 18px;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.58);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        transform 0.2s,
-        background-color 0.2s;
+        0 10px 20px
+        rgba(0, 38, 30, 0.27);
 }
 
 .logout-button:hover {
-    background: rgba(255, 255, 255, 0.22);
-    transform: translateY(-2px);
+    background:
+        rgba(255, 255, 255, 0.22);
 }
 
 /* ========================================
    画面タイトル
    ======================================== */
 
-body > h1 {
-    position: relative;
-    z-index: 1;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
+.page-title {
     padding: 23px 36px;
+    background:
+        rgba(255, 255, 255, 0.96);
+    border-bottom:
+        1px solid #c9e6dd;
+}
+
+.page-title h1 {
+    margin: 0;
     color: #174b40;
-    background: rgba(255, 255, 255, 0.96);
-    border-bottom: 1px solid #c9e6dd;
     font-size: 25px;
     font-weight: 700;
     letter-spacing: 0.05em;
 }
 
 /* ========================================
-   更新メッセージ
+   メッセージ
    ======================================== */
 
-body > p {
-    position: relative;
-    z-index: 1;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 14px 30px;
-    color: #12624f;
-    background: #dff5ed;
-    border-right: 1px solid #a7daca;
-    border-bottom: 1px solid #a7daca;
-    border-left: 1px solid #a7daca;
+.message {
+    margin: 24px 55px 0;
+    padding: 14px 20px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
+    line-height: 1.6;
     text-align: center;
+}
+
+.success-message {
+    color: #12624f;
+    background: #dff5ed;
+    border: 1px solid #a7daca;
+}
+
+.error-message {
+    color: #a83b32;
+    background: #fff0ee;
+    border: 1px solid #edb9b3;
+}
+
+/* ========================================
+   メイン部分
+   ======================================== */
+
+.main-content {
+    padding: 40px 55px 50px;
 }
 
 /* ========================================
@@ -269,26 +300,35 @@ body > p {
    ======================================== */
 
 .employee-edit-form {
-    position: relative;
-    z-index: 1;
     display: grid;
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
     gap: 24px 30px;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 40px 55px 45px;
-    background: rgba(255, 255, 255, 0.93);
+    margin: 0;
+    padding: 34px 38px 40px;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #e9f9f4 100%
+        );
+    border: 1px solid #c4e4da;
+    border-radius: 14px;
     box-shadow:
-        0 18px 40px rgba(38, 105, 87, 0.14);
+        0 12px 28px
+        rgba(32, 105, 85, 0.1);
 }
 
-.employee-edit-form > div {
+.form-item {
     min-width: 0;
 }
 
-.employee-edit-form label {
+.form-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-item label,
+.issued-item label {
     display: block;
     margin-bottom: 9px;
     color: #174b40;
@@ -296,8 +336,8 @@ body > p {
     font-weight: 700;
 }
 
-.employee-edit-form input,
-.employee-edit-form select {
+.form-item input,
+.form-item select {
     width: 100%;
     min-height: 48px;
     padding: 10px 13px;
@@ -305,7 +345,6 @@ body > p {
     background: #ffffff;
     border: 1px solid #b9d4cc;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 15px;
     outline: none;
     transition:
@@ -313,18 +352,17 @@ body > p {
         box-shadow 0.2s;
 }
 
-.employee-edit-form select {
+.form-item select {
     cursor: pointer;
 }
 
-.employee-edit-form input:focus,
-.employee-edit-form select:focus {
+.form-item input:focus,
+.form-item select:focus {
     border-color: #0c846a;
     box-shadow:
-        0 0 0 4px rgba(12, 132, 106, 0.13);
+        0 0 0 4px
+        rgba(12, 132, 106, 0.13);
 }
-
-/* 変更できない社員ID */
 
 #employeeId {
     color: #5f756f;
@@ -332,61 +370,63 @@ body > p {
     cursor: not-allowed;
 }
 
-#employeeId + span {
+.input-note {
     display: block;
     margin-top: 7px;
     color: #687d77;
     font-size: 12px;
 }
 
-/* 在籍状況 */
-
-.employee-edit-form > div:last-child {
-    grid-column: 1 / -1;
-}
-
-/* 区切り線を消す */
-
-body > hr {
-    display: none;
-}
-
 /* ========================================
    パスワード再設定
    ======================================== */
 
-body > section {
-    position: relative;
-    z-index: 1;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 35px 55px 45px;
+.password-section {
+    margin-top: 30px;
+    padding: 34px 38px 40px;
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.97),
-            rgba(231, 248, 242, 0.97)
+            #ffffff 0%,
+            #e7f8f2 100%
         );
-    border-top: 1px solid #c7e5dc;
+    border: 1px solid #c4e4da;
+    border-radius: 14px;
+    box-shadow:
+        0 12px 28px
+        rgba(32, 105, 85, 0.1);
 }
 
-body > section h2 {
-    margin: 0 0 12px;
+.section-heading {
+    margin-bottom: 24px;
+}
+
+.section-heading h2 {
+    margin: 0;
     color: #174b40;
     font-size: 22px;
-    font-weight: 700;
 }
 
-body > section > p {
-    margin: 0 0 22px;
+.section-heading p {
+    margin: 9px 0 0;
     color: #5b736c;
     font-size: 14px;
 }
 
-/* 発行されたパスワード情報 */
+.password-success-message {
+    margin: 0 0 24px;
+    padding: 14px 18px;
+    color: #12624f;
+    background: #dff5ed;
+    border: 1px solid #a7daca;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.6;
+    text-align: center;
+}
 
-body > section > div {
+.password-result {
     margin-bottom: 25px;
     padding: 24px;
     background: #ffffff;
@@ -394,39 +434,42 @@ body > section > div {
     border-radius: 10px;
 }
 
-body > section > div p {
-    margin: 16px 0 8px;
-    color: #174b40;
-    font-size: 14px;
-    font-weight: 700;
+.issued-item {
+    margin-bottom: 20px;
 }
 
-body > section > div p:first-child {
-    margin-top: 0;
+.copy-area {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+    gap: 12px;
 }
 
-body > section > div input {
-    width: calc(100% - 120px);
-    min-height: 45px;
-    padding: 10px 12px;
+.issued-item input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 13px;
     color: #174b40;
     background: #f2f7f5;
     border: 1px solid #b9d4cc;
-    border-radius: 7px;
-    font-family: inherit;
+    border-radius: 8px;
     font-size: 15px;
     font-weight: 700;
+    outline: none;
+    user-select: text;
+    -webkit-user-select: text;
 }
 
-body > section > div button {
-    min-width: 95px;
-    min-height: 45px;
-    margin-left: 10px;
+.copy-button {
+    min-width: 100px;
+    min-height: 48px;
+    padding: 10px 17px;
     color: #ffffff;
     background: #397a69;
     border: none;
-    border-radius: 7px;
-    font-family: inherit;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     transition:
@@ -434,31 +477,48 @@ body > section > div button {
         background-color 0.2s;
 }
 
-body > section > div button:hover {
+.copy-button:hover {
     background: #286655;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
-/* 注意メッセージ */
-
 .password-warning {
-    margin-top: 20px !important;
-    padding: 11px 14px;
-    color: #9c4f13 !important;
+    margin: 4px 0 0;
+    padding: 12px 14px;
+    color: #9c4f13;
     background: #fff3e6;
     border: 1px solid #edc397;
     border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* コピー結果 */
+.copy-message {
+    min-height: 24px;
+    margin: 17px 0 0;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.copy-message.copy-success {
+    color: #08705a;
+}
+
+.copy-message.copy-error {
+    color: #b42318;
 }
 
 /* ========================================
    パスワード再設定ボタン
    ======================================== */
 
-body > section > form {
+.password-reset-form {
     margin: 0;
 }
 
-body > section > form button {
+.password-reset-button {
     min-height: 47px;
     padding: 11px 22px;
     color: #ffffff;
@@ -470,48 +530,39 @@ body > section > form button {
         );
     border: none;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     box-shadow:
-        0 8px 18px rgba(153, 80, 25, 0.2);
+        0 8px 18px
+        rgba(153, 80, 25, 0.2);
     transition:
         transform 0.2s,
         box-shadow 0.2s,
         filter 0.2s;
 }
 
-body > section > form button:hover {
+.password-reset-button:hover {
     transform: translateY(-2px);
     filter: brightness(1.05);
     box-shadow:
-        0 11px 22px rgba(153, 80, 25, 0.27);
+        0 11px 22px
+        rgba(153, 80, 25, 0.27);
 }
 
 /* ========================================
-   画面一番下の操作ボタン
+   画面下部の操作
    ======================================== */
 
 .bottom-actions {
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 18px;
-    width: 1050px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 28px 30px 35px;
-    background: rgba(255, 255, 255, 0.93);
+    margin-top: 30px;
+    padding-top: 28px;
     border-top: 1px solid #c7e5dc;
-    border-radius: 0 0 16px 16px;
-    box-shadow:
-        0 22px 55px rgba(38, 105, 87, 0.18);
 }
-
-/* 更新・社員一覧へ戻る共通 */
 
 .update-button,
 .employee-list-link {
@@ -522,7 +573,6 @@ body > section > form button:hover {
     min-height: 50px;
     padding: 12px 25px;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
@@ -532,8 +582,6 @@ body > section > form button:hover {
         box-shadow 0.2s,
         filter 0.2s;
 }
-
-/* 更新 */
 
 .update-button {
     color: #ffffff;
@@ -545,31 +593,35 @@ body > section > form button:hover {
         );
     border: none;
     box-shadow:
-        0 8px 18px rgba(8, 112, 90, 0.25);
+        0 8px 18px
+        rgba(8, 112, 90, 0.25);
 }
-
-.update-button:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.06);
-    box-shadow:
-        0 11px 23px rgba(8, 112, 90, 0.32);
-}
-
-/* 社員一覧へ戻る */
 
 .employee-list-link {
     color: #315d53;
     background: #ffffff;
     border: 1px solid #a9c9c0;
     box-shadow:
-        0 7px 16px rgba(35, 91, 77, 0.09);
+        0 7px 16px
+        rgba(35, 91, 77, 0.09);
+}
+
+.update-button:hover,
+.employee-list-link:hover {
+    transform: translateY(-2px);
+}
+
+.update-button:hover {
+    filter: brightness(1.06);
+    box-shadow:
+        0 11px 23px
+        rgba(8, 112, 90, 0.32);
 }
 
 .employee-list-link:hover {
     color: #086b56;
     background: #f3fcf9;
     border-color: #0d9273;
-    transform: translateY(-2px);
 }
 
 /* ========================================
@@ -577,13 +629,13 @@ body > section > form button:hover {
    ======================================== */
 
 @media screen and (max-width: 850px) {
-
     body {
         padding: 20px 14px 50px;
     }
 
     .header {
-        grid-template-columns: 1fr auto;
+        grid-template-columns:
+            1fr auto;
         gap: 16px;
         padding: 22px;
     }
@@ -599,13 +651,25 @@ body > section > form button:hover {
         font-size: 13px;
     }
 
-    body > h1 {
+    .page-title {
         padding: 21px 24px;
+    }
+
+    .page-title h1 {
         font-size: 22px;
     }
 
+    .message {
+        margin-right: 24px;
+        margin-left: 24px;
+    }
+
+    .main-content {
+        padding: 30px 24px 38px;
+    }
+
     .employee-edit-form,
-    body > section {
+    .password-section {
         padding: 30px 25px 35px;
     }
 }
@@ -615,6 +679,13 @@ body > section > form button:hover {
    ======================================== */
 
 @media screen and (max-width: 600px) {
+    body {
+        padding: 7px;
+    }
+
+    .page-container {
+        border-radius: 13px;
+    }
 
     .header {
         grid-template-columns: 1fr;
@@ -642,36 +713,47 @@ body > section > form button:hover {
         width: 100%;
     }
 
+    .message {
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    .main-content {
+        padding: 24px 15px 30px;
+    }
+
     .employee-edit-form {
         grid-template-columns: 1fr;
         gap: 20px;
         padding: 25px 18px 30px;
     }
 
-    .employee-edit-form > div:last-child {
+    .form-item.full-width {
         grid-column: auto;
     }
 
-    body > section {
+    .password-section {
         padding: 28px 18px 32px;
     }
 
-    body > section > div {
+    .password-result {
         padding: 18px;
     }
 
-    body > section > div input {
+    .copy-area {
+        grid-template-columns: 1fr;
+    }
+
+    .copy-button {
         width: 100%;
     }
 
-    body > section > div button {
+    .password-reset-button {
         width: 100%;
-        margin: 8px 0 0;
     }
 
     .bottom-actions {
         flex-direction: column;
-        padding: 24px 20px 30px;
     }
 
     .update-button,

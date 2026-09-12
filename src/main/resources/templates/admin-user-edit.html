@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-
 <html lang="ja"
       xmlns:th="http://www.thymeleaf.org">
 
@@ -17,311 +15,483 @@
 </head>
 
 <body>
+    <div class="page-container">
 
-    <!-- 上部の管理者情報 -->
-    <header class="header">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="company-information">
+                会社名：株式会社アテンダンス
+            </div>
 
-        <!-- 会社名 -->
-        <div class="company-information">
-            会社名：株式会社アテンダンス
+            <div class="admin-information">
+                管理者名：
+                <span th:text="${admin.employeeName}">
+                    山田太郎
+                </span>
+            </div>
+
+            <div class="header-actions">
+                <a class="header-home-link"
+                   th:href="@{/admin}">
+                    ◀ ホームへ戻る
+                </a>
+
+                <form class="logout-form"
+                      th:action="@{/logout}"
+                      method="post">
+
+                    <button class="logout-button"
+                            type="submit">
+                        ログアウト
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <!-- 画面タイトル -->
+        <div class="page-title">
+            <h1>社員編集</h1>
         </div>
 
-        <!-- 管理者名 -->
-        <div class="admin-information">
-            管理者名：
-
-            <span th:text="${admin.employeeName}">
-                山田太郎
-            </span>
+        <!-- 社員情報更新メッセージ -->
+        <div class="message success-message"
+             th:if="${message != null}"
+             th:text="${message}">
+            社員情報を更新しました
         </div>
 
-        <!-- 右側のボタン -->
-        <div class="header-actions">
+        <!-- エラーメッセージ -->
+        <div class="message error-message"
+             th:if="${errorMessage != null}"
+             th:text="${errorMessage}">
+            入力内容を確認してください
+        </div>
 
-            <!-- ホームへ戻る -->
-            <a class="header-home-link"
-               th:href="@{/admin}">
-                ◀ ホームへ戻る
-            </a>
+        <main class="main-content">
 
-            <!-- ログアウト -->
-            <form class="logout-form"
-                  th:action="@{/logout}"
+            <!-- 社員編集フォーム -->
+            <form id="employeeEditForm"
+                  class="employee-edit-form"
+                  th:action="@{/admin/users/{employeeId}/edit(
+                      employeeId=${employee.employeeId}
+                  )}"
                   method="post">
 
-                <button class="logout-button"
-                        type="submit">
-                    ログアウト
-                </button>
+                <!-- 社員ID -->
+                <div class="form-item">
+                    <label for="employeeId">
+                        社員ID
+                    </label>
+
+                    <input type="text"
+                           id="employeeId"
+                           th:value="${employee.employeeId}"
+                           readonly>
+
+                    <span class="input-note">
+                        ※社員IDは変更できません
+                    </span>
+                </div>
+
+                <!-- 社員名 -->
+                <div class="form-item">
+                    <label for="employeeName">
+                        社員名
+                    </label>
+
+                    <input type="text"
+                           id="employeeName"
+                           name="employeeName"
+                           th:value="${employee.employeeName}"
+                           maxlength="100"
+                           required>
+                </div>
+
+                <!-- 部署名 -->
+                <div class="form-item">
+                    <label for="departmentId">
+                        部署名
+                    </label>
+
+                    <select id="departmentId"
+                            name="departmentId"
+                            required>
+
+                        <option value="1"
+                                th:selected="${employee.departmentId == 1}">
+                            営業部
+                        </option>
+
+                        <option value="2"
+                                th:selected="${employee.departmentId == 2}">
+                            総務部
+                        </option>
+
+                        <option value="3"
+                                th:selected="${employee.departmentId == 3}">
+                            人事部
+                        </option>
+                    </select>
+                </div>
+
+                <!-- メールアドレス -->
+                <div class="form-item">
+                    <label for="employeeEmail">
+                        メールアドレス
+                    </label>
+
+                    <input type="email"
+                           id="employeeEmail"
+                           name="employeeEmail"
+                           th:value="${employee.employeeEmail}"
+                           maxlength="100"
+                           required>
+                </div>
+
+                <!-- 社員タイプ -->
+                <div class="form-item">
+                    <label for="employeeType">
+                        社員タイプ
+                    </label>
+
+                    <select id="employeeType"
+                            name="employeeType"
+                            required>
+
+                        <option value="1"
+                                th:selected="${employee.employeeType == 1}">
+                            従業員
+                        </option>
+
+                        <option value="2"
+                                th:selected="${employee.employeeType == 2}">
+                            管理者
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 入社日 -->
+                <div class="form-item">
+                    <label for="hireDate">
+                        入社日
+                    </label>
+
+                    <input type="date"
+                           id="hireDate"
+                           name="hireDate"
+                           th:value="${employee.hireDate}"
+                           required>
+                </div>
+
+                <!-- 在籍状況 -->
+                <div class="form-item full-width">
+                    <label for="employeeStatusId">
+                        在籍状況
+                    </label>
+
+                    <select id="employeeStatusId"
+                            name="employeeStatusId"
+                            required>
+
+                        <option value="1"
+                                th:selected="${employee.employeeStatusId == 1}">
+                            在籍
+                        </option>
+
+                        <option value="2"
+                                th:selected="${employee.employeeStatusId == 2}">
+                            退職
+                        </option>
+
+                        <option value="3"
+                                th:selected="${employee.employeeStatusId == 3}">
+                            育休
+                        </option>
+
+                        <option value="4"
+                                th:selected="${employee.employeeStatusId == 4}">
+                            休職
+                        </option>
+                    </select>
+                </div>
             </form>
 
-        </div>
-    </header>
+            <!-- パスワード再設定 -->
+            <section class="password-section">
+                <div class="section-heading">
+                    <h2>パスワード再設定</h2>
 
-    <!-- 画面タイトル -->
-    <h1>
-        社員編集
-    </h1>
+                    <p>
+                        新しい仮パスワードを自動発行します。
+                    </p>
+                </div>
 
-    <!-- 社員情報更新メッセージ -->
-    <p th:if="${message != null}"
-       th:text="${message}">
-        社員情報を更新しました
-    </p>
+                <!-- 再設定完了メッセージ -->
+                <div class="password-success-message"
+                     th:if="${passwordMessage != null}"
+                     th:text="${passwordMessage}">
+                    パスワードを再設定しました。
+                    新しい仮パスワードは安全な方法で本人へお伝えください。
+                </div>
 
-    <!-- 社員編集フォーム -->
-    <form id="employeeEditForm"
-          class="employee-edit-form"
-          th:action="@{/admin/users/{employeeId}/edit(
-                        employeeId=${employee.employeeId}
-                     )}"
-          method="post">
+                <!-- 発行された仮パスワード -->
+                <div class="password-result"
+                     th:if="${passwordResetResult != null}">
 
-        <!-- 社員ID -->
-        <div>
-            <label for="employeeId">
-                社員ID
-            </label>
+                    <!-- 社員ID -->
+                    <div class="issued-item">
+                        <label for="resetEmployeeId">
+                            社員ID
+                        </label>
 
-            <input type="text"
-                   id="employeeId"
-                   th:value="${employee.employeeId}"
-                   readonly>
+                        <div class="copy-area">
+                            <input type="text"
+                                   id="resetEmployeeId"
+                                   th:value="${passwordResetResult.employeeId}"
+                                   readonly>
 
-            <span>
-                ※社員IDは変更できません
-            </span>
-        </div>
+                            <button class="copy-button"
+                                    type="button"
+                                    onclick="copyText(
+                                        'resetEmployeeId',
+                                        '社員ID'
+                                    )">
+                                コピー
+                            </button>
+                        </div>
+                    </div>
 
-        <!-- 社員名 -->
-        <div>
-            <label for="employeeName">
-                社員名
-            </label>
+                    <!-- 新しい仮パスワード -->
+                    <div class="issued-item">
+                        <label for="temporaryPassword">
+                            新しい仮パスワード
+                        </label>
 
-            <input type="text"
-                   id="employeeName"
-                   name="employeeName"
-                   th:value="${employee.employeeName}"
-                   maxlength="100"
-                   required>
-        </div>
+                        <div class="copy-area">
+                            <input type="text"
+                                   id="temporaryPassword"
+                                   th:value="${passwordResetResult.temporaryPassword}"
+                                   readonly>
 
-        <!-- 部署名 -->
-        <div>
-            <label for="departmentId">
-                部署名
-            </label>
+                            <button class="copy-button"
+                                    type="button"
+                                    onclick="copyText(
+                                        'temporaryPassword',
+                                        '新しい仮パスワード'
+                                    )">
+                                コピー
+                            </button>
+                        </div>
+                    </div>
 
-            <select id="departmentId"
-                    name="departmentId"
-                    required>
+                    <p class="password-warning">
+                        この仮パスワードは、この画面で一度だけ表示されます。
+                    </p>
 
-                <option value="1"
-                        th:selected="${employee.departmentId == 1}">
-                    営業部
-                </option>
+                    <!-- コピー結果 -->
+                    <p id="copyMessage"
+                       class="copy-message"
+                       role="status"
+                       aria-live="polite">
+                    </p>
+                </div>
 
-                <option value="2"
-                        th:selected="${employee.departmentId == 2}">
-                    総務部
-                </option>
+                <!-- パスワード再設定フォーム -->
+                <form class="password-reset-form"
+                      th:action="@{/admin/users/{employeeId}/password-reset(
+                          employeeId=${employee.employeeId}
+                      )}"
+                      method="post"
+                      onsubmit="return confirm(
+                          'パスワードを再設定しますか？'
+                      );">
 
-                <option value="3"
-                        th:selected="${employee.departmentId == 3}">
-                    人事部
-                </option>
+                    <button class="password-reset-button"
+                            type="submit">
+                        パスワードを再設定
+                    </button>
+                </form>
+            </section>
 
-            </select>
-        </div>
+            <!-- 画面下部の操作 -->
+            <div class="bottom-actions">
+                <button class="update-button"
+                        type="submit"
+                        form="employeeEditForm">
+                    更新
+                </button>
 
-        <!-- メールアドレス -->
-        <div>
-            <label for="employeeEmail">
-                メールアドレス
-            </label>
-
-            <input type="email"
-                   id="employeeEmail"
-                   name="employeeEmail"
-                   th:value="${employee.employeeEmail}"
-                   maxlength="100"
-                   required>
-        </div>
-
-        <!-- 社員タイプ -->
-        <div>
-            <label for="employeeType">
-                社員タイプ
-            </label>
-
-            <select id="employeeType"
-                    name="employeeType"
-                    required>
-
-                <option value="1"
-                        th:selected="${employee.employeeType == 1}">
-                    従業員
-                </option>
-
-                <option value="2"
-                        th:selected="${employee.employeeType == 2}">
-                    管理者
-                </option>
-
-            </select>
-        </div>
-
-        <!-- 入社日 -->
-        <div>
-            <label for="hireDate">
-                入社日
-            </label>
-            <input type="date"
-			       id="hireDate"
-			       name="hireDate"
-			       th:value="${employee.hireDate}"
-			       required>
-        </div>
-
-        <!-- 在籍状況 -->
-        <div>
-            <label for="employeeStatusId">
-                在籍状況
-            </label>
-
-            <select id="employeeStatusId"
-                    name="employeeStatusId"
-                    required>
-
-                <option value="1"
-                        th:selected="${employee.employeeStatusId == 1}">
-                    在籍
-                </option>
-
-                <option value="2"
-                        th:selected="${employee.employeeStatusId == 2}">
-                    退職
-                </option>
-
-                <option value="3"
-                        th:selected="${employee.employeeStatusId == 3}">
-                    育休
-                </option>
-
-                <option value="4"
-                        th:selected="${employee.employeeStatusId == 4}">
-                    休職
-                </option>
-
-            </select>
-        </div>
-
-    </form>
-
-    <!-- パスワード再設定 -->
-    <section>
-
-        <h2>
-            パスワード再設定
-        </h2>
-
-        <p>
-            新しい仮パスワードを自動発行します。
-        </p>
-
-        <!-- 再設定完了メッセージ -->
-        <p th:if="${passwordMessage != null}"
-           th:text="${passwordMessage}">
-            パスワードを再設定しました
-        </p>
-
-        <!-- 発行された仮パスワード -->
-        <div th:if="${passwordResetResult != null}">
-
-            <!-- 社員ID -->
-            <p>
-                社員ID
-            </p>
-
-            <input type="text"
-                   id="resetEmployeeId"
-                   th:value="${passwordResetResult.employeeId}"
-                   readonly>
-
-            <button type="button"
-                    onclick="copyText('resetEmployeeId')">
-                コピー
-            </button>
-
-            <!-- 新しい仮パスワード -->
-            <p>
-                新しい仮パスワード
-            </p>
-
-            <input type="text"
-                   id="temporaryPassword"
-                   th:value="${passwordResetResult.temporaryPassword}"
-                   readonly>
-
-            <button type="button"
-                    onclick="copyText('temporaryPassword')">
-                コピー
-            </button>
-
-            <p class="password-warning">
-                この仮パスワードは、この画面で一度だけ表示されます。
-            </p>
-
-        </div>
-
-        <!-- パスワード再設定フォーム -->
-		<form th:action="@{/admin/users/{employeeId}/password-reset(employeeId=${employee.employeeId})}"
-		      method="post"
-		      onsubmit="return confirm('パスワードを再設定しますか？');">
-		
-		    <button type="submit">
-		        パスワードを再設定
-		    </button>
-		</form>
-    </section>
-
-    <!-- 画面一番下のボタン -->
-    <div class="bottom-actions">
-
-        <!--
-            form属性で、上にある
-            employeeEditFormを送信する
-        -->
-        <button class="update-button"
-                type="submit"
-                form="employeeEditForm">
-            更新
-        </button>
-
-        <a class="employee-list-link"
-           th:href="@{/admin/users}">
-            社員一覧へ戻る
-        </a>
-
+                <a class="employee-list-link"
+                   th:href="@{/admin/users}">
+                    社員一覧へ戻る
+                </a>
+            </div>
+        </main>
     </div>
 
     <!-- コピー処理 -->
-	<script>
-	    function copyText(elementId) {
-	        const target =
-	            document.getElementById(elementId);
-	
-	        navigator.clipboard
-	            .writeText(target.value)
-	            .then(function() {
-	                alert("コピーしました");
-	            })
-	            .catch(function() {
-	                alert("コピーできませんでした");
-	            });
-	    }
-	</script>
+    <script>
+        /**
+         * 社員IDまたは仮パスワードをコピーする
+         */
+        async function copyText(
+                elementId,
+                itemName) {
 
+            const target =
+                document.getElementById(
+                    elementId
+                );
+
+            const copyMessage =
+                document.getElementById(
+                    "copyMessage"
+                );
+
+            if (target === null) {
+                showCopyMessage(
+                    copyMessage,
+                    "コピー対象が見つかりません",
+                    true
+                );
+
+                return;
+            }
+
+            try {
+                /*
+                 * HTTPSまたはlocalhostの場合
+                 */
+                if (navigator.clipboard
+                        && window.isSecureContext) {
+
+                    await navigator.clipboard.writeText(
+                        target.value
+                    );
+
+                } else {
+                    /*
+                     * HTTPで公開している画面の場合
+                     */
+                    copyOnHttp(
+                        target.value
+                    );
+                }
+
+                showCopyMessage(
+                    copyMessage,
+                    itemName + "をコピーしました",
+                    false
+                );
+
+            } catch (error) {
+                /*
+                 * 自動コピーできなかった場合は、
+                 * 元の入力欄を選択状態にする
+                 */
+                target.focus();
+                target.select();
+
+                target.setSelectionRange(
+                    0,
+                    target.value.length
+                );
+
+                showCopyMessage(
+                    copyMessage,
+                    "自動コピーできませんでした。"
+                        + "選択された文字をCommand＋Cでコピーしてください",
+                    true
+                );
+            }
+        }
+
+
+        /**
+         * HTTP公開画面用のコピー処理
+         */
+        function copyOnHttp(text) {
+
+            const temporaryTextarea =
+                document.createElement(
+                    "textarea"
+                );
+
+            temporaryTextarea.value =
+                text;
+
+            temporaryTextarea.setAttribute(
+                "readonly",
+                ""
+            );
+
+            temporaryTextarea.style.position =
+                "fixed";
+
+            temporaryTextarea.style.top =
+                "-9999px";
+
+            temporaryTextarea.style.left =
+                "-9999px";
+
+            temporaryTextarea.style.opacity =
+                "0";
+
+            document.body.appendChild(
+                temporaryTextarea
+            );
+
+            temporaryTextarea.focus();
+            temporaryTextarea.select();
+
+            temporaryTextarea.setSelectionRange(
+                0,
+                temporaryTextarea.value.length
+            );
+
+            const copied =
+                document.execCommand(
+                    "copy"
+                );
+
+            document.body.removeChild(
+                temporaryTextarea
+            );
+
+            if (!copied) {
+                throw new Error(
+                    "コピーに失敗しました"
+                );
+            }
+        }
+
+
+        /**
+         * コピー結果を表示する
+         */
+        function showCopyMessage(
+                messageElement,
+                message,
+                isError) {
+
+            if (messageElement === null) {
+                return;
+            }
+
+            messageElement.textContent =
+                message;
+
+            messageElement.classList.toggle(
+                "copy-error",
+                isError
+            );
+
+            messageElement.classList.toggle(
+                "copy-success",
+                !isError
+            );
+        }
+    </script>
 </body>
+
 </html>
