@@ -20,6 +20,7 @@
 
         <!-- ヘッダー -->
         <header class="header">
+
             <div class="header-information">
                 <h1>株式会社アテンダンス</h1>
 
@@ -49,8 +50,6 @@
             </div>
         </header>
 
-
-        <!-- メイン部分 -->
         <main class="main-content">
 
             <!-- 成功メッセージ -->
@@ -67,12 +66,12 @@
                 入力内容を確認してください
             </div>
 
-
             <!-- 勤務予定登録・編集 -->
             <section id="registrationSection"
                      class="registration-section">
 
                 <div class="section-title">
+
                     <div>
                         <h2 id="registrationTitle">
                             勤務予定登録
@@ -90,7 +89,6 @@
                     </button>
                 </div>
 
-
                 <form id="registrationForm"
                       class="registration-form"
                       th:action="@{/attendance/register}"
@@ -106,12 +104,12 @@
                         <div>操作</div>
                     </div>
 
-
-                    <!-- 勤務予定入力欄 -->
+                    <!-- 最初の入力行 -->
                     <div id="scheduleList"
                          class="schedule-list">
 
                         <div class="schedule-row">
+
                             <div class="schedule-number">
                                 1
                             </div>
@@ -177,18 +175,16 @@
                                     削除
                                 </button>
                             </div>
+
                         </div>
                     </div>
 
-
-                    <!-- JavaScriptのエラー -->
+                    <!-- 入力エラー -->
                     <div id="clientErrorMessage"
                          class="client-error-message"
                          role="alert">
                     </div>
 
-
-                    <!-- 登録・変更ボタン -->
                     <div class="register-action">
                         <button id="registerButton"
                                 class="register-button"
@@ -199,20 +195,22 @@
                 </form>
             </section>
 
-
             <!-- 勤怠実績一覧 -->
             <section class="list-section">
+
                 <div class="list-header">
+
                     <div>
                         <h2>勤怠実績一覧</h2>
 
                         <p>
-                            未打刻の勤務予定は、この画面から変更できます
+                            打刻後も勤務予定時間は変更できます。
+                            打刻済みの日は公休に変更できません。
                         </p>
                     </div>
 
-                    <!-- 前月・翌月 -->
                     <div class="month-navigation">
+
                         <a class="month-button"
                            th:href="@{/attendance(month=${previousMonth})}"
                            aria-label="前月">
@@ -234,9 +232,10 @@
                     </div>
                 </div>
 
-
                 <div class="table-wrapper">
+
                     <table class="attendance-table">
+
                         <thead>
                             <tr>
                                 <th>日付</th>
@@ -251,16 +250,15 @@
                         </thead>
 
                         <tbody>
+
                             <tr th:each="attendance : ${attendanceList}"
-                                th:classappend="${
-                                    attendance.holiday
+                                th:classappend="${attendance.holiday
                                     ? 'holiday-row'
-                                    : (
-                                        attendance.requestPending
+                                    : (attendance.requestPending
                                         ? 'requesting-row'
-                                        : ''
-                                    )
-                                }">
+                                        : '')}"
+                                th:attr="data-working-date=${attendance.workingDay},
+                                         data-clocked=${attendance.actualWorkingStartTime != null or attendance.actualWorkingEndTime != null}">
 
                                 <!-- 日付 -->
                                 <td th:text="${#temporals.format(
@@ -270,7 +268,6 @@
                                     9月1日
                                 </td>
 
-
                                 <!-- 申告勤務時間 -->
                                 <td>
                                     <span th:if="${attendance.holiday}">
@@ -278,6 +275,7 @@
                                     </span>
 
                                     <span th:unless="${attendance.holiday}">
+
                                         <span th:if="${attendance.workingStartTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.workingStartTime,
@@ -306,7 +304,6 @@
                                     </span>
                                 </td>
 
-
                                 <!-- 実際の出勤時刻 -->
                                 <td>
                                     <span th:if="${attendance.holiday}">
@@ -314,6 +311,7 @@
                                     </span>
 
                                     <span th:unless="${attendance.holiday}">
+
                                         <span th:if="${attendance.actualWorkingStartTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.actualWorkingStartTime,
@@ -328,7 +326,6 @@
                                     </span>
                                 </td>
 
-
                                 <!-- 実際の退勤時刻 -->
                                 <td>
                                     <span th:if="${attendance.holiday}">
@@ -336,6 +333,7 @@
                                     </span>
 
                                     <span th:unless="${attendance.holiday}">
+
                                         <span th:if="${attendance.actualWorkingEndTime != null}"
                                               th:text="${#temporals.format(
                                                   attendance.actualWorkingEndTime,
@@ -350,18 +348,15 @@
                                     </span>
                                 </td>
 
-
                                 <!-- 実働時間 -->
                                 <td th:text="${attendance.actualWorkingHoursDisplay}">
                                     --:--
                                 </td>
 
-
                                 <!-- 残業時間 -->
                                 <td th:text="${attendance.overtimeDisplay}">
                                     --:--
                                 </td>
-
 
                                 <!-- 備考 -->
                                 <td>
@@ -389,42 +384,27 @@
                                     </span>
                                 </td>
 
-
                                 <!-- 予定操作 -->
                                 <td class="operation-cell">
 
-                                    <!-- 登録済みかつ未打刻 -->
+                                    <!-- 登録済みなら打刻後も予定編集できる -->
                                     <button class="edit-schedule-button"
                                             type="button"
-                                            th:if="${attendance.attendanceId != null
-                                                and attendance.actualWorkingStartTime == null
-                                                and attendance.actualWorkingEndTime == null}"
-                                            th:attr="
-                                                data-working-date=${attendance.workingDay},
-                                                data-work-type=${attendance.workType},
-                                                data-start-time=${attendance.workingStartTime},
-                                                data-end-time=${attendance.workingEndTime}">
+                                            th:if="${attendance.attendanceId != null}"
+                                            th:attr="data-working-date=${attendance.workingDay},
+                                                     data-work-type=${attendance.workType},
+                                                     data-start-time=${attendance.workingStartTime},
+                                                     data-end-time=${attendance.workingEndTime},
+                                                     data-clocked=${attendance.actualWorkingStartTime != null or attendance.actualWorkingEndTime != null}">
                                         予定編集
                                     </button>
 
-
-                                    <!-- 勤務予定が未登録 -->
                                     <span class="unregistered-label"
                                           th:if="${attendance.attendanceId == null}">
                                         未登録
                                     </span>
-
-
-                                    <!-- 出勤または退勤の打刻済み -->
-                                    <span class="locked-label"
-                                          th:if="${attendance.attendanceId != null
-                                              and (
-                                                  attendance.actualWorkingStartTime != null
-                                                  or attendance.actualWorkingEndTime != null
-                                              )}">
-                                        変更不可
-                                    </span>
                                 </td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -433,12 +413,12 @@
         </main>
     </div>
 
-
     <!-- 追加する勤務予定行のひな形 -->
     <template id="scheduleRowTemplate">
+
         <div class="schedule-row">
-            <div class="schedule-number">
-            </div>
+
+            <div class="schedule-number"></div>
 
             <div class="schedule-field">
                 <label class="mobile-label">
@@ -503,11 +483,11 @@
         </div>
     </template>
 
-
     <script>
         document.addEventListener(
             "DOMContentLoaded",
             function () {
+
                 const registrationForm =
                     document.getElementById(
                         "registrationForm"
@@ -553,6 +533,22 @@
                         "clientErrorMessage"
                     );
 
+                /*
+                 * 一覧表示時点で打刻済みの日付を控える。
+                 * 最終判定はControllerとSQLでも行う。
+                 */
+                const clockedDates =
+                    new Set();
+
+                document
+                    .querySelectorAll(
+                        ".attendance-table tbody tr[data-clocked='true']"
+                    )
+                    .forEach(function (tableRow) {
+                        clockedDates.add(
+                            tableRow.dataset.workingDate
+                        );
+                    });
 
                 /*
                  * 勤務予定を1行追加する
@@ -560,6 +556,7 @@
                 addScheduleButton.addEventListener(
                     "click",
                     function () {
+
                         const newRow =
                             createScheduleRow();
 
@@ -577,11 +574,11 @@
                     }
                 );
 
-
                 /*
                  * 新しい入力行を作成する
                  */
                 function createScheduleRow() {
+
                     const templateContent =
                         scheduleRowTemplate
                             .content
@@ -598,7 +595,6 @@
 
                     return newRow;
                 }
-
 
                 /*
                  * 入力行のイベントを設定する
@@ -619,6 +615,7 @@
                     workType.addEventListener(
                         "change",
                         function () {
+
                             changeRowWorkType(
                                 scheduleRow
                             );
@@ -630,6 +627,7 @@
                     removeButton.addEventListener(
                         "click",
                         function () {
+
                             scheduleRow.remove();
                             updateScheduleRows();
                             clearClientError();
@@ -641,112 +639,78 @@
                     );
                 }
 
+                /*
+                 * 公休のときだけ時刻欄を編集不可にする。
+                 * 送信するリストの件数を揃えるため、
+                 * 時刻欄はdisabledにも空欄にもしない。
+                 */
+                function changeRowWorkType(
+                        scheduleRow) {
 
-			/**
-			 * 公休の場合は時刻入力を変更できなくする
-			 */
-			function changeRowWorkType(
-			        scheduleRow) {
-			
-			    const workType =
-			        scheduleRow.querySelector(
-			            ".work-type"
-			        );
-			
-			    const startTime =
-			        scheduleRow.querySelector(
-			            ".working-start-time"
-			        );
-			
-			    const endTime =
-			        scheduleRow.querySelector(
-			            ".working-end-time"
-			        );
-			
-			    const isHoliday =
-			        workType.value === "2";
-			
-			
-			    startTime.readOnly =
-			        isHoliday;
-			
-			    endTime.readOnly =
-			        isHoliday;
-			
-			    startTime.required =
-			        !isHoliday;
-			
-			    endTime.required =
-			        !isHoliday;
-			
-			
-			    if (isHoliday) {
-			
-			        /*
-			         * 空文字にするとController側のリスト件数が
-			         * 合わなくなるため、送信用の値を残す。
-			         *
-			         * Controllerは公休の場合、この時刻を使用せず
-			         * DBにはNULLを登録する。
-			         */
-			        if (startTime.value === "") {
-			
-			            startTime.value =
-			                "09:00";
-			        }
-			
-			        if (endTime.value === "") {
-			
-			            endTime.value =
-			                "18:00";
-			        }
-			
-			        startTime.classList.add(
-			            "is-disabled"
-			        );
-			
-			        endTime.classList.add(
-			            "is-disabled"
-			        );
-			
-			    } else {
-			
-			        if (startTime.value === "") {
-			
-			            startTime.value =
-			                "09:00";
-			        }
-			
-			        if (endTime.value === "") {
-			
-			            endTime.value =
-			                "18:00";
-			        }
-			
-			        startTime.classList.remove(
-			            "is-disabled"
-			        );
-			
-			        endTime.classList.remove(
-			            "is-disabled"
-			        );
-			    }
-			}
+                    const workType =
+                        scheduleRow.querySelector(
+                            ".work-type"
+                        );
 
+                    const startTime =
+                        scheduleRow.querySelector(
+                            ".working-start-time"
+                        );
+
+                    const endTime =
+                        scheduleRow.querySelector(
+                            ".working-end-time"
+                        );
+
+                    const isHoliday =
+                        workType.value === "2";
+
+                    startTime.readOnly =
+                        isHoliday;
+
+                    endTime.readOnly =
+                        isHoliday;
+
+                    startTime.required =
+                        !isHoliday;
+
+                    endTime.required =
+                        !isHoliday;
+
+                    if (startTime.value === "") {
+                        startTime.value =
+                            "09:00";
+                    }
+
+                    if (endTime.value === "") {
+                        endTime.value =
+                            "18:00";
+                    }
+
+                    startTime.classList.toggle(
+                        "is-disabled",
+                        isHoliday
+                    );
+
+                    endTime.classList.toggle(
+                        "is-disabled",
+                        isHoliday
+                    );
+                }
 
                 /*
                  * 一覧の予定編集ボタン
                  */
-                const editButtons =
-                    document.querySelectorAll(
+                document
+                    .querySelectorAll(
                         ".edit-schedule-button"
-                    );
+                    )
+                    .forEach(function (editButton) {
 
-                editButtons.forEach(
-                    function (editButton) {
                         editButton.addEventListener(
                             "click",
                             function () {
+
                                 scheduleList.innerHTML =
                                     "";
 
@@ -773,42 +737,95 @@
                                         ".working-end-time"
                                     );
 
-
                                 dateInput.value =
                                     editButton.dataset
                                         .workingDate;
 
                                 /*
-                                 * 編集時は勤務日を変更不可にする。
-                                 * readonlyなので値は送信される。
+                                 * 編集中の日付を固定する。
+                                 * disabledだと送信されないため、
+                                 * 編集用の表示欄と隠し欄を分ける。
                                  */
-                                dateInput.readOnly =
+                                dateInput.disabled =
                                     true;
+
+                                dateInput.removeAttribute(
+                                    "name"
+                                );
 
                                 dateInput.classList.add(
                                     "is-editing-date"
                                 );
 
+                                const hiddenDate =
+                                    document.createElement(
+                                        "input"
+                                    );
+
+                                hiddenDate.type =
+                                    "hidden";
+
+                                hiddenDate.name =
+                                    "workingDates";
+
+                                hiddenDate.value =
+                                    dateInput.value;
+
+                                dateInput.parentElement
+                                    .appendChild(
+                                        hiddenDate
+                                    );
 
                                 workType.value =
                                     editButton.dataset
                                         .workType;
 
-
                                 if (workType.value === "1") {
+
                                     startTime.value =
                                         normalizeTime(
-                                            editButton.dataset
+                                            editButton
+                                                .dataset
                                                 .startTime
                                         );
 
                                     endTime.value =
                                         normalizeTime(
-                                            editButton.dataset
+                                            editButton
+                                                .dataset
                                                 .endTime
                                         );
                                 }
 
+                                if (editButton.dataset
+                                        .clocked === "true") {
+
+                                    /*
+                                     * 打刻済みの日は
+                                     * 公休を選べない。
+                                     */
+                                    workType.value =
+                                        "1";
+
+                                    workType
+                                        .querySelector(
+                                            'option[value="2"]'
+                                        )
+                                        .disabled =
+                                        true;
+
+                                    registrationDescription
+                                        .textContent =
+                                        "打刻済みのため"
+                                        + "勤務予定時間のみ"
+                                        + "変更できます";
+                                } else {
+
+                                    registrationDescription
+                                        .textContent =
+                                        "未打刻の勤務予定を"
+                                        + "変更します";
+                                }
 
                                 scheduleList.appendChild(
                                     editRow
@@ -820,29 +837,29 @@
 
                                 updateScheduleRows();
 
-
-                                registrationTitle.textContent =
+                                registrationTitle
+                                    .textContent =
                                     "勤務予定編集";
 
-                                registrationDescription.textContent =
-                                    "未打刻の勤務予定を変更します";
-
-                                registerButton.textContent =
+                                registerButton
+                                    .textContent =
                                     "勤務予定を変更";
 
+                                clearClientError();
 
-                                registrationSection.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "start"
-                                });
+                                registrationSection
+                                    .scrollIntoView({
+                                        behavior:
+                                            "smooth",
+                                        block:
+                                            "start"
+                                    });
                             }
                         );
-                    }
-                );
-
+                    });
 
                 /*
-                 * LocalTimeをHH:mmにする
+                 * LocalTimeの表示をHH:mmに揃える
                  */
                 function normalizeTime(
                         timeValue) {
@@ -859,21 +876,22 @@
                     );
                 }
 
-
                 /*
                  * 新規登録表示へ戻す
                  */
                 function changeToRegisterMode() {
+
                     registrationTitle.textContent =
                         "勤務予定登録";
 
-                    registrationDescription.textContent =
-                        "勤務日ごとに勤務区分と勤務時間を登録します";
+                    registrationDescription
+                        .textContent =
+                        "勤務日ごとに勤務区分と"
+                        + "勤務時間を登録します";
 
                     registerButton.textContent =
                         "勤務予定を登録";
                 }
-
 
                 /*
                  * 前の入力行の翌日を設定する
@@ -882,9 +900,10 @@
                         newRow) {
 
                     const rows =
-                        scheduleList.querySelectorAll(
-                            ".schedule-row"
-                        );
+                        scheduleList
+                            .querySelectorAll(
+                                ".schedule-row"
+                            );
 
                     if (rows.length < 2) {
                         return;
@@ -894,20 +913,20 @@
                         rows[rows.length - 2];
 
                     const previousDateInput =
-                        previousRow.querySelector(
-                            ".working-date"
-                        );
+                        previousRow
+                            .querySelector(
+                                ".working-date"
+                            );
 
                     const newDateInput =
                         newRow.querySelector(
                             ".working-date"
                         );
 
-
-                    if (previousDateInput.value === "") {
+                    if (previousDateInput.value
+                            === "") {
                         return;
                     }
-
 
                     const nextDate =
                         new Date(
@@ -923,7 +942,6 @@
                         formatDate(nextDate);
                 }
 
-
                 /*
                  * 日付をyyyy-MM-dd形式へ変換する
                  */
@@ -936,18 +954,12 @@
                     const month =
                         String(
                             date.getMonth() + 1
-                        ).padStart(
-                            2,
-                            "0"
-                        );
+                        ).padStart(2, "0");
 
                     const day =
                         String(
                             date.getDate()
-                        ).padStart(
-                            2,
-                            "0"
-                        );
+                        ).padStart(2, "0");
 
                     return year
                         + "-"
@@ -956,15 +968,16 @@
                         + day;
                 }
 
-
                 /*
                  * 行番号と削除ボタンを更新する
                  */
                 function updateScheduleRows() {
+
                     const rows =
-                        scheduleList.querySelectorAll(
-                            ".schedule-row"
-                        );
+                        scheduleList
+                            .querySelectorAll(
+                                ".schedule-row"
+                            );
 
                     rows.forEach(
                         function (
@@ -972,14 +985,16 @@
                                 index) {
 
                             const number =
-                                scheduleRow.querySelector(
-                                    ".schedule-number"
-                                );
+                                scheduleRow
+                                    .querySelector(
+                                        ".schedule-number"
+                                    );
 
                             const removeButton =
-                                scheduleRow.querySelector(
-                                    ".remove-schedule-button"
-                                );
+                                scheduleRow
+                                    .querySelector(
+                                        ".remove-schedule-button"
+                                    );
 
                             number.textContent =
                                 index + 1;
@@ -990,47 +1005,54 @@
                     );
                 }
 
-
                 /*
                  * 送信前の入力確認
                  */
                 registrationForm.addEventListener(
                     "submit",
                     function (event) {
+
                         clearClientError();
 
                         const rows =
-                            scheduleList.querySelectorAll(
-                                ".schedule-row"
-                            );
+                            scheduleList
+                                .querySelectorAll(
+                                    ".schedule-row"
+                                );
 
                         const selectedDates =
                             new Set();
 
+                        for (const scheduleRow
+                                of rows) {
 
-                        for (const scheduleRow of rows) {
                             const dateInput =
-                                scheduleRow.querySelector(
-                                    ".working-date"
-                                );
+                                scheduleRow
+                                    .querySelector(
+                                        ".working-date"
+                                    );
 
                             const workType =
-                                scheduleRow.querySelector(
-                                    ".work-type"
-                                );
+                                scheduleRow
+                                    .querySelector(
+                                        ".work-type"
+                                    );
 
                             const startTime =
-                                scheduleRow.querySelector(
-                                    ".working-start-time"
-                                );
+                                scheduleRow
+                                    .querySelector(
+                                        ".working-start-time"
+                                    );
 
                             const endTime =
-                                scheduleRow.querySelector(
-                                    ".working-end-time"
-                                );
+                                scheduleRow
+                                    .querySelector(
+                                        ".working-end-time"
+                                    );
 
+                            if (dateInput.value
+                                    === "") {
 
-                            if (dateInput.value === "") {
                                 event.preventDefault();
 
                                 showClientError(
@@ -1041,38 +1063,59 @@
                                 return;
                             }
 
-
                             if (selectedDates.has(
                                     dateInput.value
                             )) {
+
                                 event.preventDefault();
 
                                 showClientError(
-                                    "同じ勤務日が複数選択されています。"
+                                    "同じ勤務日が複数"
+                                    + "選択されています。"
                                 );
 
                                 return;
                             }
 
-
                             selectedDates.add(
                                 dateInput.value
                             );
 
+                            /*
+                             * 追加した行も含めて、
+                             * 打刻済みの日を公休には
+                             * できないようにする。
+                             */
+                            if (workType.value === "2"
+                                    && clockedDates.has(
+                                        dateInput.value
+                                    )) {
+
+                                event.preventDefault();
+
+                                showClientError(
+                                    dateInput.value
+                                    + "は打刻済みのため"
+                                    + "公休に変更できません。"
+                                );
+
+                                return;
+                            }
 
                             if (workType.value === "1") {
+
                                 if (startTime.value === ""
                                         || endTime.value === "") {
 
                                     event.preventDefault();
 
                                     showClientError(
-                                        "出勤日の勤務時間を入力してください。"
+                                        "出勤日の勤務時間を"
+                                        + "入力してください。"
                                     );
 
                                     return;
                                 }
-
 
                                 if (startTime.value
                                         >= endTime.value) {
@@ -1080,7 +1123,9 @@
                                     event.preventDefault();
 
                                     showClientError(
-                                        "勤務開始時間は勤務終了時間より前にしてください。"
+                                        "勤務開始時間は"
+                                        + "勤務終了時間より"
+                                        + "前にしてください。"
                                     );
 
                                     return;
@@ -1088,10 +1133,10 @@
                             }
                         }
 
-
                         const confirmed =
                             window.confirm(
-                                "入力した勤務予定を登録・変更しますか？"
+                                "入力した勤務予定を"
+                                + "登録・変更しますか？"
                             );
 
                         if (!confirmed) {
@@ -1100,48 +1145,46 @@
                     }
                 );
 
-
                 function showClientError(
                         message) {
 
-                    clientErrorMessage.textContent =
+                    clientErrorMessage
+                        .textContent =
                         message;
 
-                    clientErrorMessage.classList.add(
-                        "is-visible"
-                    );
+                    clientErrorMessage
+                        .classList.add(
+                            "is-visible"
+                        );
                 }
-
 
                 function clearClientError() {
-                    clientErrorMessage.textContent =
+
+                    clientErrorMessage
+                        .textContent =
                         "";
 
-                    clientErrorMessage.classList.remove(
-                        "is-visible"
-                    );
+                    clientErrorMessage
+                        .classList.remove(
+                            "is-visible"
+                        );
                 }
-
 
                 /*
                  * 最初の入力行を初期化する
                  */
-                const initialRows =
-                    scheduleList.querySelectorAll(
+                scheduleList
+                    .querySelectorAll(
                         ".schedule-row"
+                    )
+                    .forEach(
+                        initializeScheduleRow
                     );
-
-                initialRows.forEach(
-                    function (scheduleRow) {
-                        initializeScheduleRow(
-                            scheduleRow
-                        );
-                    }
-                );
 
                 updateScheduleRows();
             }
         );
     </script>
 </body>
+
 </html>
