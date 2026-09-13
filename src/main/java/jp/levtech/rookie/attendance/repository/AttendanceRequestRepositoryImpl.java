@@ -15,15 +15,12 @@ public class AttendanceRequestRepositoryImpl
     private final AttendanceRequestMapper
             attendanceRequestMapper;
 
-
     public AttendanceRequestRepositoryImpl(
-            AttendanceRequestMapper
-                    attendanceRequestMapper) {
+            AttendanceRequestMapper attendanceRequestMapper) {
 
         this.attendanceRequestMapper =
                 attendanceRequestMapper;
     }
-
 
     /**
      * 勤怠修正申請を登録する
@@ -36,7 +33,6 @@ public class AttendanceRequestRepositoryImpl
                 attendanceRequest
         );
     }
-
 
     /**
      * 指定した社員・期間の申請状態を取得する
@@ -53,6 +49,23 @@ public class AttendanceRequestRepositoryImpl
                         employeeId,
                         startDate,
                         endDate
+                );
+    }
+
+    /**
+     * 指定した勤務日の申請中・承認済みの
+     * 勤怠修正申請を時刻付きで取得する
+     */
+    @Override
+    public List<TbTrnAttendanceRequest>
+            findActiveByUserIdAndWorkingDay(
+                    String employeeId,
+                    LocalDate workingDay) {
+
+        return attendanceRequestMapper
+                .findActiveByUserIdAndWorkingDay(
+                        employeeId,
+                        workingDay
                 );
     }
 }

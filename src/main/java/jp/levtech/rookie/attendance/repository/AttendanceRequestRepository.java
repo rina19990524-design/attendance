@@ -14,7 +14,6 @@ public interface AttendanceRequestRepository {
             TbTrnAttendanceRequest attendanceRequest
     );
 
-
     /**
      * 指定した社員・期間の申請状態を取得する
      */
@@ -23,5 +22,15 @@ public interface AttendanceRequestRepository {
                     String employeeId,
                     LocalDate startDate,
                     LocalDate endDate
+            );
+
+    /**
+     * 指定した勤務日の申請中・承認済みの
+     * 勤怠修正申請を時刻付きで取得する
+     */
+    List<TbTrnAttendanceRequest>
+            findActiveByUserIdAndWorkingDay(
+                    String employeeId,
+                    LocalDate workingDay
             );
 }

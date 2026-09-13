@@ -1,17 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="jp.levtech.rookie.attendance.mapper.AttendanceRequestMapper">
 
-
     <!-- 勤怠修正申請を登録する -->
     <insert id="insert">
-
         INSERT INTO tb_trn_attendance_request (
-
             attendance_request_id,
             attendance_id,
             requested_working_start_time,
@@ -19,9 +15,7 @@
             request_reason,
             request_flag,
             request_type
-
         ) VALUES (
-
             #{attendanceRequestId},
             #{attendanceId},
             #{workingStartTime},
@@ -29,60 +23,76 @@
             #{requestReason},
             #{requestFlag},
             #{requestType}
-
         )
-
     </insert>
 
-
     <!--
-        指定した社員・期間の申請状態を取得する
-
-        同じ勤怠に申請中のデータがある場合は、
-        申請中を優先して取得する。
+        指定した社員・期間の申請状態を取得する。
+        同じ勤怠に申請中のデータがある場合は申請中を優先する。
     -->
     <select id="findStatusesByUserIdAndPeriod"
             resultType="jp.levtech.rookie.attendance.model.TbTrnAttendanceRequest">
-
         SELECT
             request.attendance_id AS attendanceId,
-
             CASE
                 WHEN COUNT(*) FILTER (
                     WHERE request.request_flag = 1
                 ) > 0
-                THEN 1
-
+                    THEN 1
                 WHEN COUNT(*) FILTER (
                     WHERE request.request_flag = 2
                 ) > 0
-                THEN 2
-
+                    THEN 2
                 ELSE 0
             END AS requestFlag
-
         FROM
             tb_trn_attendance_request request
-
         INNER JOIN
             tb_trn_attendance attendance
-
         ON
-            request.attendance_id =
-                attendance.attendance_id
-
+            request.attendance_id = attendance.attendance_id
         WHERE
-            attendance.user_id =
-                #{employeeId}
-
+            attendance.user_id = #{employeeId}
         AND
             attendance.working_day
                 BETWEEN #{startDate} AND #{endDate}
-
         GROUP BY
             request.attendance_id
-
     </select>
 
+    <!--
+        指定日の申請中・承認済みの勤怠修正申請を、
+        申請した勤務開始時刻・勤務終了時刻とともに取得する。
+    -->
+    <select id="findActiveByUserIdAndWorkingDay"
+            resultType="jp.levtech.rookie.attendance.model.TbTrnAttendanceRequest">
+        SELECT
+            request.attendance_request_id
+                AS attendanceRequestId,
+            request.attendance_id
+                AS attendanceId,
+            request.requested_working_start_time
+                AS workingStartTime,
+            request.requested_working_end_time
+                AS workingEndTime,
+            request.request_flag
+                AS requestFlag,
+            request.request_type
+                AS requestType
+        FROM
+            tb_trn_attendance_request request
+        INNER JOIN
+            tb_trn_attendance attendance
+        ON
+            request.attendance_id = attendance.attendance_id
+        WHERE
+            attendance.user_id = #{employeeId}
+        AND
+            attendance.working_day = #{workingDay}
+        AND
+            request.request_flag IN (1, 2)
+        ORDER BY
+            request.attendance_request_id
+    </select>
 
 </mapper>

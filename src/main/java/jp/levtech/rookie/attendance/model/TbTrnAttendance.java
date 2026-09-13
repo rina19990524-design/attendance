@@ -24,10 +24,11 @@ public class TbTrnAttendance {
     public static final int WORK_TYPE_HOLIDAY = 2;
 
     /**
-     * 固定休憩時間
+     * アプリ内で自動控除する休憩時間
      */
-    private static final long BREAK_MINUTES = 60;
-
+    private static final long NO_BREAK_MINUTES = 0;
+    private static final long SHORT_BREAK_MINUTES = 45;
+    private static final long LONG_BREAK_MINUTES = 60;
 
     private String attendanceId;
 
@@ -45,7 +46,6 @@ public class TbTrnAttendance {
 
     private int workType;
 
-
     /**
      * 勤怠修正申請の状態
      *
@@ -53,45 +53,36 @@ public class TbTrnAttendance {
      * 1：申請中
      * 2：承認済み
      *
-     * この項目はtb_trn_attendanceには保存しない。
-     * 勤怠一覧画面の表示にだけ使用する。
+     * DBには保存せず、勤怠一覧画面の表示に使用する。
      */
     private Integer requestFlag;
-
 
     /**
      * 公休か確認する
      */
     public boolean isHoliday() {
-
-        return workType
-                == WORK_TYPE_HOLIDAY;
+        return workType == WORK_TYPE_HOLIDAY;
     }
-
 
     /**
      * 勤怠修正申請中か確認する
      */
     public boolean isRequestPending() {
-
         return requestFlag != null
                 && requestFlag
                     == TbTrnAttendanceRequest
                         .REQUEST_FLAG_PENDING;
     }
 
-
     /**
      * 勤怠修正申請が承認済みか確認する
      */
     public boolean isRequestApproved() {
-
         return requestFlag != null
                 && requestFlag
                     == TbTrnAttendanceRequest
                         .REQUEST_FLAG_APPROVED;
     }
-
 
     /**
      * 申告した勤務時間を表示する
@@ -99,13 +90,11 @@ public class TbTrnAttendance {
     public String getScheduledWorkingHoursDisplay() {
 
         if (isHoliday()) {
-
             return "公休";
         }
 
         if (workingStartTime == null
                 || workingEndTime == null) {
-
             return "--:--";
         }
 
@@ -115,11 +104,8 @@ public class TbTrnAttendance {
                         workingEndTime
                 );
 
-        return formatMinutes(
-                scheduledMinutes
-        );
+        return formatMinutes(scheduledMinutes);
     }
-
 
     /**
      * 実際の勤務時間を表示する
@@ -127,13 +113,11 @@ public class TbTrnAttendance {
     public String getActualWorkingHoursDisplay() {
 
         if (isHoliday()) {
-
             return "―";
         }
 
         if (actualWorkingStartTime == null
                 || actualWorkingEndTime == null) {
-
             return "--:--";
         }
 
@@ -143,11 +127,8 @@ public class TbTrnAttendance {
                         actualWorkingEndTime
                 );
 
-        return formatMinutes(
-                actualMinutes
-        );
+        return formatMinutes(actualMinutes);
     }
-
 
     /**
      * 残業時間を表示する
@@ -155,7 +136,6 @@ public class TbTrnAttendance {
     public String getOvertimeDisplay() {
 
         if (isHoliday()) {
-
             return "―";
         }
 
@@ -163,7 +143,6 @@ public class TbTrnAttendance {
                 || workingEndTime == null
                 || actualWorkingStartTime == null
                 || actualWorkingEndTime == null) {
-
             return "--:--";
         }
 
@@ -180,48 +159,37 @@ public class TbTrnAttendance {
                 );
 
         long overtimeMinutes =
-                actualMinutes - scheduledMinutes;
+                Math.max(
+                        actualMinutes - scheduledMinutes,
+                        0
+                );
 
-        if (overtimeMinutes <= 0) {
-
-            return "00:00";
-        }
-
-        return formatMinutes(
-                overtimeMinutes
-        );
+        return formatMinutes(overtimeMinutes);
     }
-
 
     /**
      * 備考欄へ表示する文字を返す
      */
     public String getRemarkDisplay() {
 
-        // 公休を最優先で表示
         if (isHoliday()) {
-
             return "公休";
         }
 
-        // 勤怠修正申請中
         if (isRequestPending()) {
-
             return "勤怠修正申請中";
         }
 
-        // 承認済み
         if (isRequestApproved()) {
-
             return "承認済み";
         }
 
         return "―";
     }
 
-
     /**
-     * 休憩時間を除いた勤務時間を計算する
+     * 開始・終了時刻から、休憩を自動控除して
+     * 勤務時間を計算する
      */
     private long calculateWorkingMinutes(
             LocalTime startTime,
@@ -235,20 +203,38 @@ public class TbTrnAttendance {
 
         // 日をまたぐ勤務
         if (totalMinutes < 0) {
-
             totalMinutes += 24 * 60;
         }
 
-        // 固定休憩時間の60分を引く
-        long workingMinutes =
-                totalMinutes - BREAK_MINUTES;
+        long breakMinutes =
+                calculateBreakMinutes(totalMinutes);
 
         return Math.max(
-                workingMinutes,
+                totalMinutes - breakMinutes,
                 0
         );
     }
 
+    /**
+     * このアプリの自動休憩ルール。
+     *
+     * 6時間以内：休憩なし
+     * 6時間超～8時間以内：45分
+     * 8時間超：60分
+     */
+    private long calculateBreakMinutes(
+            long totalMinutes) {
+
+        if (totalMinutes <= 6 * 60) {
+            return NO_BREAK_MINUTES;
+        }
+
+        if (totalMinutes <= 8 * 60) {
+            return SHORT_BREAK_MINUTES;
+        }
+
+        return LONG_BREAK_MINUTES;
+    }
 
     /**
      * 分をHH:mm形式へ変換する
@@ -256,11 +242,8 @@ public class TbTrnAttendance {
     private String formatMinutes(
             long totalMinutes) {
 
-        long hours =
-                totalMinutes / 60;
-
-        long minutes =
-                totalMinutes % 60;
+        long hours = totalMinutes / 60;
+        long minutes = totalMinutes % 60;
 
         return String.format(
                 "%02d:%02d",

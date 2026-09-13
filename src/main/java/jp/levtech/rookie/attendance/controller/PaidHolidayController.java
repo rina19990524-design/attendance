@@ -1,7 +1,9 @@
 package jp.levtech.rookie.attendance.controller;
 
 import java.security.Principal;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +21,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.levtech.rookie.attendance.model.TbMstEmployee;
 import jp.levtech.rookie.attendance.model.TbTrnAttendance;
+import jp.levtech.rookie.attendance.model.TbTrnAttendanceRequest;
 import jp.levtech.rookie.attendance.model.TbTrnPaidHolidayRequest;
 import jp.levtech.rookie.attendance.repository.AttendanceRepository;
+import jp.levtech.rookie.attendance.repository.AttendanceRequestRepository;
 import jp.levtech.rookie.attendance.repository.PaidHolidayRequestRepository;
 import jp.levtech.rookie.attendance.repository.TestRepository;
 
@@ -34,20 +38,26 @@ public class PaidHolidayController {
     private static final int REQUESTING = 1;
     private static final int APPROVED = 2;
 
+    private static final long HALF_DAY_HOURS = 4;
+    private static final long FULL_SCHEDULE_HOURS = 9;
+
     private final TestRepository testRepository;
-
     private final AttendanceRepository attendanceRepository;
-
+    private final AttendanceRequestRepository
+            attendanceRequestRepository;
     private final PaidHolidayRequestRepository
             paidHolidayRequestRepository;
 
     public PaidHolidayController(
             TestRepository testRepository,
             AttendanceRepository attendanceRepository,
+            AttendanceRequestRepository attendanceRequestRepository,
             PaidHolidayRequestRepository paidHolidayRequestRepository) {
 
         this.testRepository = testRepository;
         this.attendanceRepository = attendanceRepository;
+        this.attendanceRequestRepository =
+                attendanceRequestRepository;
         this.paidHolidayRequestRepository =
                 paidHolidayRequestRepository;
     }
@@ -116,8 +126,7 @@ public class PaidHolidayController {
         Set<LocalDate> selectedDates = new HashSet<>();
 
         /*
-         * 保存前にすべての日付を確認する。
-         * 途中で登録してからエラーになることを避ける。
+         * 一括申請の全日付を確認してから保存する。
          */
         for (LocalDate holiday : holidays) {
 
@@ -137,7 +146,7 @@ public class PaidHolidayController {
                 );
             }
 
-            Optional<TbTrnAttendance> attendance =
+            Optional<TbTrnAttendance> attendanceOptional =
                     attendanceRepository
                         .findByUserIdAndWorkingDay(
                                 employeeId,
@@ -145,13 +154,11 @@ public class PaidHolidayController {
                         );
 
             /*
-             * 1日有給と打刻実績は同じ日に共存させない。
-             * 半休は残り半日の勤務があり得るため、
-             * 打刻があるだけでは拒否しない。
+             * 1日有給と打刻実績は同日に併用できない。
              */
             if (holidayType == FULL_DAY
-                    && attendance.isPresent()
-                    && isClocked(attendance.get())) {
+                    && attendanceOptional.isPresent()
+                    && isClocked(attendanceOptional.get())) {
 
                 return redirectWithError(
                         holiday
@@ -161,6 +168,139 @@ public class PaidHolidayController {
                 );
             }
 
+            List<TbTrnAttendanceRequest> attendanceRequests =
+                    attendanceRequestRepository
+                        .findActiveByUserIdAndWorkingDay(
+                                employeeId,
+                                holiday
+                        );
+
+            /*
+             * 1日有給は、申請中・承認済みの勤怠修正と
+             * 同じ日に併用できない。
+             */
+            if (holidayType == FULL_DAY
+                    && !attendanceRequests.isEmpty()) {
+
+                return redirectWithError(
+                        holiday
+                            + "は勤怠修正を申請中または"
+                            + "承認済みのため"
+                            + "1日有給を申請できません",
+                        redirectAttributes
+                );
+            }
+
+            /*
+             * 半休は、休む4時間と勤務時間が
+             * 重ならない場合だけ申請できる。
+             */
+            if (holidayType != FULL_DAY) {
+
+                if (attendanceOptional.isEmpty()
+                        || !hasNineHourSchedule(
+                                attendanceOptional.get()
+                        )) {
+
+                    return redirectWithError(
+                            holiday
+                                + "は9時間の勤務予定が"
+                                + "登録されていないため"
+                                + "半休を判定できません",
+                            redirectAttributes
+                    );
+                }
+
+                TbTrnAttendance attendance =
+                        attendanceOptional.get();
+
+                LocalTime leaveStart =
+                        holidayType == MORNING_HALF_DAY
+                            ? attendance.getWorkingStartTime()
+                            : attendance.getWorkingEndTime()
+                                .minusHours(HALF_DAY_HOURS);
+
+                LocalTime leaveEnd =
+                        holidayType == MORNING_HALF_DAY
+                            ? attendance.getWorkingStartTime()
+                                .plusHours(HALF_DAY_HOURS)
+                            : attendance.getWorkingEndTime();
+
+                /*
+                 * 実際の打刻時間も確認する。
+                 * 片方しか打刻されていない場合は、
+                 * 勤務時間が確定できないため拒否する。
+                 */
+                LocalTime actualStart =
+                        attendance.getActualWorkingStartTime();
+                LocalTime actualEnd =
+                        attendance.getActualWorkingEndTime();
+
+                if ((actualStart == null) != (actualEnd == null)) {
+
+                    return redirectWithError(
+                            holiday
+                                + "は出退勤の時刻が揃っていないため"
+                                + "半休を申請できません",
+                            redirectAttributes
+                    );
+                }
+
+                if (actualStart != null
+                        && (!actualStart.isBefore(actualEnd)
+                            || overlaps(
+                                    actualStart,
+                                    actualEnd,
+                                    leaveStart,
+                                    leaveEnd
+                            ))) {
+
+                    return redirectWithError(
+                            holiday
+                                + "は打刻時間と半休の時間が"
+                                + "重なるため申請できません",
+                            redirectAttributes
+                    );
+                }
+
+                /*
+                 * 打刻漏れなどの勤怠修正申請も確認する。
+                 * 時刻が片方だけの場合は、重複しないと
+                 * 確認できないため拒否する。
+                 */
+                for (TbTrnAttendanceRequest attendanceRequest
+                        : attendanceRequests) {
+
+                    LocalTime requestedStart =
+                            attendanceRequest.getWorkingStartTime();
+                    LocalTime requestedEnd =
+                            attendanceRequest.getWorkingEndTime();
+
+                    if (requestedStart == null
+                            || requestedEnd == null
+                            || !requestedStart.isBefore(requestedEnd)
+                            || overlaps(
+                                    requestedStart,
+                                    requestedEnd,
+                                    leaveStart,
+                                    leaveEnd
+                            )) {
+
+                        return redirectWithError(
+                                holiday
+                                    + "は勤怠修正申請の勤務時間と"
+                                    + "半休の時間が重なるか"
+                                    + "確認できないため、"
+                                    + "申請できません",
+                                redirectAttributes
+                        );
+                    }
+                }
+            }
+
+            /*
+             * 申請中・承認済みの有給との重複を確認する。
+             */
             List<TbTrnPaidHolidayRequest> existingRequests =
                     paidHolidayRequestRepository
                         .findByEmployeeIdAndPeriod(
@@ -178,9 +318,9 @@ public class PaidHolidayController {
                 }
 
                 /*
-                 * 1日有給と半休は同じ日に併用しない。
-                 * 午前半休と午後半休は、それぞれ1件ずつ
-                 * 申請できる。
+                 * 1日有給と半休は併用不可。
+                 * 同じ半休の再申請も不可。
+                 * 午前半休＋午後半休は許可する。
                  */
                 boolean conflicts =
                         holidayType == FULL_DAY
@@ -224,6 +364,42 @@ public class PaidHolidayController {
         );
 
         return "redirect:/paid-holiday";
+    }
+
+    /**
+     * 9時間拘束の勤務予定があるか確認する。
+     * このうち午前・午後に4時間ずつ勤務し、
+     * 間の1時間を休憩として扱う。
+     */
+    private boolean hasNineHourSchedule(
+            TbTrnAttendance attendance) {
+
+        LocalTime start =
+                attendance.getWorkingStartTime();
+        LocalTime end =
+                attendance.getWorkingEndTime();
+
+        return start != null
+                && end != null
+                && start.isBefore(end)
+                && Duration.between(start, end).toHours()
+                    == FULL_SCHEDULE_HOURS
+                && Duration.between(start, end).toMinutes()
+                    == FULL_SCHEDULE_HOURS * 60;
+    }
+
+    /**
+     * 2つの時間帯が重なるか確認する。
+     * 終了時刻と開始時刻が同じ場合は重複しない。
+     */
+    private boolean overlaps(
+            LocalTime firstStart,
+            LocalTime firstEnd,
+            LocalTime secondStart,
+            LocalTime secondEnd) {
+
+        return firstStart.isBefore(secondEnd)
+                && secondStart.isBefore(firstEnd);
     }
 
     private boolean isClocked(
