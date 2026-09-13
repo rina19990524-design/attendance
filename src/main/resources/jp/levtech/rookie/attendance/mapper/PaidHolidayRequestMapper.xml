@@ -1,19 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace=
-        "jp.levtech.rookie.attendance.mapper.PaidHolidayRequestMapper">
+<mapper namespace="jp.levtech.rookie.attendance.mapper.PaidHolidayRequestMapper">
 
-
-    <!--
-        SQLの取得結果とDTOの項目を対応させる
-    -->
+    <!-- 管理者画面用の取得結果とDTOの対応 -->
     <resultMap id="adminPaidHolidayRequestViewResultMap"
-               type=
-               "jp.levtech.rookie.attendance.dto.AdminPaidHolidayRequestView">
+               type="jp.levtech.rookie.attendance.dto.AdminPaidHolidayRequestView">
 
         <result column="paid_holiday_request_id"
                 property="paidHolidayRequestId"/>
@@ -35,9 +29,30 @@
 
         <result column="request_reason"
                 property="requestReason"/>
-
     </resultMap>
 
+    <!-- 従業員の勤怠画面用の取得結果とモデルの対応 -->
+    <resultMap id="paidHolidayRequestResultMap"
+               type="jp.levtech.rookie.attendance.model.TbTrnPaidHolidayRequest">
+
+        <id column="paid_holiday_request_id"
+            property="paidHolidayRequestId"/>
+
+        <result column="holiday_type"
+                property="holidayType"/>
+
+        <result column="holiday"
+                property="holiday"/>
+
+        <result column="employee_id"
+                property="employeeId"/>
+
+        <result column="request_reason"
+                property="requestReason"/>
+
+        <result column="request_flag"
+                property="requestFlag"/>
+    </resultMap>
 
     <!-- 有給申請を登録する -->
     <insert id="insert">
@@ -50,7 +65,6 @@
             request_reason,
             request_flag
         )
-
         VALUES (
             #{paidHolidayRequestId},
             #{holidayType},
@@ -62,33 +76,26 @@
 
     </insert>
 
-
     <!-- 指定した申請フラグの件数を取得する -->
     <select id="countByRequestFlag"
             resultType="int">
 
         SELECT
             COUNT(*)
-
         FROM
             tb_trn_paid_holiday_request
-
         WHERE
             request_flag = #{requestFlag}
 
     </select>
 
-
-    <!-- 指定した申請フラグの一覧を取得する -->
+    <!-- 管理者画面：指定した申請フラグの一覧 -->
     <select id="findByRequestFlag"
-            resultMap=
-            "adminPaidHolidayRequestViewResultMap">
+            resultMap="adminPaidHolidayRequestViewResultMap">
 
         SELECT
             request.paid_holiday_request_id,
-
             employee.employee_id,
-
             employee.employee_name,
 
             CASE employee.department_id
@@ -99,9 +106,7 @@
             END AS department_name,
 
             request.holiday_type,
-
             request.holiday,
-
             request.request_reason
 
         FROM
@@ -119,13 +124,10 @@
 
         ORDER BY
             request.holiday ASC,
-
             employee.employee_id ASC,
-
             request.paid_holiday_request_id ASC
 
     </select>
-
 
     <!-- 有給申請を承認済みに変更する -->
     <update id="updateRequestFlag">
@@ -146,5 +148,43 @@
                 #{currentFlag}
 
     </update>
+
+    <!--
+        従業員の勤怠画面：
+        ログイン中の社員・表示期間の申請中と承認済みを取得する
+    -->
+    <select id="findByEmployeeIdAndPeriod"
+            resultMap="paidHolidayRequestResultMap">
+
+        SELECT
+            paid_holiday_request_id,
+            holiday_type,
+            holiday,
+            employee_id,
+            request_reason,
+            request_flag
+
+        FROM
+            tb_trn_paid_holiday_request
+
+        WHERE
+            employee_id =
+                #{employeeId}
+
+        AND
+            holiday BETWEEN
+                #{startDate}
+                AND
+                #{endDate}
+
+        AND
+            request_flag IN (1, 2)
+
+        ORDER BY
+            holiday ASC,
+            request_flag DESC,
+            paid_holiday_request_id ASC
+
+    </select>
 
 </mapper>

@@ -1,5 +1,6 @@
 package jp.levtech.rookie.attendance.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,6 @@ public class PaidHolidayRequestRepositoryImpl
     private final PaidHolidayRequestMapper
             paidHolidayRequestMapper;
 
-
     public PaidHolidayRequestRepositoryImpl(
             PaidHolidayRequestMapper
                     paidHolidayRequestMapper) {
@@ -26,7 +26,6 @@ public class PaidHolidayRequestRepositoryImpl
         this.paidHolidayRequestMapper =
                 paidHolidayRequestMapper;
     }
-
 
     /**
      * 有給申請を登録する
@@ -40,7 +39,6 @@ public class PaidHolidayRequestRepositoryImpl
         );
     }
 
-
     /**
      * 指定した申請フラグの有給申請件数を取得する
      */
@@ -53,7 +51,6 @@ public class PaidHolidayRequestRepositoryImpl
                         requestFlag
                 );
     }
-
 
     /**
      * 指定した申請フラグの有給申請を取得する
@@ -69,7 +66,6 @@ public class PaidHolidayRequestRepositoryImpl
                 );
     }
 
-
     /**
      * 有給申請の申請フラグを更新する
      */
@@ -84,6 +80,24 @@ public class PaidHolidayRequestRepositoryImpl
                         requestId,
                         currentFlag,
                         newFlag
+                );
+    }
+
+    /**
+     * 従業員本人の指定期間の有給申請を取得する
+     */
+    @Override
+    public List<TbTrnPaidHolidayRequest>
+            findByEmployeeIdAndPeriod(
+                    String employeeId,
+                    LocalDate startDate,
+                    LocalDate endDate) {
+
+        return paidHolidayRequestMapper
+                .findByEmployeeIdAndPeriod(
+                        employeeId,
+                        startDate,
+                        endDate
                 );
     }
 }

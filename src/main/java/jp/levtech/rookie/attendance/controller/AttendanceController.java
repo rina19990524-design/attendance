@@ -28,8 +28,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jp.levtech.rookie.attendance.model.TbMstEmployee;
 import jp.levtech.rookie.attendance.model.TbTrnAttendance;
 import jp.levtech.rookie.attendance.model.TbTrnAttendanceRequest;
+import jp.levtech.rookie.attendance.model.TbTrnPaidHolidayRequest;
 import jp.levtech.rookie.attendance.repository.AttendanceRepository;
 import jp.levtech.rookie.attendance.repository.AttendanceRequestRepository;
+import jp.levtech.rookie.attendance.repository.PaidHolidayRequestRepository;
 import jp.levtech.rookie.attendance.repository.TestRepository;
 
 @Controller
@@ -45,16 +47,26 @@ public class AttendanceController {
     private final AttendanceRequestRepository
             attendanceRequestRepository;
 
+    private final PaidHolidayRequestRepository
+            paidHolidayRequestRepository;
+
     public AttendanceController(
             TestRepository testRepository,
             AttendanceRepository attendanceRepository,
-            AttendanceRequestRepository
-                    attendanceRequestRepository) {
+            AttendanceRequestRepository attendanceRequestRepository,
+            PaidHolidayRequestRepository paidHolidayRequestRepository) {
 
-        this.testRepository = testRepository;
-        this.attendanceRepository = attendanceRepository;
+        this.testRepository =
+                testRepository;
+
+        this.attendanceRepository =
+                attendanceRepository;
+
         this.attendanceRequestRepository =
                 attendanceRequestRepository;
+
+        this.paidHolidayRequestRepository =
+                paidHolidayRequestRepository;
     }
 
     /**
@@ -161,6 +173,37 @@ public class AttendanceController {
                         )
                     );
 
+        /*
+         * 表示月の有給申請を取得する。
+         * 申請中・承認済みの両方が含まれる。
+         */
+        List<TbTrnPaidHolidayRequest> paidHolidayRequests =
+                paidHolidayRequestRepository
+                    .findByEmployeeIdAndPeriod(
+                            employeeId,
+                            startDate,
+                            endDate
+                    );
+
+        /*
+         * 勤務日をキーにして有給申請をまとめる。
+         * 同じ日に午前半休と午後半休がある場合も
+         * 両方表示できるようにListを値にする。
+         */
+        Map<LocalDate, List<TbTrnPaidHolidayRequest>>
+                paidHolidayRequestsByDate =
+                    paidHolidayRequests
+                        .stream()
+                        .filter(request ->
+                            request.getHoliday() != null
+                        )
+                        .collect(
+                            Collectors.groupingBy(
+                                TbTrnPaidHolidayRequest
+                                    ::getHoliday
+                            )
+                        );
+
         List<TbTrnAttendance> monthlyAttendanceList =
                 IntStream
                     .rangeClosed(
@@ -219,6 +262,11 @@ public class AttendanceController {
         model.addAttribute(
                 "attendanceList",
                 monthlyAttendanceList
+        );
+
+        model.addAttribute(
+                "paidHolidayRequestsByDate",
+                paidHolidayRequestsByDate
         );
 
         model.addAttribute(

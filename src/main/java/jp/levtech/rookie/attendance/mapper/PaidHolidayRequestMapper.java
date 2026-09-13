@@ -1,5 +1,6 @@
 package jp.levtech.rookie.attendance.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -21,7 +22,6 @@ public interface PaidHolidayRequestMapper {
             TbTrnPaidHolidayRequest request
     );
 
-
     /**
      * 指定した申請フラグの有給申請件数を取得する
      */
@@ -30,17 +30,13 @@ public interface PaidHolidayRequestMapper {
             int requestFlag
     );
 
-
     /**
      * 指定した申請フラグの有給申請を取得する
      */
-    List<AdminPaidHolidayRequestView>
-            findByRequestFlag(
-
-                @Param("requestFlag")
-                int requestFlag
-            );
-
+    List<AdminPaidHolidayRequestView> findByRequestFlag(
+            @Param("requestFlag")
+            int requestFlag
+    );
 
     /**
      * 有給申請の申請フラグを更新する
@@ -54,5 +50,19 @@ public interface PaidHolidayRequestMapper {
 
             @Param("newFlag")
             int newFlag
+    );
+
+    /**
+     * 従業員本人の指定期間の有給申請を取得する
+     */
+    List<TbTrnPaidHolidayRequest> findByEmployeeIdAndPeriod(
+            @Param("employeeId")
+            String employeeId,
+
+            @Param("startDate")
+            LocalDate startDate,
+
+            @Param("endDate")
+            LocalDate endDate
     );
 }

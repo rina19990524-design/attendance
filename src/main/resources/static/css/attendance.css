@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
-/* ========================================
-   共通
-   ======================================== */
-
+/* 共通 */
 * {
     box-sizing: border-box;
 }
@@ -36,11 +33,7 @@ select {
     font: inherit;
 }
 
-
-/* ========================================
-   画面全体
-   ======================================== */
-
+/* 画面全体 */
 .page-container {
     width: 100%;
     max-width: 1500px;
@@ -53,11 +46,7 @@ select {
     box-shadow: 0 12px 32px rgba(17, 65, 111, 0.11);
 }
 
-
-/* ========================================
-   ヘッダー
-   ======================================== */
-
+/* ヘッダー */
 .header {
     display: flex;
     align-items: center;
@@ -65,13 +54,12 @@ select {
     min-height: 110px;
     padding: 24px 38px;
     color: #ffffff;
-    background:
-        linear-gradient(
-            110deg,
-            #082b5c 0%,
-            #0b3d78 60%,
-            #0d4d91 100%
-        );
+    background: linear-gradient(
+        110deg,
+        #082b5c 0%,
+        #0b3d78 60%,
+        #0d4d91 100%
+    );
 }
 
 .header-information h1 {
@@ -113,12 +101,11 @@ select {
 
 .header-home-link {
     color: #ffffff;
-    background:
-        linear-gradient(
-            135deg,
-            #2b9cf0 0%,
-            #0877df 100%
-        );
+    background: linear-gradient(
+        135deg,
+        #2b9cf0 0%,
+        #0877df 100%
+    );
     border: 1px solid #2b9cf0;
     box-shadow: 0 6px 14px rgba(0, 70, 145, 0.2);
 }
@@ -139,32 +126,23 @@ select {
 }
 
 .header-home-link:hover {
-    background:
-        linear-gradient(
-            135deg,
-            #3baaf8 0%,
-            #1787ee 100%
-        );
+    background: linear-gradient(
+        135deg,
+        #3baaf8 0%,
+        #1787ee 100%
+    );
 }
 
 .logout-button:hover {
     background-color: rgba(255, 255, 255, 0.18);
 }
 
-
-/* ========================================
-   メイン部分
-   ======================================== */
-
+/* メイン部分 */
 .main-content {
     padding: 34px 40px 50px;
 }
 
-
-/* ========================================
-   メッセージ
-   ======================================== */
-
+/* メッセージ */
 .message {
     margin: 0 0 20px;
     padding: 13px 17px;
@@ -199,19 +177,14 @@ select {
     display: block;
 }
 
-
-/* ========================================
-   勤務予定登録・編集
-   ======================================== */
-
+/* 勤務予定登録・編集 */
 .registration-section {
     padding: 28px 30px 32px;
-    background:
-        linear-gradient(
-            120deg,
-            #ffffff 0%,
-            #f2faff 100%
-        );
+    background: linear-gradient(
+        120deg,
+        #ffffff 0%,
+        #f2faff 100%
+    );
     border: 1px solid #b9ddf0;
     border-radius: 14px;
     box-shadow: 0 8px 22px rgba(23, 98, 157, 0.07);
@@ -260,11 +233,7 @@ select {
     transform: translateY(-1px);
 }
 
-
-/* ========================================
-   勤務予定入力欄
-   ======================================== */
-
+/* 勤務予定入力欄 */
 .registration-form {
     width: 100%;
 }
@@ -390,11 +359,7 @@ select {
     cursor: not-allowed;
 }
 
-
-/* ========================================
-   登録・変更ボタン
-   ======================================== */
-
+/* 登録・変更ボタン */
 .register-action {
     display: flex;
     justify-content: center;
@@ -408,12 +373,11 @@ select {
     color: #ffffff;
     font-size: 15px;
     font-weight: 700;
-    background:
-        linear-gradient(
-            135deg,
-            #2b9cf0 0%,
-            #0877df 100%
-        );
+    background: linear-gradient(
+        135deg,
+        #2b9cf0 0%,
+        #0877df 100%
+    );
     border: none;
     border-radius: 9px;
     box-shadow: 0 8px 18px rgba(8, 119, 223, 0.22);
@@ -428,11 +392,7 @@ select {
     box-shadow: 0 11px 23px rgba(8, 119, 223, 0.28);
 }
 
-
-/* ========================================
-   勤怠実績一覧
-   ======================================== */
-
+/* 勤怠実績一覧 */
 .list-section {
     margin-top: 30px;
     padding: 28px 30px 34px;
@@ -462,11 +422,7 @@ select {
     font-size: 13px;
 }
 
-
-/* ========================================
-   月移動
-   ======================================== */
-
+/* 月移動 */
 .month-navigation {
     display: flex;
     align-items: center;
@@ -502,11 +458,7 @@ select {
     background-color: #1688df;
 }
 
-
-/* ========================================
-   テーブル
-   ======================================== */
-
+/* テーブル */
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -545,12 +497,11 @@ select {
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
-    background:
-        linear-gradient(
-            180deg,
-            #e5f6ff 0%,
-            #d5effd 100%
-        );
+    background: linear-gradient(
+        180deg,
+        #e5f6ff 0%,
+        #d5effd 100%
+    );
 }
 
 .attendance-table tbody td {
@@ -593,11 +544,7 @@ select {
     width: 13%;
 }
 
-
-/* ========================================
-   行・状態ラベル
-   ======================================== */
-
+/* 行・状態ラベル */
 .holiday-row td {
     color: #697680 !important;
     background-color: #f2f4f6 !important;
@@ -607,17 +554,26 @@ select {
     background-color: #fffaf0 !important;
 }
 
+/*
+ * 勤怠修正・公休・有給のラベル共通。
+ * 複数の申請が同じ日にある場合は折り返して表示する。
+ */
 .holiday-badge,
 .requesting-badge,
-.approved-badge {
+.approved-badge,
+.paid-leave-pending-badge,
+.paid-leave-approved-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 76px;
     min-height: 29px;
+    margin: 2px;
     padding: 4px 10px;
     font-size: 12px;
     font-weight: 700;
+    line-height: 1.4;
+    vertical-align: middle;
     border-radius: 999px;
 }
 
@@ -639,11 +595,21 @@ select {
     border: 1px solid #a8dfd2;
 }
 
+/* 有給申請中：黄色 */
+.paid-leave-pending-badge {
+    color: #8a5700;
+    background-color: #fff0c7;
+    border: 1px solid #e6c570;
+}
 
-/* ========================================
-   予定編集・変更不可
-   ======================================== */
+/* 有給承認済み：緑色 */
+.paid-leave-approved-badge {
+    color: #086b50;
+    background-color: #d9f5e8;
+    border: 1px solid #91d5b3;
+}
 
+/* 予定編集 */
 .operation-cell {
     white-space: nowrap;
 }
@@ -695,11 +661,7 @@ select {
     border: 1px solid #d0d8dd;
 }
 
-
-/* ========================================
-   タブレット
-   ======================================== */
-
+/* タブレット */
 @media (max-width: 1050px) {
     body {
         padding: 10px;
@@ -757,11 +719,7 @@ select {
     }
 }
 
-
-/* ========================================
-   スマートフォン
-   ======================================== */
-
+/* スマートフォン */
 @media (max-width: 700px) {
     body {
         padding: 6px;
@@ -834,10 +792,7 @@ select {
         height: 34px;
     }
 
-    .schedule-operation {
-        width: 100%;
-    }
-
+    .schedule-operation,
     .remove-schedule-button {
         width: 100%;
     }

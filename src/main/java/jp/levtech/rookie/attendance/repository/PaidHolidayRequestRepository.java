@@ -1,5 +1,6 @@
 package jp.levtech.rookie.attendance.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jp.levtech.rookie.attendance.dto.AdminPaidHolidayRequestView;
@@ -19,7 +20,6 @@ public interface PaidHolidayRequestRepository {
             TbTrnPaidHolidayRequest request
     );
 
-
     /**
      * 指定した申請フラグの有給申請件数を取得する
      *
@@ -30,18 +30,15 @@ public interface PaidHolidayRequestRepository {
             int requestFlag
     );
 
-
     /**
      * 指定した申請フラグの有給申請を取得する
      *
      * @param requestFlag 申請フラグ
      * @return 有給申請一覧
      */
-    List<AdminPaidHolidayRequestView>
-            findByRequestFlag(
-                    int requestFlag
-            );
-
+    List<AdminPaidHolidayRequestView> findByRequestFlag(
+            int requestFlag
+    );
 
     /**
      * 有給申請の申請フラグを更新する
@@ -55,5 +52,19 @@ public interface PaidHolidayRequestRepository {
             String requestId,
             int currentFlag,
             int newFlag
+    );
+
+    /**
+     * 従業員本人の指定期間の有給申請を取得する
+     *
+     * @param employeeId 社員ID
+     * @param startDate 期間の開始日
+     * @param endDate 期間の終了日
+     * @return 有給申請一覧
+     */
+    List<TbTrnPaidHolidayRequest> findByEmployeeIdAndPeriod(
+            String employeeId,
+            LocalDate startDate,
+            LocalDate endDate
     );
 }
