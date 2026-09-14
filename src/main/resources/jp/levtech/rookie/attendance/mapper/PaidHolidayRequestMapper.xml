@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -31,7 +31,7 @@
                 property="requestReason"/>
     </resultMap>
 
-    <!-- 従業員の勤怠画面用の取得結果とモデルの対応 -->
+    <!-- 従業員画面用の取得結果とモデルの対応 -->
     <resultMap id="paidHolidayRequestResultMap"
                type="jp.levtech.rookie.attendance.model.TbTrnPaidHolidayRequest">
 
@@ -56,7 +56,6 @@
 
     <!-- 有給申請を登録する -->
     <insert id="insert">
-
         INSERT INTO tb_trn_paid_holiday_request (
             paid_holiday_request_id,
             holiday_type,
@@ -73,89 +72,67 @@
             #{requestReason},
             #{requestFlag}
         )
-
     </insert>
 
     <!-- 指定した申請フラグの件数を取得する -->
     <select id="countByRequestFlag"
             resultType="int">
-
         SELECT
             COUNT(*)
         FROM
             tb_trn_paid_holiday_request
         WHERE
             request_flag = #{requestFlag}
-
     </select>
 
     <!-- 管理者画面：指定した申請フラグの一覧 -->
     <select id="findByRequestFlag"
             resultMap="adminPaidHolidayRequestViewResultMap">
-
         SELECT
             request.paid_holiday_request_id,
             employee.employee_id,
             employee.employee_name,
-
             CASE employee.department_id
                 WHEN 1 THEN '営業部'
                 WHEN 2 THEN '総務部'
                 WHEN 3 THEN '人事部'
                 ELSE ''
             END AS department_name,
-
             request.holiday_type,
             request.holiday,
             request.request_reason
-
         FROM
             tb_trn_paid_holiday_request request
-
         INNER JOIN
             tb_mst_employee employee
         ON
-            request.employee_id =
-                employee.employee_id
-
+            request.employee_id = employee.employee_id
         WHERE
-            request.request_flag =
-                #{requestFlag}
-
+            request.request_flag = #{requestFlag}
         ORDER BY
             request.holiday ASC,
             employee.employee_id ASC,
             request.paid_holiday_request_id ASC
-
     </select>
 
-    <!-- 有給申請を承認済みに変更する -->
+    <!-- 管理者による申請フラグの更新 -->
     <update id="updateRequestFlag">
-
         UPDATE
             tb_trn_paid_holiday_request
-
         SET
-            request_flag =
-                #{newFlag}
-
+            request_flag = #{newFlag}
         WHERE
-            paid_holiday_request_id =
-                #{requestId}
-
+            paid_holiday_request_id = #{requestId}
         AND
-            request_flag =
-                #{currentFlag}
-
+            request_flag = #{currentFlag}
     </update>
 
     <!--
         従業員の勤怠画面：
-        ログイン中の社員・表示期間の申請中と承認済みを取得する
+        指定期間の申請中・承認済みを取得する
     -->
     <select id="findByEmployeeIdAndPeriod"
             resultMap="paidHolidayRequestResultMap">
-
         SELECT
             paid_holiday_request_id,
             holiday_type,
@@ -163,28 +140,56 @@
             employee_id,
             request_reason,
             request_flag
-
         FROM
             tb_trn_paid_holiday_request
-
         WHERE
-            employee_id =
-                #{employeeId}
-
+            employee_id = #{employeeId}
         AND
-            holiday BETWEEN
-                #{startDate}
-                AND
-                #{endDate}
-
+            holiday BETWEEN #{startDate} AND #{endDate}
         AND
             request_flag IN (1, 2)
-
         ORDER BY
             holiday ASC,
             request_flag DESC,
             paid_holiday_request_id ASC
-
     </select>
+
+    <!-- 本人の申請中一覧：取消ボタンの表示に使用する -->
+    <select id="findPendingByEmployeeId"
+            resultMap="paidHolidayRequestResultMap">
+        SELECT
+            paid_holiday_request_id,
+            holiday_type,
+            holiday,
+            employee_id,
+            request_reason,
+            request_flag
+        FROM
+            tb_trn_paid_holiday_request
+        WHERE
+            employee_id = #{employeeId}
+        AND
+            request_flag = 1
+        ORDER BY
+            holiday ASC,
+            paid_holiday_request_id ASC
+    </select>
+
+    <!--
+        本人の申請中だけを取消済み（3）にする。
+        承認後や他人の申請なら更新件数は0になる。
+    -->
+    <update id="cancelPendingRequest">
+        UPDATE
+            tb_trn_paid_holiday_request
+        SET
+            request_flag = 3
+        WHERE
+            paid_holiday_request_id = #{requestId}
+        AND
+            employee_id = #{employeeId}
+        AND
+            request_flag = 1
+    </update>
 
 </mapper>

@@ -83,6 +83,16 @@ public class PaidHolidayController {
 
         model.addAttribute("employee", employee);
 
+        // 本人の申請中一覧を取消ボタン用に渡す
+        List<TbTrnPaidHolidayRequest> pendingRequests =
+                paidHolidayRequestRepository
+                    .findPendingByEmployeeId(employeeId);
+
+        model.addAttribute(
+                "pendingRequests",
+                pendingRequests
+        );
+
         return "paidholiday";
     }
 
@@ -300,6 +310,7 @@ public class PaidHolidayController {
 
             /*
              * 申請中・承認済みの有給との重複を確認する。
+             * 取消済み（3）は取得対象外。
              */
             List<TbTrnPaidHolidayRequest> existingRequests =
                     paidHolidayRequestRepository
@@ -362,6 +373,45 @@ public class PaidHolidayController {
                 "message",
                 "申請しました"
         );
+
+        return "redirect:/paid-holiday";
+    }
+
+    /**
+     * 本人の申請中の有給申請を取り消す
+     */
+    @PostMapping("/paid-holiday/cancel")
+    @Transactional
+    public String cancel(
+            Principal principal,
+            @RequestParam String requestId,
+            RedirectAttributes redirectAttributes) {
+
+        String employeeId = principal.getName();
+
+        int updatedCount =
+                paidHolidayRequestRepository
+                    .cancelPendingRequest(
+                            requestId,
+                            employeeId
+                    );
+
+        if (updatedCount == 1) {
+
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "有給申請を取り消しました"
+            );
+
+        } else {
+
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "申請を取り消せませんでした。"
+                    + "承認済み、取消済み、または"
+                    + "対象の申請が存在しない可能性があります"
+            );
+        }
 
         return "redirect:/paid-holiday";
     }

@@ -20,8 +20,7 @@ public class PaidHolidayRequestRepositoryImpl
             paidHolidayRequestMapper;
 
     public PaidHolidayRequestRepositoryImpl(
-            PaidHolidayRequestMapper
-                    paidHolidayRequestMapper) {
+            PaidHolidayRequestMapper paidHolidayRequestMapper) {
 
         this.paidHolidayRequestMapper =
                 paidHolidayRequestMapper;
@@ -34,9 +33,7 @@ public class PaidHolidayRequestRepositoryImpl
     public void insert(
             TbTrnPaidHolidayRequest request) {
 
-        paidHolidayRequestMapper.insert(
-                request
-        );
+        paidHolidayRequestMapper.insert(request);
     }
 
     /**
@@ -47,9 +44,7 @@ public class PaidHolidayRequestRepositoryImpl
             int requestFlag) {
 
         return paidHolidayRequestMapper
-                .countByRequestFlag(
-                        requestFlag
-                );
+                .countByRequestFlag(requestFlag);
     }
 
     /**
@@ -61,9 +56,7 @@ public class PaidHolidayRequestRepositoryImpl
                     int requestFlag) {
 
         return paidHolidayRequestMapper
-                .findByRequestFlag(
-                        requestFlag
-                );
+                .findByRequestFlag(requestFlag);
     }
 
     /**
@@ -98,6 +91,33 @@ public class PaidHolidayRequestRepositoryImpl
                         employeeId,
                         startDate,
                         endDate
+                );
+    }
+
+    /**
+     * 本人の申請中の有給申請を取得する
+     */
+    @Override
+    public List<TbTrnPaidHolidayRequest>
+            findPendingByEmployeeId(
+                    String employeeId) {
+
+        return paidHolidayRequestMapper
+                .findPendingByEmployeeId(employeeId);
+    }
+
+    /**
+     * 本人の申請中の有給申請だけを取消済みにする
+     */
+    @Override
+    public int cancelPendingRequest(
+            String requestId,
+            String employeeId) {
+
+        return paidHolidayRequestMapper
+                .cancelPendingRequest(
+                        requestId,
+                        employeeId
                 );
     }
 }

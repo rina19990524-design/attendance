@@ -805,4 +805,43 @@ select {
     .month-navigation {
         justify-content: center;
     }
+    /* 申請中の表示と取消ボタン */
+
+	.request-action {
+	    display: inline-flex;
+	    align-items: center;
+	    justify-content: center;
+	    flex-wrap: wrap;
+	    gap: 4px;
+	    margin: 3px 2px;
+	    vertical-align: middle;
+	}
+	
+	.cancel-request-form {
+	    display: inline-flex;
+	    margin: 0;
+	}
+	
+	.cancel-request-button {
+	    min-height: 29px;
+	    padding: 4px 9px;
+	    color: #a3453d;
+	    font-size: 12px;
+	    font-weight: 700;
+	    white-space: nowrap;
+	    background-color: #ffffff;
+	    border: 1px solid #d99b95;
+	    border-radius: 7px;
+	    cursor: pointer;
+	}
+	
+	.cancel-request-button:hover {
+	    color: #ffffff;
+	    background-color: #b94f46;
+	}
+	
+	.cancel-request-button:focus-visible {
+	    outline: 3px solid #d99b95;
+	    outline-offset: 2px;
+	}
 }

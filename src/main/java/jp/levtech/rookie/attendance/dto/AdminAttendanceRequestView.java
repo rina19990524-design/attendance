@@ -1,5 +1,6 @@
 package jp.levtech.rookie.attendance.dto;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
@@ -19,48 +20,45 @@ public class AdminAttendanceRequestView {
      */
     private String attendanceRequestId;
 
+    /**
+     * 修正対象の勤務日
+     */
+    private LocalDate workingDay;
 
     /**
      * 社員ID
      */
     private String employeeId;
 
-
     /**
      * 社員名
      */
     private String employeeName;
-
 
     /**
      * 部署名
      */
     private String departmentName;
 
-
     /**
      * 変更前の勤務開始時刻
      */
     private LocalTime beforeStartTime;
-
 
     /**
      * 変更前の勤務終了時刻
      */
     private LocalTime beforeEndTime;
 
-
     /**
-     * 変更後の勤務開始始時刻
+     * 変更後の勤務開始時刻
      */
     private LocalTime afterStartTime;
-
 
     /**
      * 変更後の勤務終了時刻
      */
     private LocalTime afterEndTime;
-
 
     /**
      * HTMLへ表示する変更前の時間
@@ -69,14 +67,12 @@ public class AdminAttendanceRequestView {
      */
     private String beforeTime;
 
-
     /**
      * HTMLへ表示する変更後の時間
      *
      * 例：09:30～18:30
      */
     private String afterTime;
-
 
     /**
      * 申請種別
@@ -86,12 +82,10 @@ public class AdminAttendanceRequestView {
      */
     private int requestType;
 
-
     /**
      * HTMLへ表示する申請種別名
      */
     private String requestTypeName;
-
 
     /**
      * 申請理由

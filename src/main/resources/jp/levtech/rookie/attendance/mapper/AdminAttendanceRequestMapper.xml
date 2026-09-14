@@ -4,20 +4,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace=
-        "jp.levtech.rookie.attendance.mapper.AdminAttendanceRequestMapper">
-
+<mapper namespace="jp.levtech.rookie.attendance.mapper.AdminAttendanceRequestMapper">
 
     <!--
         SQLの取得結果と
         AdminAttendanceRequestViewの項目を対応させる
     -->
     <resultMap id="adminAttendanceRequestViewResultMap"
-               type=
-               "jp.levtech.rookie.attendance.dto.AdminAttendanceRequestView">
+               type="jp.levtech.rookie.attendance.dto.AdminAttendanceRequestView">
 
         <result column="attendance_request_id"
                 property="attendanceRequestId"/>
+
+        <result column="working_day"
+                property="workingDay"/>
 
         <result column="employee_id"
                 property="employeeId"/>
@@ -48,19 +48,14 @@
 
     </resultMap>
 
-
-    <!--
-        指定した申請フラグの勤怠申請を取得する
-    -->
+    <!-- 指定した申請フラグの勤怠申請を取得する -->
     <select id="findByRequestFlag"
-            resultMap=
-            "adminAttendanceRequestViewResultMap">
+            resultMap="adminAttendanceRequestViewResultMap">
 
         SELECT
             request.attendance_request_id,
-
+            attendance.working_day,
             employee.employee_id,
-
             employee.employee_name,
 
             CASE employee.department_id
@@ -82,7 +77,6 @@
                 AS after_end_time,
 
             request.request_type,
-
             request.request_reason
 
         FROM
@@ -93,18 +87,18 @@
 
         ON
             request.attendance_id =
-            attendance.attendance_id
+                attendance.attendance_id
 
         INNER JOIN
             tb_mst_employee employee
 
         ON
             attendance.user_id =
-            employee.employee_id
+                employee.employee_id
 
         WHERE
             request.request_flag =
-            #{requestFlag}
+                #{requestFlag}
 
         ORDER BY
             attendance.working_day ASC,
@@ -113,26 +107,22 @@
 
     </select>
 
-
-    <!--
-        指定した申請フラグの勤怠申請件数を取得する
-    -->
+    <!-- 指定した申請フラグの勤怠申請件数を取得する -->
     <select id="countByRequestFlag"
             resultType="int">
 
         SELECT
             COUNT(*)
+
         FROM
             tb_trn_attendance_request
+
         WHERE
             request_flag = #{requestFlag}
 
     </select>
 
-
-    <!--
-        申請された時刻を元の勤怠実績へ反映する
-    -->
+    <!-- 申請された時刻を元の勤怠実績へ反映する -->
     <update id="updateAttendanceFromRequest">
 
         UPDATE
@@ -162,10 +152,7 @@
 
     </update>
 
-
-    <!--
-        勤怠申請の申請フラグを承認済みに変更する
-    -->
+    <!-- 勤怠申請の申請フラグを承認済みに変更する -->
     <update id="updateRequestFlag">
 
         UPDATE
@@ -184,6 +171,5 @@
                 #{currentFlag}
 
     </update>
-
 
 </mapper>

@@ -1,8 +1,6 @@
 @charset "UTF-8";
 
-/* ========================================
-   管理者用 勤怠申請一覧
-   ======================================== */
+/* 管理者用 勤怠申請一覧 */
 
 * {
     box-sizing: border-box;
@@ -27,7 +25,6 @@ body {
         "Yu Gothic",
         Meiryo,
         sans-serif;
-
     background:
         radial-gradient(
             circle at 8% 25%,
@@ -47,10 +44,7 @@ body {
         );
 }
 
-
-/* ========================================
-   画面全体
-   ======================================== */
+/* 画面全体 */
 
 .page-container {
     width: 100%;
@@ -61,15 +55,10 @@ body {
     background-color: rgba(255, 255, 255, 0.98);
     border: 1px solid #c4e4dd;
     border-radius: 22px;
-    box-shadow:
-        0 18px 45px
-        rgba(15, 92, 78, 0.14);
+    box-shadow: 0 18px 45px rgba(15, 92, 78, 0.14);
 }
 
-
-/* ========================================
-   ヘッダー
-   ======================================== */
+/* ヘッダー */
 
 .page-header {
     display: flex;
@@ -78,14 +67,12 @@ body {
     min-height: 105px;
     padding: 24px 42px;
     color: #ffffff;
-
-    background:
-        linear-gradient(
-            110deg,
-            #034d40 0%,
-            #08735f 60%,
-            #0a8971 100%
-        );
+    background: linear-gradient(
+        110deg,
+        #034d40 0%,
+        #08735f 60%,
+        #0a8971 100%
+    );
 }
 
 .company-info {
@@ -106,18 +93,12 @@ body {
     font-size: 15px;
     font-weight: 700;
     white-space: nowrap;
-    background-color:
-        rgba(255, 255, 255, 0.17);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.17);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 10px;
 }
 
-
-/* ========================================
-   ヘッダーのボタン
-   ======================================== */
+/* ヘッダーのボタン */
 
 .header-home-link,
 .logout-button {
@@ -133,21 +114,17 @@ body {
     white-space: nowrap;
     border-radius: 10px;
     cursor: pointer;
-
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease,
         background-color 0.2s ease;
 }
 
-/* ホームへ戻るは白背景 */
 .header-home-link {
     color: #075949;
     background-color: #ffffff;
     border: 1px solid #ffffff;
-    box-shadow:
-        0 6px 14px
-        rgba(0, 49, 40, 0.14);
+    box-shadow: 0 6px 14px rgba(0, 49, 40, 0.14);
 }
 
 .logout-form {
@@ -156,11 +133,8 @@ body {
 
 .logout-button {
     color: #ffffff;
-    background-color:
-        rgba(255, 255, 255, 0.12);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.72);
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.72);
 }
 
 .header-home-link:hover,
@@ -173,23 +147,16 @@ body {
 }
 
 .logout-button:hover {
-    background-color:
-        rgba(255, 255, 255, 0.22);
+    background-color: rgba(255, 255, 255, 0.22);
 }
 
-
-/* ========================================
-   メイン部分
-   ======================================== */
+/* メイン部分 */
 
 .main-content {
     padding: 36px 42px 50px;
 }
 
-
-/* ========================================
-   画面タイトル
-   ======================================== */
+/* 画面タイトル */
 
 .page-title {
     padding-bottom: 22px;
@@ -209,10 +176,7 @@ body {
     font-size: 14px;
 }
 
-
-/* ========================================
-   メッセージ
-   ======================================== */
+/* メッセージ */
 
 .message {
     margin-top: 24px;
@@ -234,10 +198,7 @@ body {
     border: 1px solid #efc0bb;
 }
 
-
-/* ========================================
-   申請一覧カード
-   ======================================== */
+/* 申請一覧カード */
 
 .request-list-card {
     margin-top: 28px;
@@ -245,9 +206,7 @@ body {
     background-color: #ffffff;
     border: 1px solid #b7ded5;
     border-radius: 15px;
-    box-shadow:
-        0 10px 24px
-        rgba(21, 98, 82, 0.08);
+    box-shadow: 0 10px 24px rgba(21, 98, 82, 0.08);
 }
 
 .list-heading {
@@ -284,10 +243,7 @@ body {
     border-radius: 999px;
 }
 
-
-/* ========================================
-   一括承認
-   ======================================== */
+/* 一括承認 */
 
 .bulk-actions {
     display: flex;
@@ -302,21 +258,15 @@ body {
     font-family: inherit;
     font-size: 14px;
     font-weight: 700;
-
-    background:
-        linear-gradient(
-            135deg,
-            #13a283 0%,
-            #08745f 100%
-        );
-
+    background: linear-gradient(
+        135deg,
+        #13a283 0%,
+        #08745f 100%
+    );
     border: none;
     border-radius: 9px;
-    box-shadow:
-        0 7px 15px
-        rgba(7, 116, 95, 0.18);
+    box-shadow: 0 7px 15px rgba(7, 116, 95, 0.18);
     cursor: pointer;
-
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -324,15 +274,10 @@ body {
 
 .bulk-approve-button:hover {
     transform: translateY(-2px);
-    box-shadow:
-        0 10px 20px
-        rgba(7, 116, 95, 0.24);
+    box-shadow: 0 10px 20px rgba(7, 116, 95, 0.24);
 }
 
-
-/* ========================================
-   データなし
-   ======================================== */
+/* データなし */
 
 .no-data {
     padding: 40px 20px;
@@ -344,10 +289,7 @@ body {
     border-radius: 11px;
 }
 
-
-/* ========================================
-   テーブル
-   ======================================== */
+/* テーブル */
 
 .table-scroll {
     width: 100%;
@@ -358,7 +300,7 @@ body {
 
 .request-table {
     width: 100%;
-    min-width: 1150px;
+    min-width: 1280px;
     border-spacing: 0;
     border-collapse: separate;
     table-layout: fixed;
@@ -387,13 +329,11 @@ body {
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
-
-    background:
-        linear-gradient(
-            180deg,
-            #08705c 0%,
-            #045746 100%
-        );
+    background: linear-gradient(
+        180deg,
+        #08705c 0%,
+        #045746 100%
+    );
 }
 
 .request-table tbody td {
@@ -410,51 +350,52 @@ body {
     background-color: #eaf8f4;
 }
 
-
-/* ========================================
-   テーブルの列幅
-   ======================================== */
+/*
+ * テーブルの列幅
+ * HTMLの10列と同じ順番に指定する
+ */
 
 .request-table th:nth-child(1) {
-    width: 6%;
+    width: 6%;   /* 選択 */
 }
 
 .request-table th:nth-child(2) {
-    width: 10%;
+    width: 9%;   /* 社員ID */
 }
 
 .request-table th:nth-child(3) {
-    width: 12%;
+    width: 11%;  /* 社員名 */
 }
 
 .request-table th:nth-child(4) {
-    width: 10%;
+    width: 9%;   /* 部署名 */
 }
 
 .request-table th:nth-child(5) {
-    width: 13%;
+    width: 10%;  /* 勤務日 */
 }
 
 .request-table th:nth-child(6) {
-    width: 13%;
+    width: 13%;  /* 変更前 */
 }
 
 .request-table th:nth-child(7) {
-    width: 11%;
+    width: 13%;  /* 変更後 */
 }
 
 .request-table th:nth-child(8) {
-    width: 17%;
+    width: 10%;  /* 申請種別 */
 }
 
 .request-table th:nth-child(9) {
-    width: 8%;
+    width: 12%;  /* 申請理由 */
 }
 
+.request-table th:nth-child(10) {
+    width: 7%;   /* 承認 */
+}
 
-/* ========================================
-   チェックボックス
-   ======================================== */
+/* チェックボックス */
 
 .select-cell {
     text-align: center;
@@ -481,10 +422,7 @@ body {
     accent-color: #ffffff;
 }
 
-
-/* ========================================
-   表内の表示
-   ======================================== */
+/* 表内の表示 */
 
 .time-cell {
     white-space: nowrap;
@@ -511,10 +449,7 @@ body {
     border-radius: 999px;
 }
 
-
-/* ========================================
-   1件承認ボタン
-   ======================================== */
+/* 1件承認ボタン */
 
 .approve-button {
     min-height: 37px;
@@ -528,7 +463,6 @@ body {
     border: 1px solid #79c8b6;
     border-radius: 8px;
     cursor: pointer;
-
     transition:
         color 0.2s ease,
         transform 0.2s ease,
@@ -541,13 +475,9 @@ body {
     transform: translateY(-1px);
 }
 
-
-/* ========================================
-   タブレット
-   ======================================== */
+/* タブレット */
 
 @media (max-width: 1200px) {
-
     body {
         padding: 24px 16px 50px;
     }
@@ -581,13 +511,9 @@ body {
     }
 }
 
-
-/* ========================================
-   スマートフォン
-   ======================================== */
+/* スマートフォン */
 
 @media (max-width: 768px) {
-
     body {
         padding: 8px;
     }

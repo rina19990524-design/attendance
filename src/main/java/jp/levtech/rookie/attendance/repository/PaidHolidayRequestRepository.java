@@ -67,4 +67,26 @@ public interface PaidHolidayRequestRepository {
             LocalDate startDate,
             LocalDate endDate
     );
+
+    /**
+     * 本人の申請中の有給申請を取得する
+     *
+     * @param employeeId ログイン中の社員ID
+     * @return 申請中の有給申請一覧
+     */
+    List<TbTrnPaidHolidayRequest> findPendingByEmployeeId(
+            String employeeId
+    );
+
+    /**
+     * 本人の申請中の有給申請だけを取消済みにする
+     *
+     * @param requestId 有給申請ID
+     * @param employeeId ログイン中の社員ID
+     * @return 更新件数。取消できなければ0
+     */
+    int cancelPendingRequest(
+            String requestId,
+            String employeeId
+    );
 }

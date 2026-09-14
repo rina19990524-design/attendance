@@ -37,8 +37,6 @@ public interface AttendanceRequestMapper {
     /**
      * 指定した勤務日の申請中・承認済みの
      * 勤怠修正申請を時刻付きで取得する
-     *
-     * 半休と勤務時間の重なりを確認するために使用する
      */
     List<TbTrnAttendanceRequest>
             findActiveByUserIdAndWorkingDay(
@@ -48,4 +46,32 @@ public interface AttendanceRequestMapper {
                     @Param("workingDay")
                     LocalDate workingDay
             );
+
+    /**
+     * 本人の指定期間の申請中の勤怠修正申請を取得する
+     */
+    List<TbTrnAttendanceRequest>
+            findPendingByUserIdAndPeriod(
+                    @Param("employeeId")
+                    String employeeId,
+
+                    @Param("startDate")
+                    LocalDate startDate,
+
+                    @Param("endDate")
+                    LocalDate endDate
+            );
+
+    /**
+     * 本人の申請中の勤怠修正申請だけを取り消す
+     *
+     * @return 更新件数
+     */
+    int cancelPendingRequest(
+            @Param("requestId")
+            String requestId,
+
+            @Param("employeeId")
+            String employeeId
+    );
 }

@@ -33,4 +33,24 @@ public interface AttendanceRequestRepository {
                     String employeeId,
                     LocalDate workingDay
             );
+
+    /**
+     * 本人の指定期間の「申請中」の勤怠修正申請を取得する
+     */
+    List<TbTrnAttendanceRequest>
+            findPendingByUserIdAndPeriod(
+                    String employeeId,
+                    LocalDate startDate,
+                    LocalDate endDate
+            );
+
+    /**
+     * 本人の申請中の勤怠修正申請だけを取り消す
+     *
+     * @return 更新件数。取り消せなければ0
+     */
+    int cancelPendingRequest(
+            String requestId,
+            String employeeId
+    );
 }

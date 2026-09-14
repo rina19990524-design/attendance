@@ -65,4 +65,25 @@ public interface PaidHolidayRequestMapper {
             @Param("endDate")
             LocalDate endDate
     );
+
+    /**
+     * 本人の申請中の有給申請を取得する
+     */
+    List<TbTrnPaidHolidayRequest> findPendingByEmployeeId(
+            @Param("employeeId")
+            String employeeId
+    );
+
+    /**
+     * 本人の申請中の有給申請だけを取消済みにする
+     *
+     * @return 更新件数
+     */
+    int cancelPendingRequest(
+            @Param("requestId")
+            String requestId,
+
+            @Param("employeeId")
+            String employeeId
+    );
 }

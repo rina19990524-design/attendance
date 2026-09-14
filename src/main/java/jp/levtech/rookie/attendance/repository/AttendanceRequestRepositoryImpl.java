@@ -68,4 +68,37 @@ public class AttendanceRequestRepositoryImpl
                         workingDay
                 );
     }
+
+    /**
+     * 本人の指定期間の申請中の勤怠修正申請を取得する
+     */
+    @Override
+    public List<TbTrnAttendanceRequest>
+            findPendingByUserIdAndPeriod(
+                    String employeeId,
+                    LocalDate startDate,
+                    LocalDate endDate) {
+
+        return attendanceRequestMapper
+                .findPendingByUserIdAndPeriod(
+                        employeeId,
+                        startDate,
+                        endDate
+                );
+    }
+
+    /**
+     * 本人の申請中の勤怠修正申請だけを取り消す
+     */
+    @Override
+    public int cancelPendingRequest(
+            String requestId,
+            String employeeId) {
+
+        return attendanceRequestMapper
+                .cancelPendingRequest(
+                        requestId,
+                        employeeId
+                );
+    }
 }
