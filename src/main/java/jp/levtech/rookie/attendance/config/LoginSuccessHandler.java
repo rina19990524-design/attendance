@@ -14,76 +14,63 @@ import jp.levtech.rookie.attendance.repository.TestRepository;
 
 @Component
 public class LoginSuccessHandler
-        implements AuthenticationSuccessHandler {
+		implements AuthenticationSuccessHandler {
 
-    private static final int EMPLOYEE_TYPE_EMPLOYEE = 1;
+	private static final int EMPLOYEE_TYPE_EMPLOYEE = 1;
 
-    private static final int EMPLOYEE_TYPE_ADMIN = 2;
+	private static final int EMPLOYEE_TYPE_ADMIN = 2;
 
-    private final TestRepository testRepository;
+	private final TestRepository testRepository;
 
+	public LoginSuccessHandler(
+			TestRepository testRepository) {
 
-    public LoginSuccessHandler(
-            TestRepository testRepository) {
+		this.testRepository = testRepository;
+	}
 
-        this.testRepository = testRepository;
-    }
+	/**
+	 * ログイン成功後の処理
+	 */
+	@Override
+	public void onAuthenticationSuccess(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Authentication authentication)
+			throws IOException, ServletException {
 
+		// ログインした社員IDを取得
+		String employeeId = authentication.getName();
 
-    /**
-     * ログイン成功後の処理
-     */
-    @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication)
-            throws IOException, ServletException {
+		// DBから社員情報を取得
+		TbMstEmployee employee = testRepository
+				.findByEmployeeId(employeeId)
+				.orElseThrow(() -> new IllegalStateException(
+						"社員情報が見つかりません"));
 
-        // ログインした社員IDを取得
-        String employeeId =
-                authentication.getName();
+		// 社員タイプを取得
+		int employeeType = employee.getEmployeeType();
 
-        // DBから社員情報を取得
-        TbMstEmployee employee =
-                testRepository
-                    .findByEmployeeId(employeeId)
-                    .orElseThrow(() ->
-                        new IllegalStateException(
-                            "社員情報が見つかりません"
-                        )
-                    );
+		// 従業員の場合
+		if (employeeType == EMPLOYEE_TYPE_EMPLOYEE) {
 
-        // 社員タイプを取得
-        int employeeType =
-                employee.getEmployeeType();
+			response.sendRedirect(
+					request.getContextPath() + "/home");
 
-        // 従業員の場合
-        if (employeeType
-                == EMPLOYEE_TYPE_EMPLOYEE) {
+			return;
+		}
 
-            response.sendRedirect(
-                    request.getContextPath() + "/home"
-            );
+		// 管理者の場合
+		if (employeeType == EMPLOYEE_TYPE_ADMIN) {
 
-            return;
-        }
+			response.sendRedirect(
+					request.getContextPath() + "/admin");
 
-        // 管理者の場合
-        if (employeeType
-                == EMPLOYEE_TYPE_ADMIN) {
+			return;
+		}
 
-            response.sendRedirect(
-                    request.getContextPath() + "/admin"
-            );
-
-            return;
-        }
-
-        // 社員タイプが1でも2でもない場合
-        response.sendError(
-                HttpServletResponse.SC_FORBIDDEN,
-                "利用できない社員タイプです"
-        );
-    }
+		// 社員タイプが1でも2でもない場合
+		response.sendError(
+				HttpServletResponse.SC_FORBIDDEN,
+				"利用できない社員タイプです");
+	}
 }
