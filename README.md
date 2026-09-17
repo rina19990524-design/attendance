@@ -9,7 +9,7 @@ http://54.90.243.74:8080/login
 
 ## 機能一覧
 | ログイン画面 | 従業員ホーム画面 | 
-| -------------------------- | ------------------------- | 
+| :--------------------------: | :-------------------------: | 
 | ![ログイン画面](src/main/resources/docs/img/login.png) | ![従業員ホーム画面](src/main/resources/docs/img/home-employer.png)
 | 勤怠一覧画面 | 勤怠申請画面 | 
 | ![勤怠一覧画面](src/main/resources/docs/img/attendance-employer.png) | ![勤怠申請画面](src/main/resources/docs/img/attendance-request.png) 
