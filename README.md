@@ -17,5 +17,5 @@ http://54.90.243.74:8080/login
 | ![有給申請画面](src/main/resources/docs/img/holiday-request.png) | ![管理者ホーム画面](src/main/resources/docs/img/home-manager.png) 
 | 社員管理画面 | 新規登録画面 | 
 | ![社員管理画面](src/main/resources/docs/img/employer-list.png) | ![新規登録画面](src/main/resources/docs/img/employer-regist.png) 
-| 勤怠実績確認画面 | 
-| ![勤怠実績確認画面](src/main/resources/docs/img/attendance-manager.png) | 
+| 勤怠実績確認画面 | 勤怠承認画面 |
+| ![勤怠実績確認画面](src/main/resources/docs/img/attendance-manager.png) | ![勤怠承認画面](src/main/resources/docs/img/attendance-approval.png)
