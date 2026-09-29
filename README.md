@@ -1,11 +1,14 @@
 ## サービスのURL
 http://54.90.243.74:8080/login
 
+
 ## サービスへの想い
 〇〇
 
+
 ## アプリケーションのイメージ
 ![イメージ](src/main/resources/docs/bannerkoubou-gif-20260914-214817.gif)
+
 
 ## 機能一覧
 | ログイン画面 | 従業員ホーム画面 | 
@@ -32,3 +35,23 @@ http://54.90.243.74:8080/login
 | :--------------------------: | :-------------------------: | 
 | ![勤怠実績確認画面](src/main/resources/docs/img/attendance-manager.png) | ![勤怠承認画面](src/main/resources/docs/img/attendance-approval.png)
 | 月や部署、社員で絞り込み、勤務状況を確認できます。 | 申請内容と変更前後の時刻を確認し、承認できます。 |
+
+
+## 使用技術
+| 分類 | 使用技術 |
+| :--- | :--- |
+| フロントエンド | HTML , CSS , JavaScript、Thymeleaf |
+| バックエンド | Java 21 , Spring Boot , Spring Security , MyBatis |
+| データベース | PostgreSQL |
+| インフラ | AWS EC2 |
+| 開発環境・バージョン管理 | Eclipse , Gradle , Git , GitHub |
+
+
+## システム構成図
+<table>
+  <tr>
+    <td>
+      <img src="src/main/resources/docs/img/ER.png" alt="ER図">
+    </td>
+  </tr>
+</table>
