@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
-/* ========================================
-   社員編集画面
-   ======================================== */
-
+/* 基本設定 */
 * {
     box-sizing: border-box;
 }
@@ -56,7 +53,6 @@ select {
 }
 
 /* 背景の波 */
-
 body::before {
     content: "";
     position: fixed;
@@ -99,10 +95,7 @@ body::after {
     pointer-events: none;
 }
 
-/* ========================================
-   画面全体
-   ======================================== */
-
+/* 画面全体 */
 .page-container {
     position: relative;
     z-index: 1;
@@ -118,13 +111,10 @@ body::after {
     -webkit-backdrop-filter: blur(12px);
 }
 
-/* ========================================
-   ヘッダー
-   ======================================== */
-
+/* ヘッダー */
 .header {
     display: grid;
-    grid-template-columns: minmax(260px, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
     gap: 24px;
     min-height: 110px;
@@ -140,9 +130,15 @@ body::after {
 }
 
 .company-information {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
     font-size: 22px;
     font-weight: 700;
     letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
 }
 
 .admin-information {
@@ -219,58 +215,57 @@ body::after {
     background: rgba(255, 255, 255, 0.22);
 }
 
-/* ========================================
-   デモアカウントの表示
-   ======================================== */
-
+/* 黄色のDEMOラベル */
 .demo-badge {
-    display: inline-block;
-    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 27px;
     padding: 4px 12px;
+    color: #694700;
+    background: #fff1bd;
+    border: 1px solid #f2d477;
     border-radius: 20px;
-    background: #d9f6ef;
-    color: #185348;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    vertical-align: middle;
+    letter-spacing: 0.06em;
     white-space: nowrap;
 }
 
-.demo-notice {
-    margin: 24px 55px;
+/* 黄色のデモ案内 */
+.demo-banner {
+    margin: 0 0 24px;
     padding: 16px 20px;
-    border: 1px solid #c8e1ed;
-    border-radius: 10px;
-    background: #edf7fc;
-    color: #24465a;
+    color: #705000;
+    background: #fff8df;
+    border: 1px solid #ead18a;
+    border-radius: 12px;
     font-size: 14px;
-    line-height: 1.7;
+    line-height: 1.8;
     overflow-wrap: anywhere;
 }
 
-.demo-notice strong {
+.demo-banner strong {
     display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
 }
 
-.demo-notice p {
+.demo-banner p {
     margin: 6px 0 0;
 }
 
-.demo-operation-note {
-    margin: 12px 0 0;
-    color: #a33b3b;
-    font-size: 14px;
-    line-height: 1.6;
+/* 操作できない旨の文章 */
+.demo-banner .demo-restriction {
+    color: #b42318;
+    font-weight: 700;
 }
 
-/* ========================================
-   画面タイトル
-   ======================================== */
-
+/* 画面タイトル */
 .page-title {
-    padding: 23px 36px;
-    background: rgba(255, 255, 255, 0.96);
+    margin-bottom: 24px;
+    padding: 0 0 18px;
     border-bottom: 1px solid #c9e6dd;
 }
 
@@ -282,12 +277,9 @@ body::after {
     letter-spacing: 0.05em;
 }
 
-/* ========================================
-   メッセージ
-   ======================================== */
-
+/* メッセージ */
 .message {
-    margin: 24px 55px 0;
+    margin: 0 0 24px;
     padding: 14px 20px;
     border-radius: 8px;
     font-size: 14px;
@@ -303,23 +295,17 @@ body::after {
 }
 
 .error-message {
-    color: #a83b32;
+    color: #b42318;
     background: #fff0ee;
     border: 1px solid #edb9b3;
 }
 
-/* ========================================
-   メイン部分
-   ======================================== */
-
+/* メイン部分 */
 .main-content {
     padding: 40px 55px 50px;
 }
 
-/* ========================================
-   社員編集フォーム
-   ======================================== */
-
+/* 社員編集フォーム */
 .employee-edit-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -386,29 +372,28 @@ body::after {
     cursor: not-allowed;
 }
 
+/* 変更できない項目の説明 */
 .input-note {
     display: block;
     margin-top: 7px;
-    color: #687d77;
+    color: #b42318;
     font-size: 12px;
+    font-weight: 700;
+    line-height: 1.6;
 }
 
 /* デモ管理者の入力欄 */
-
 .employee-edit-form input:disabled,
 .employee-edit-form select:disabled {
-    background: #f0f2f4;
     color: #46535c;
+    background: #f0f2f4;
     border-color: #cbd4d0;
     opacity: 1;
     -webkit-text-fill-color: #46535c;
     cursor: not-allowed;
 }
 
-/* ========================================
-   パスワード再設定
-   ======================================== */
-
+/* パスワード再設定 */
 .password-section {
     margin-top: 30px;
     padding: 34px 38px 40px;
@@ -437,6 +422,7 @@ body::after {
     margin: 9px 0 0;
     color: #5b736c;
     font-size: 14px;
+    line-height: 1.6;
 }
 
 .password-success-message {
@@ -509,21 +495,22 @@ body::after {
 .password-warning {
     margin: 4px 0 0;
     padding: 12px 14px;
-    color: #9c4f13;
-    background: #fff3e6;
-    border: 1px solid #edc397;
+    color: #705000;
+    background: #fff8df;
+    border: 1px solid #ead18a;
     border-radius: 7px;
     font-size: 13px;
     font-weight: 700;
+    line-height: 1.7;
 }
 
 /* コピー結果 */
-
 .copy-message {
     min-height: 24px;
     margin: 17px 0 0;
     font-size: 14px;
     font-weight: 700;
+    line-height: 1.6;
     text-align: center;
 }
 
@@ -535,10 +522,7 @@ body::after {
     color: #b42318;
 }
 
-/* ========================================
-   パスワード再設定ボタン
-   ======================================== */
-
+/* パスワード再設定ボタン */
 .password-reset-form {
     margin: 0;
 }
@@ -571,10 +555,7 @@ body::after {
     box-shadow: 0 11px 22px rgba(153, 80, 25, 0.27);
 }
 
-/* ========================================
-   画面下部の操作
-   ======================================== */
-
+/* 画面下部の操作 */
 .bottom-actions {
     display: flex;
     align-items: center;
@@ -640,7 +621,6 @@ body::after {
 }
 
 /* デモ管理者の無効ボタン */
-
 .password-reset-button:disabled,
 .update-button:disabled {
     color: #46535c;
@@ -653,10 +633,7 @@ body::after {
     filter: none;
 }
 
-/* ========================================
-   タブレット
-   ======================================== */
-
+/* タブレット */
 @media screen and (max-width: 850px) {
     body {
         padding: 20px 14px 50px;
@@ -679,18 +656,8 @@ body::after {
         font-size: 13px;
     }
 
-    .page-title {
-        padding: 21px 24px;
-    }
-
     .page-title h1 {
         font-size: 22px;
-    }
-
-    .message,
-    .demo-notice {
-        margin-right: 24px;
-        margin-left: 24px;
     }
 
     .main-content {
@@ -703,10 +670,7 @@ body::after {
     }
 }
 
-/* ========================================
-   スマートフォン
-   ======================================== */
-
+/* スマートフォン */
 @media screen and (max-width: 600px) {
     body {
         padding: 7px;
@@ -741,17 +705,16 @@ body::after {
         min-width: 0;
     }
 
+    .header-home-link {
+        white-space: normal;
+        text-align: center;
+    }
+
     .logout-button {
         width: 100%;
     }
 
-    .message,
-    .demo-notice {
-        margin-right: 15px;
-        margin-left: 15px;
-    }
-
-    .demo-notice {
+    .demo-banner {
         padding: 14px 16px;
     }
 

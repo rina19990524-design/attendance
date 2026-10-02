@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -16,10 +17,14 @@
 
 <div class="page-container">
 
+    <!-- ヘッダー -->
     <header class="header">
 
         <div class="company-information">
-            <span class="admin-label">ADMIN</span>
+
+            <span class="admin-label">
+                ADMIN
+            </span>
 
             <strong>
                 会社名：株式会社アテンダンス
@@ -29,10 +34,12 @@
                   th:if="${isDemoAdmin}">
                 DEMO
             </span>
+
         </div>
 
         <div class="administrator-information">
             管理者名：
+
             <span th:text="${admin.employeeName}">
                 山田太郎
             </span>
@@ -57,11 +64,11 @@
             </form>
 
         </div>
-
     </header>
 
     <main>
 
+        <!-- 黄色のデモ案内 -->
         <div class="demo-banner"
              th:if="${isDemoAdmin}"
              role="status">
@@ -72,23 +79,35 @@
 
             <p>
                 画面の閲覧や検索をお試しいただけます。
+            </p>
+
+            <p>
                 デモアカウントでは、登録・更新・パスワード再設定・申請の承認はできません。
             </p>
 
         </div>
 
+        <!-- 画面タイトル -->
         <section class="title-section">
+
             <h1>社員管理</h1>
-            <p>社員情報の確認・登録・編集を行います</p>
+
+            <p>
+                社員情報の確認・登録・編集を行います
+            </p>
+
         </section>
 
+        <!-- 検索・新規登録 -->
         <section class="operation-section">
 
             <form class="search-form"
                   th:action="@{/admin/users}"
                   method="get">
 
-                <label for="keyword">社員検索</label>
+                <label for="keyword">
+                    社員検索
+                </label>
 
                 <div class="search-controls">
 
@@ -98,7 +117,9 @@
                            th:value="${keyword}"
                            placeholder="社員ID・社員名を入力">
 
-                    <button type="submit">検索</button>
+                    <button type="submit">
+                        検索
+                    </button>
 
                     <a class="clear-button"
                        th:href="@{/admin/users}">
@@ -116,6 +137,7 @@
 
         </section>
 
+        <!-- 社員一覧 -->
         <section class="employee-section">
 
             <div class="employee-list-header">
@@ -160,10 +182,23 @@
                         </td>
 
                         <td th:switch="${employee.departmentId}">
-                            <span th:case="1">営業部</span>
-                            <span th:case="2">総務部</span>
-                            <span th:case="3">人事部</span>
-                            <span th:case="*">―</span>
+
+                            <span th:case="1">
+                                営業部
+                            </span>
+
+                            <span th:case="2">
+                                総務部
+                            </span>
+
+                            <span th:case="3">
+                                人事部
+                            </span>
+
+                            <span th:case="*">
+                                ―
+                            </span>
+
                         </td>
 
                         <td th:switch="${employee.employeeStatusId}">
@@ -196,20 +231,24 @@
                         </td>
 
                         <td>
+
                             <a class="edit-button"
                                th:href="@{/admin/users/{employeeId}/edit(employeeId=${employee.employeeId})}"
                                th:text="${isDemoAdmin ? '詳細' : '編集'}">
                                 編集
                             </a>
+
                         </td>
 
                     </tr>
 
                     <tr th:if="${#lists.isEmpty(employees)}">
+
                         <td class="empty-message"
                             colspan="5">
                             該当する社員は見つかりませんでした
                         </td>
+
                     </tr>
 
                     </tbody>
@@ -218,6 +257,7 @@
 
             </div>
 
+            <!-- ページ番号 -->
             <nav class="pagination"
                  aria-label="社員一覧のページ">
 

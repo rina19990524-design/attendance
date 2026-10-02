@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
-/* ========================================
-   管理者用 社員管理画面
-   ======================================== */
-
+/* 基本設定 */
 * {
     box-sizing: border-box;
 }
@@ -15,10 +12,7 @@ body {
     margin: 0;
 }
 
-/* ========================================
-   画面全体
-   ======================================== */
-
+/* 画面全体 */
 body {
     position: relative;
     min-height: 100vh;
@@ -65,7 +59,6 @@ select {
 }
 
 /* 背景の波 */
-
 body::before {
     content: "";
     position: fixed;
@@ -108,10 +101,7 @@ body::after {
     pointer-events: none;
 }
 
-/* ========================================
-   中央の画面枠
-   ======================================== */
-
+/* 中央の画面枠 */
 .page-container {
     position: relative;
     z-index: 1;
@@ -127,10 +117,7 @@ body::after {
     -webkit-backdrop-filter: blur(12px);
 }
 
-/* ========================================
-   ヘッダー
-   ======================================== */
-
+/* ヘッダー */
 .header {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;
@@ -149,7 +136,6 @@ body::after {
 }
 
 /* 会社名 */
-
 .company-information {
     display: flex;
     align-items: center;
@@ -164,7 +150,6 @@ body::after {
 }
 
 /* ADMINラベル */
-
 .admin-label {
     display: inline-block;
     flex-shrink: 0;
@@ -179,23 +164,25 @@ body::after {
     white-space: nowrap;
 }
 
-/* DEMOラベル */
-
+/* 黄色のDEMOラベル */
 .demo-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    padding: 5px 11px;
-    color: #185348;
-    background: #d9f6ef;
+    min-height: 27px;
+    padding: 4px 12px;
+    color: #694700;
+    background: #fff1bd;
+    border: 1px solid #f2d477;
     border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     white-space: nowrap;
 }
 
 /* 管理者名 */
-
 .administrator-information {
     padding: 12px 18px;
     color: #e6fff8;
@@ -211,7 +198,6 @@ body::after {
 }
 
 /* ヘッダー右側 */
-
 .header-actions {
     display: flex;
     align-items: center;
@@ -223,7 +209,6 @@ body::after {
 }
 
 /* ログアウト */
-
 .logout-button {
     min-width: 125px;
     min-height: 45px;
@@ -247,7 +232,6 @@ body::after {
 }
 
 /* ホームへ戻る */
-
 .header-home-link {
     display: inline-flex;
     align-items: center;
@@ -275,42 +259,36 @@ body::after {
     box-shadow: 0 8px 18px rgba(1, 55, 44, 0.25);
 }
 
-/* ========================================
-   メイン
-   ======================================== */
-
+/* メイン */
 main {
     padding: 38px 45px 50px;
 }
 
-/* ========================================
-   デモ管理者向けの案内
-   ======================================== */
-
-.demo-notice {
-    margin-bottom: 24px;
+/* 案内文全体を黄色い枠で囲う */
+.demo-banner {
+    margin: 0 0 24px;
     padding: 16px 20px;
-    color: #24465a;
-    background: #edf7fc;
-    border: 1px solid #c8e1ed;
-    border-radius: 10px;
+    color: #705000;
+    background: #fff8df;
+    border: 1px solid #ead18a;
+    border-radius: 12px;
     font-size: 14px;
-    line-height: 1.7;
+    line-height: 1.8;
     overflow-wrap: anywhere;
 }
 
-.demo-notice strong {
+.demo-banner strong {
     display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 700;
 }
 
-.demo-notice p {
+.demo-banner p {
     margin: 6px 0 0;
 }
 
-/* ========================================
-   タイトル
-   ======================================== */
-
+/* タイトル */
 .title-section {
     margin-bottom: 28px;
     padding-bottom: 20px;
@@ -332,10 +310,7 @@ main {
     line-height: 1.6;
 }
 
-/* ========================================
-   検索・新規登録
-   ======================================== */
-
+/* 検索・新規登録 */
 .operation-section {
     display: flex;
     align-items: flex-end;
@@ -355,7 +330,6 @@ main {
 }
 
 /* 検索フォーム */
-
 .search-form {
     flex: 1;
     min-width: 0;
@@ -396,7 +370,6 @@ main {
 }
 
 /* 検索ボタン */
-
 .search-controls button {
     min-width: 90px;
     min-height: 45px;
@@ -424,7 +397,6 @@ main {
 }
 
 /* クリア */
-
 .clear-button {
     display: inline-flex;
     align-items: center;
@@ -448,7 +420,6 @@ main {
 }
 
 /* 新規登録画面へのリンク */
-
 .new-user-button {
     display: inline-flex;
     align-items: center;
@@ -479,10 +450,7 @@ main {
     filter: brightness(1.06);
 }
 
-/* ========================================
-   社員一覧
-   ======================================== */
-
+/* 社員一覧 */
 .employee-section {
     padding: 27px 28px 32px;
     background: #ffffff;
@@ -507,7 +475,6 @@ main {
 }
 
 /* 件数 */
-
 .employee-count {
     flex-shrink: 0;
     padding: 6px 13px;
@@ -518,10 +485,7 @@ main {
     font-weight: 700;
 }
 
-/* ========================================
-   テーブル
-   ======================================== */
-
+/* テーブル */
 .table-wrapper {
     width: 100%;
     border: 1px solid #afd3c8;
@@ -587,7 +551,6 @@ table tbody tr:hover {
 }
 
 /* 状態 */
-
 .status-badge {
     display: inline-block;
     min-width: 65px;
@@ -622,7 +585,6 @@ table tbody tr:hover {
 }
 
 /* 編集・詳細画面へのリンク */
-
 .edit-button {
     display: inline-flex;
     align-items: center;
@@ -644,17 +606,13 @@ table tbody tr:hover {
 }
 
 /* 検索結果なし */
-
 .empty-message {
     height: 100px;
     color: #688078;
     font-weight: 600;
 }
 
-/* ========================================
-   ページ番号
-   ======================================== */
-
+/* ページ番号 */
 .pagination {
     display: flex;
     align-items: center;
@@ -687,10 +645,7 @@ table tbody tr:hover {
     border-color: #08745e;
 }
 
-/* ========================================
-   タブレット
-   ======================================== */
-
+/* タブレット */
 @media screen and (max-width: 900px) {
     .header {
         grid-template-columns: minmax(0, 1fr) auto;
@@ -714,10 +669,7 @@ table tbody tr:hover {
     }
 }
 
-/* ========================================
-   スマートフォン
-   ======================================== */
-
+/* スマートフォン */
 @media screen and (max-width: 600px) {
     body {
         padding: 20px 12px 50px;
@@ -762,13 +714,15 @@ table tbody tr:hover {
     .header-home-link {
         padding: 10px 12px;
         font-size: 13px;
+        white-space: normal;
+        text-align: center;
     }
 
     main {
         padding: 28px 18px 35px;
     }
 
-    .demo-notice {
+    .demo-banner {
         padding: 14px 16px;
     }
 
@@ -782,7 +736,9 @@ table tbody tr:hover {
     }
 
     .search-controls {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
     }
 
     .search-controls input {
