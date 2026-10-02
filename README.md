@@ -1,5 +1,5 @@
 ## サービスのURL
-[http://54.90.243.74:8080/login](https://www.rina-attendance.mydns.jp:8443/login)](https://www.rina-attendance.mydns.jp:8443/login)
+https://www.rina-attendance.mydns.jp:8443/login
 
 ## サービスへの想い
 初めてのアプリ開発として、これまでの業務経験で身近だった勤怠管理をテーマに選びました。<br>
