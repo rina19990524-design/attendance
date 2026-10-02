@@ -14,13 +14,20 @@
           th:href="@{/css/admin-user-edit.css}">
 </head>
 
-<body>
+<body th:with="isDemoAdmin=${admin.employeeId == 'E0003'}">
+
     <div class="page-container">
 
         <!-- ヘッダー -->
         <header class="header">
+
             <div class="company-information">
                 会社名：株式会社アテンダンス
+
+                <span class="demo-badge"
+                      th:if="${isDemoAdmin}">
+                    DEMO
+                </span>
             </div>
 
             <div class="admin-information">
@@ -31,6 +38,7 @@
             </div>
 
             <div class="header-actions">
+
                 <a class="header-home-link"
                    th:href="@{/admin}">
                     ◀ ホームへ戻る
@@ -47,6 +55,21 @@
                 </form>
             </div>
         </header>
+
+        <!-- デモ管理者向けの案内 -->
+        <div class="demo-notice"
+             th:if="${isDemoAdmin}"
+             role="status">
+
+            <strong>
+                デモ管理者としてログインしています。
+            </strong>
+
+            <p>
+                画面の閲覧・検索をお試しいただけます。
+                社員情報の変更やパスワード再設定は制限されています。
+            </p>
+        </div>
 
         <!-- 画面タイトル -->
         <div class="page-title">
@@ -79,6 +102,7 @@
 
                 <!-- 社員ID -->
                 <div class="form-item">
+
                     <label for="employeeId">
                         社員ID
                     </label>
@@ -95,6 +119,7 @@
 
                 <!-- 社員名 -->
                 <div class="form-item">
+
                     <label for="employeeName">
                         社員名
                     </label>
@@ -103,18 +128,21 @@
                            id="employeeName"
                            name="employeeName"
                            th:value="${employee.employeeName}"
+                           th:disabled="${isDemoAdmin}"
                            maxlength="100"
                            required>
                 </div>
 
                 <!-- 部署名 -->
                 <div class="form-item">
+
                     <label for="departmentId">
                         部署名
                     </label>
 
                     <select id="departmentId"
                             name="departmentId"
+                            th:disabled="${isDemoAdmin}"
                             required>
 
                         <option value="1"
@@ -136,6 +164,7 @@
 
                 <!-- メールアドレス -->
                 <div class="form-item">
+
                     <label for="employeeEmail">
                         メールアドレス
                     </label>
@@ -144,18 +173,21 @@
                            id="employeeEmail"
                            name="employeeEmail"
                            th:value="${employee.employeeEmail}"
+                           th:disabled="${isDemoAdmin}"
                            maxlength="100"
                            required>
                 </div>
 
                 <!-- 社員タイプ -->
                 <div class="form-item">
+
                     <label for="employeeType">
                         社員タイプ
                     </label>
 
                     <select id="employeeType"
                             name="employeeType"
+                            th:disabled="${isDemoAdmin}"
                             required>
 
                         <option value="1"
@@ -172,6 +204,7 @@
 
                 <!-- 入社日 -->
                 <div class="form-item">
+
                     <label for="hireDate">
                         入社日
                     </label>
@@ -180,17 +213,20 @@
                            id="hireDate"
                            name="hireDate"
                            th:value="${employee.hireDate}"
+                           th:disabled="${isDemoAdmin}"
                            required>
                 </div>
 
                 <!-- 在籍状況 -->
                 <div class="form-item full-width">
+
                     <label for="employeeStatusId">
                         在籍状況
                     </label>
 
                     <select id="employeeStatusId"
                             name="employeeStatusId"
+                            th:disabled="${isDemoAdmin}"
                             required>
 
                         <option value="1"
@@ -218,6 +254,7 @@
 
             <!-- パスワード再設定 -->
             <section class="password-section">
+
                 <div class="section-heading">
                     <h2>パスワード再設定</h2>
 
@@ -226,75 +263,75 @@
                     </p>
                 </div>
 
-                <!-- 再設定完了メッセージ -->
-                <div class="password-success-message"
-                     th:if="${passwordMessage != null}"
-                     th:text="${passwordMessage}">
-                    パスワードを再設定しました。
-                    新しい仮パスワードは安全な方法で本人へお伝えください。
-                </div>
+                <!-- 通常の管理者にだけ結果を表示する -->
+                <th:block th:unless="${isDemoAdmin}">
 
-                <!-- 発行された仮パスワード -->
-                <div class="password-result"
-                     th:if="${passwordResetResult != null}">
-
-                    <!-- 社員ID -->
-                    <div class="issued-item">
-                        <label for="resetEmployeeId">
-                            社員ID
-                        </label>
-
-                        <div class="copy-area">
-                            <input type="text"
-                                   id="resetEmployeeId"
-                                   th:value="${passwordResetResult.employeeId}"
-                                   readonly>
-
-                            <button class="copy-button"
-                                    type="button"
-                                    onclick="copyText(
-                                        'resetEmployeeId',
-                                        '社員ID'
-                                    )">
-                                コピー
-                            </button>
-                        </div>
+                    <!-- 再設定完了メッセージ -->
+                    <div class="password-success-message"
+                         th:if="${passwordMessage != null}"
+                         th:text="${passwordMessage}">
+                        パスワードを再設定しました。
                     </div>
 
-                    <!-- 新しい仮パスワード -->
-                    <div class="issued-item">
-                        <label for="temporaryPassword">
-                            新しい仮パスワード
-                        </label>
+                    <!-- 発行された仮パスワード -->
+                    <div class="password-result"
+                         th:if="${passwordResetResult != null}">
 
-                        <div class="copy-area">
-                            <input type="text"
-                                   id="temporaryPassword"
-                                   th:value="${passwordResetResult.temporaryPassword}"
-                                   readonly>
+                        <!-- 社員ID -->
+                        <div class="issued-item">
 
-                            <button class="copy-button"
-                                    type="button"
-                                    onclick="copyText(
-                                        'temporaryPassword',
-                                        '新しい仮パスワード'
-                                    )">
-                                コピー
-                            </button>
+                            <label for="resetEmployeeId">
+                                社員ID
+                            </label>
+
+                            <div class="copy-area">
+
+                                <input type="text"
+                                       id="resetEmployeeId"
+                                       th:value="${passwordResetResult.employeeId}"
+                                       readonly>
+
+                                <button class="copy-button"
+                                        type="button"
+                                        onclick="copyText('resetEmployeeId', '社員ID')">
+                                    コピー
+                                </button>
+                            </div>
                         </div>
+
+                        <!-- 新しい仮パスワード -->
+                        <div class="issued-item">
+
+                            <label for="temporaryPassword">
+                                新しい仮パスワード
+                            </label>
+
+                            <div class="copy-area">
+
+                                <input type="text"
+                                       id="temporaryPassword"
+                                       th:value="${passwordResetResult.temporaryPassword}"
+                                       readonly>
+
+                                <button class="copy-button"
+                                        type="button"
+                                        onclick="copyText('temporaryPassword', '新しい仮パスワード')">
+                                    コピー
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="password-warning">
+                            この仮パスワードは、この画面で一度だけ表示されます。
+                        </p>
+
+                        <p id="copyMessage"
+                           class="copy-message"
+                           role="status"
+                           aria-live="polite">
+                        </p>
                     </div>
-
-                    <p class="password-warning">
-                        この仮パスワードは、この画面で一度だけ表示されます。
-                    </p>
-
-                    <!-- コピー結果 -->
-                    <p id="copyMessage"
-                       class="copy-message"
-                       role="status"
-                       aria-live="polite">
-                    </p>
-                </div>
+                </th:block>
 
                 <!-- パスワード再設定フォーム -->
                 <form class="password-reset-form"
@@ -302,22 +339,28 @@
                           employeeId=${employee.employeeId}
                       )}"
                       method="post"
-                      onsubmit="return confirm(
-                          'パスワードを再設定しますか？'
-                      );">
+                      onsubmit="return confirm('パスワードを再設定しますか？');">
 
                     <button class="password-reset-button"
-                            type="submit">
+                            type="submit"
+                            th:disabled="${isDemoAdmin}">
                         パスワードを再設定
                     </button>
                 </form>
+
+                <p class="demo-operation-note"
+                   th:if="${isDemoAdmin}">
+                    デモアカウントでは、この操作はできません。
+                </p>
             </section>
 
             <!-- 画面下部の操作 -->
             <div class="bottom-actions">
+
                 <button class="update-button"
                         type="submit"
-                        form="employeeEditForm">
+                        form="employeeEditForm"
+                        th:disabled="${isDemoAdmin}">
                     更新
                 </button>
 
@@ -331,22 +374,9 @@
 
     <!-- コピー処理 -->
     <script>
-        /**
-         * 社員IDまたは仮パスワードをコピーする
-         */
-        async function copyText(
-                elementId,
-                itemName) {
-
-            const target =
-                document.getElementById(
-                    elementId
-                );
-
-            const copyMessage =
-                document.getElementById(
-                    "copyMessage"
-                );
+        async function copyText(elementId, itemName) {
+            const target = document.getElementById(elementId);
+            const copyMessage = document.getElementById("copyMessage");
 
             if (target === null) {
                 showCopyMessage(
@@ -354,28 +384,14 @@
                     "コピー対象が見つかりません",
                     true
                 );
-
                 return;
             }
 
             try {
-                /*
-                 * HTTPSまたはlocalhostの場合
-                 */
-                if (navigator.clipboard
-                        && window.isSecureContext) {
-
-                    await navigator.clipboard.writeText(
-                        target.value
-                    );
-
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(target.value);
                 } else {
-                    /*
-                     * HTTPで公開している画面の場合
-                     */
-                    copyOnHttp(
-                        target.value
-                    );
+                    copyOnHttp(target.value);
                 }
 
                 showCopyMessage(
@@ -385,17 +401,9 @@
                 );
 
             } catch (error) {
-                /*
-                 * 自動コピーできなかった場合は、
-                 * 元の入力欄を選択状態にする
-                 */
                 target.focus();
                 target.select();
-
-                target.setSelectionRange(
-                    0,
-                    target.value.length
-                );
+                target.setSelectionRange(0, target.value.length);
 
                 showCopyMessage(
                     copyMessage,
@@ -406,92 +414,47 @@
             }
         }
 
-
-        /**
-         * HTTP公開画面用のコピー処理
-         */
         function copyOnHttp(text) {
+            const temporaryTextarea = document.createElement("textarea");
 
-            const temporaryTextarea =
-                document.createElement(
-                    "textarea"
+            temporaryTextarea.value = text;
+            temporaryTextarea.setAttribute("readonly", "");
+            temporaryTextarea.style.position = "fixed";
+            temporaryTextarea.style.top = "-9999px";
+            temporaryTextarea.style.left = "-9999px";
+            temporaryTextarea.style.opacity = "0";
+
+            document.body.appendChild(temporaryTextarea);
+
+            let copied = false;
+
+            try {
+                temporaryTextarea.focus();
+                temporaryTextarea.select();
+                temporaryTextarea.setSelectionRange(
+                    0,
+                    temporaryTextarea.value.length
                 );
 
-            temporaryTextarea.value =
-                text;
-
-            temporaryTextarea.setAttribute(
-                "readonly",
-                ""
-            );
-
-            temporaryTextarea.style.position =
-                "fixed";
-
-            temporaryTextarea.style.top =
-                "-9999px";
-
-            temporaryTextarea.style.left =
-                "-9999px";
-
-            temporaryTextarea.style.opacity =
-                "0";
-
-            document.body.appendChild(
-                temporaryTextarea
-            );
-
-            temporaryTextarea.focus();
-            temporaryTextarea.select();
-
-            temporaryTextarea.setSelectionRange(
-                0,
-                temporaryTextarea.value.length
-            );
-
-            const copied =
-                document.execCommand(
-                    "copy"
-                );
-
-            document.body.removeChild(
-                temporaryTextarea
-            );
+                copied = document.execCommand("copy");
+            } finally {
+                temporaryTextarea.remove();
+            }
 
             if (!copied) {
-                throw new Error(
-                    "コピーに失敗しました"
-                );
+                throw new Error("コピーに失敗しました");
             }
         }
 
-
-        /**
-         * コピー結果を表示する
-         */
-        function showCopyMessage(
-                messageElement,
-                message,
-                isError) {
-
+        function showCopyMessage(messageElement, message, isError) {
             if (messageElement === null) {
                 return;
             }
 
-            messageElement.textContent =
-                message;
-
-            messageElement.classList.toggle(
-                "copy-error",
-                isError
-            );
-
-            messageElement.classList.toggle(
-                "copy-success",
-                !isError
-            );
+            messageElement.textContent = message;
+            messageElement.classList.toggle("copy-error", isError);
+            messageElement.classList.toggle("copy-success", !isError);
         }
     </script>
 </body>
-
 </html>

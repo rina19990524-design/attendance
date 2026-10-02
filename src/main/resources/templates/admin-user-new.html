@@ -1,455 +1,699 @@
-<!DOCTYPE html>
-<html lang="ja"
-      xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>社員登録</title>
-
-    <link rel="stylesheet"
-          th:href="@{/css/admin-user-new.css}">
-</head>
-
-<body>
-    <div class="page-container">
-
-        <!-- ヘッダー -->
-        <header class="header">
-            <div class="company-information">
-                <p class="company-name">
-                    会社名：株式会社アテンダンス
-                </p>
-            </div>
-
-            <div class="admin-information">
-                管理者名：
-                <span th:text="${admin.employeeName}">
-                    山田太郎
-                </span>
-            </div>
-
-            <div class="header-actions">
-                <a class="header-home-link"
-                   th:href="@{/admin}">
-                    ◀ ホームへ戻る
-                </a>
-
-                <form class="logout-form"
-                      th:action="@{/logout}"
-                      method="post">
-
-                    <button class="logout-button"
-                            type="submit">
-                        ログアウト
-                    </button>
-                </form>
-            </div>
-        </header>
-
-        <!-- 画面タイトル -->
-        <h1 class="page-title">
-            社員登録
-        </h1>
-
-        <main>
-            <!-- 登録完了後 -->
-            <section class="registration-result"
-                     th:if="${registrationResult != null}">
-
-                <p class="success-message"
-                   th:text="${message}">
-                    登録が完了しました。社員IDとパスワードは安全な方法でお伝えください。
-                </p>
-
-                <!-- 発行された社員ID -->
-                <div class="issued-item">
-                    <label for="issuedEmployeeId">
-                        社員ID
-                    </label>
-
-                    <div class="copy-area">
-                        <input id="issuedEmployeeId"
-                               type="text"
-                               th:value="${registrationResult.employeeId}"
-                               readonly>
-
-                        <button class="copy-button"
-                                type="button"
-                                onclick="copyValue(
-                                    'issuedEmployeeId',
-                                    '社員ID'
-                                )">
-                            コピー
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 発行された初期パスワード -->
-                <div class="issued-item">
-                    <label for="issuedPassword">
-                        初期パスワード
-                    </label>
-
-                    <div class="copy-area">
-                        <input id="issuedPassword"
-                               type="text"
-                               th:value="${registrationResult.initialPassword}"
-                               readonly>
-
-                        <button class="copy-button"
-                                type="button"
-                                onclick="copyValue(
-                                    'issuedPassword',
-                                    '初期パスワード'
-                                )">
-                            コピー
-                        </button>
-                    </div>
-                </div>
-
-                <!-- コピー結果 -->
-                <p id="copyMessage"
-                   class="copy-message"
-                   role="status"
-                   aria-live="polite">
-                </p>
-
-                <!-- 登録完了後の操作 -->
-                <div class="result-actions">
-                    <a class="continue-link"
-                       th:href="@{/admin/users/new}">
-                        続けて新規登録
-                    </a>
-
-                    <a class="users-link"
-                       th:href="@{/admin/users}">
-                        社員一覧へ
-                    </a>
-                </div>
-            </section>
-
-            <!-- 登録前の社員登録フォーム -->
-            <form class="registration-form"
-                  th:if="${registrationResult == null}"
-                  th:action="@{/admin/users/new}"
-                  method="post">
-
-                <!-- 社員ID -->
-                <div class="form-item">
-                    <label>
-                        社員ID
-                    </label>
-
-                    <span class="automatic-value">
-                        登録後に自動発行されます
-                    </span>
-                </div>
-
-                <!-- 初期パスワード -->
-                <div class="form-item">
-                    <label>
-                        初期パスワード
-                    </label>
-
-                    <span class="automatic-value">
-                        登録後に自動発行されます
-                    </span>
-                </div>
-
-                <!-- 社員名 -->
-                <div class="form-item">
-                    <label for="employeeName">
-                        社員名
-                    </label>
-
-                    <input id="employeeName"
-                           type="text"
-                           name="employeeName"
-                           maxlength="100"
-                           required>
-                </div>
-
-                <!-- 部署 -->
-                <div class="form-item">
-                    <label for="departmentId">
-                        部署名
-                    </label>
-
-                    <select id="departmentId"
-                            name="departmentId"
-                            required>
-
-                        <option value="">
-                            選択してください
-                        </option>
-
-                        <option value="1">
-                            営業部
-                        </option>
-
-                        <option value="2">
-                            総務部
-                        </option>
-
-                        <option value="3">
-                            人事部
-                        </option>
-                    </select>
-                </div>
-
-                <!-- メールアドレス -->
-                <div class="form-item">
-                    <label for="employeeEmail">
-                        メールアドレス
-                    </label>
-
-                    <input id="employeeEmail"
-                           type="email"
-                           name="employeeEmail"
-                           maxlength="100"
-                           required>
-                </div>
-
-                <!-- 社員タイプ -->
-                <div class="form-item">
-                    <label for="employeeType">
-                        社員タイプ
-                    </label>
-
-                    <select id="employeeType"
-                            name="employeeType"
-                            required>
-
-                        <option value="">
-                            選択してください
-                        </option>
-
-                        <option value="1">
-                            従業員
-                        </option>
-
-                        <option value="2">
-                            管理者
-                        </option>
-                    </select>
-                </div>
-
-                <!-- 入社日 -->
-                <div class="form-item">
-                    <label for="hireDate">
-                        入社日
-                    </label>
-
-                    <input id="hireDate"
-                           type="date"
-                           name="hireDate"
-                           required>
-                </div>
-
-                <!-- 在籍状況 -->
-                <div class="form-item">
-                    <label for="employeeStatusId">
-                        在籍状況
-                    </label>
-
-                    <select id="employeeStatusId"
-                            name="employeeStatusId"
-                            required>
-
-                        <option value="">
-                            選択してください
-                        </option>
-
-                        <option value="1">
-                            在籍
-                        </option>
-
-                        <option value="2">
-                            退職
-                        </option>
-
-                        <option value="3">
-                            育休
-                        </option>
-
-                        <option value="4">
-                            休職
-                        </option>
-                    </select>
-                </div>
-
-                <!-- 登録ボタン -->
-                <div class="form-actions">
-                    <button class="register-button"
-                            type="submit">
-                        登録
-                    </button>
-
-                    <a class="back-link"
-                       th:href="@{/admin/users}">
-                        社員一覧へ戻る
-                    </a>
-                </div>
-            </form>
-        </main>
-    </div>
-
-    <!-- コピー処理 -->
-    <script>
-        /**
-         * 社員IDまたは初期パスワードをコピーする
-         */
-        async function copyValue(
-                inputId,
-                itemName) {
-
-            const input =
-                document.getElementById(
-                    inputId
-                );
-
-            const copyMessage =
-                document.getElementById(
-                    "copyMessage"
-                );
-
-            if (input === null) {
-                showCopyMessage(
-                    copyMessage,
-                    "コピー対象が見つかりません",
-                    true
-                );
-
-                return;
-            }
-
-            try {
-                /*
-                 * HTTPSまたはlocalhostの場合
-                 */
-                if (navigator.clipboard
-                        && window.isSecureContext) {
-
-                    await navigator.clipboard.writeText(
-                        input.value
-                    );
-
-                } else {
-                    /*
-                     * HTTPで公開している場合の代替処理
-                     */
-                    const copied =
-                        copyBySelection(
-                            input
-                        );
-
-                    if (!copied) {
-                        throw new Error(
-                            "コピー処理に失敗しました"
-                        );
-                    }
-                }
-
-                showCopyMessage(
-                    copyMessage,
-                    itemName + "をコピーしました",
-                    false
-                );
-
-            } catch (error) {
-                /*
-                 * 自動コピーに失敗した場合は
-                 * 手動コピーできるように文字を選択する
-                 */
-                selectInputValue(
-                    input
-                );
-
-                showCopyMessage(
-                    copyMessage,
-                    "自動コピーできませんでした。"
-                        + "選択された文字をコピーしてください",
-                    true
-                );
-            }
-        }
-
-
-        /**
-         * HTTP環境で文字をコピーする
-         */
-        function copyBySelection(input) {
-
-            selectInputValue(
-                input
-            );
-
-            const copied =
-                document.execCommand(
-                    "copy"
-                );
-
-            /*
-             * コピー後の選択状態を解除する
-             */
-            const selection =
-                window.getSelection();
-
-            if (selection !== null) {
-                selection.removeAllRanges();
-            }
-
-            input.blur();
-
-            return copied;
-        }
-
-
-        /**
-         * 入力欄の文字をすべて選択する
-         */
-        function selectInputValue(input) {
-
-            input.focus();
-            input.select();
-
-            input.setSelectionRange(
-                0,
-                input.value.length
-            );
-        }
-
-
-        /**
-         * コピー結果を画面に表示する
-         */
-        function showCopyMessage(
-                messageElement,
-                message,
-                isError) {
-
-            if (messageElement === null) {
-                return;
-            }
-
-            messageElement.textContent =
-                message;
-
-            messageElement.classList.toggle(
-                "copy-error",
-                isError
-            );
-
-            messageElement.classList.toggle(
-                "copy-success",
-                !isError
-            );
-        }
-    </script>
-</body>
-
-</html>
+@charset "UTF-8";
+
+/* ========================================
+   社員登録画面
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    position: relative;
+    min-height: 100vh;
+    padding: 40px 24px 70px;
+    color: #183b35;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Meiryo,
+        sans-serif;
+    background:
+        radial-gradient(
+            circle at 12% 28%,
+            rgba(255, 255, 255, 0.8) 0 45px,
+            transparent 46px
+        ),
+        radial-gradient(
+            circle at 89% 20%,
+            rgba(255, 255, 255, 0.58) 0 105px,
+            transparent 106px
+        ),
+        linear-gradient(
+            135deg,
+            #f7fffd 0%,
+            #e7f8f3 40%,
+            #d4f1e9 72%,
+            #effbf8 100%
+        );
+    overflow-x: hidden;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+/* 背景の波 */
+body::before {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    left: -10%;
+    bottom: -35%;
+    width: 120%;
+    height: 65%;
+    border-radius:
+        45% 55% 0 0 /
+        35% 40% 0 0;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(69, 190, 155, 0.27),
+            rgba(20, 128, 101, 0.35)
+        );
+    transform: rotate(-3deg);
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, 0.42),
+        0 -70px 0 rgba(106, 203, 174, 0.15);
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    left: -15%;
+    bottom: -47%;
+    width: 130%;
+    height: 68%;
+    border-radius:
+        50% 50% 0 0 /
+        32% 38% 0 0;
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0.65),
+            rgba(72, 177, 146, 0.22),
+            rgba(255, 255, 255, 0.56)
+        );
+    transform: rotate(4deg);
+    pointer-events: none;
+}
+
+/* ========================================
+   画面全体
+   ======================================== */
+
+.page-container {
+    position: relative;
+    z-index: 1;
+    width: 1050px;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    background:
+        rgba(255, 255, 255, 0.91);
+    border: 1px solid
+        rgba(255, 255, 255, 0.92);
+    border-radius: 16px;
+    box-shadow:
+        0 22px 55px
+        rgba(38, 105, 87, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ========================================
+   ヘッダー
+   ======================================== */
+
+.header {
+    display: grid;
+    grid-template-columns:
+        minmax(260px, 1fr)
+        auto
+        auto;
+    align-items: center;
+    gap: 24px;
+    min-height: 110px;
+    padding: 25px 34px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #043c32 0%,
+            #075748 55%,
+            #08705b 100%
+        );
+}
+
+.company-name {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.admin-information {
+    padding: 12px 18px;
+    color: #def8f0;
+    background:
+        rgba(255, 255, 255, 0.11);
+    border-radius: 8px;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.admin-information span {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+.header-home-link,
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+    padding: 10px 18px;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        background-color 0.2s,
+        filter 0.2s,
+        box-shadow 0.2s;
+}
+
+.header-home-link {
+    min-width: 165px;
+    background:
+        linear-gradient(
+            135deg,
+            #159b7c 0%,
+            #0a735d 100%
+        );
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.24);
+    text-decoration: none;
+    box-shadow:
+        0 7px 16px
+        rgba(0, 38, 30, 0.2);
+}
+
+.logout-button {
+    min-width: 120px;
+    background:
+        rgba(255, 255, 255, 0.12);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.58);
+}
+
+.header-home-link:hover,
+.logout-button:hover {
+    transform: translateY(-2px);
+}
+
+.header-home-link:hover {
+    filter: brightness(1.08);
+    box-shadow:
+        0 10px 20px
+        rgba(0, 38, 30, 0.27);
+}
+
+.logout-button:hover {
+    background:
+        rgba(255, 255, 255, 0.22);
+}
+
+/* ========================================
+   画面タイトル
+   ======================================== */
+
+.page-title {
+    margin: 0;
+    padding: 23px 36px;
+    color: #174b40;
+    background:
+        rgba(255, 255, 255, 0.96);
+    border-bottom:
+        1px solid #c9e6dd;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================
+   メイン部分
+   ======================================== */
+
+main {
+    padding: 42px 55px 55px;
+}
+
+/* ========================================
+   登録フォーム
+   ======================================== */
+
+.registration-form {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 24px 30px;
+    margin: 0;
+    padding: 35px 38px 40px;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #e9f9f4 100%
+        );
+    border: 1px solid #c4e4da;
+    border-radius: 14px;
+    box-shadow:
+        0 12px 28px
+        rgba(32, 105, 85, 0.1);
+}
+
+.form-item {
+    min-width: 0;
+}
+
+.form-item label,
+.issued-item label {
+    display: block;
+    margin-bottom: 9px;
+    color: #174b40;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.form-item input,
+.form-item select,
+.issued-item input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 13px;
+    color: #173f37;
+    background: #ffffff;
+    border: 1px solid #b9d4cc;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.form-item select {
+    cursor: pointer;
+}
+
+.form-item input:focus,
+.form-item select:focus,
+.issued-item input:focus {
+    border-color: #0c846a;
+    box-shadow:
+        0 0 0 4px
+        rgba(12, 132, 106, 0.13);
+}
+
+/* 自動発行欄 */
+.automatic-value {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 10px 14px;
+    color: #55736c;
+    background: #edf4f2;
+    border:
+        1px dashed #adcac2;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.automatic-value::before {
+    content: "自動";
+    display: inline-block;
+    margin-right: 10px;
+    padding: 3px 9px;
+    color: #ffffff;
+    background: #6c8d84;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ========================================
+   登録ボタン
+   ======================================== */
+
+.form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 12px;
+}
+
+.register-button,
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 48px;
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.register-button {
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #149878 0%,
+            #08705a 100%
+        );
+    border: none;
+    box-shadow:
+        0 8px 18px
+        rgba(8, 112, 90, 0.25);
+}
+
+.back-link {
+    color: #315d53;
+    background: #ffffff;
+    border: 1px solid #a9c9c0;
+}
+
+.register-button:hover,
+.back-link:hover {
+    transform: translateY(-2px);
+}
+
+.register-button:hover {
+    box-shadow:
+        0 11px 23px
+        rgba(8, 112, 90, 0.31);
+}
+
+.back-link:hover {
+    color: #086b56;
+    background: #f3fcf9;
+    border-color: #0d9273;
+}
+
+/* ========================================
+   登録完了画面
+   ======================================== */
+
+.registration-result {
+    padding: 36px 40px 40px;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #e7f8f2 100%
+        );
+    border: 1px solid #bfe2d7;
+    border-radius: 14px;
+    box-shadow:
+        0 12px 28px
+        rgba(32, 105, 85, 0.11);
+}
+
+.success-message {
+    margin: 0 0 28px;
+    padding: 15px 18px;
+    color: #125b49;
+    background: #ddf5ec;
+    border: 1px solid #9bd6c4;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.7;
+    text-align: center;
+}
+
+.issued-item {
+    max-width: 650px;
+    margin: 0 auto 22px;
+}
+
+.copy-area {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+    gap: 12px;
+}
+
+.issued-item input {
+    color: #174b40;
+    background: #f3f8f6;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.copy-button {
+    min-width: 100px;
+    padding: 10px 17px;
+    color: #ffffff;
+    background: #397a69;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+.copy-button:hover {
+    background: #286655;
+    transform: translateY(-1px);
+}
+
+.copy-message {
+    min-height: 24px;
+    margin: 4px 0 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.copy-message.copy-success {
+    color: #08705a;
+}
+
+.copy-message.copy-error {
+    color: #b42318;
+}
+
+.result-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 15px;
+}
+
+.continue-link,
+.users-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 48px;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        transform 0.2s,
+        background-color 0.2s;
+}
+
+.continue-link {
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #149878,
+            #08705a
+        );
+}
+
+.users-link {
+    color: #315d53;
+    background: #ffffff;
+    border: 1px solid #a9c9c0;
+}
+
+.continue-link:hover,
+.users-link:hover {
+    transform: translateY(-2px);
+}
+
+.users-link:hover {
+    color: #086b56;
+    background: #f3fcf9;
+    border-color: #0d9273;
+}
+
+/* ========================================
+   タブレット
+   ======================================== */
+
+@media screen and (max-width: 850px) {
+    body {
+        padding: 20px 14px 50px;
+    }
+
+    .header {
+        grid-template-columns:
+            1fr auto;
+        gap: 16px;
+        padding: 22px;
+    }
+
+    .company-information {
+        grid-column: 1 / -1;
+    }
+
+    .header-actions {
+        gap: 9px;
+    }
+
+    .header-home-link,
+    .logout-button {
+        min-width: auto;
+        padding: 10px 13px;
+        font-size: 13px;
+    }
+
+    .page-title {
+        padding: 21px 24px;
+        font-size: 22px;
+    }
+
+    main {
+        padding: 30px 24px 38px;
+    }
+}
+
+/* ========================================
+   スマートフォン
+   ======================================== */
+
+@media screen and (max-width: 600px) {
+    body {
+        padding: 7px;
+    }
+
+    .page-container {
+        border-radius: 13px;
+    }
+
+    .header {
+        grid-template-columns: 1fr;
+    }
+
+    .company-information {
+        grid-column: auto;
+    }
+
+    .company-name {
+        font-size: 19px;
+    }
+
+    .admin-information {
+        width: 100%;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-home-link,
+    .logout-form {
+        width: 50%;
+    }
+
+    .logout-button {
+        width: 100%;
+    }
+
+    .registration-form {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 23px 18px 27px;
+    }
+
+    .form-actions {
+        grid-column: auto;
+        flex-direction: column;
+    }
+
+    .register-button,
+    .back-link {
+        width: 100%;
+    }
+
+    main {
+        padding: 24px 15px 30px;
+    }
+
+    .registration-result {
+        padding: 24px 18px 28px;
+    }
+
+    .copy-area {
+        grid-template-columns: 1fr;
+    }
+
+    .copy-button {
+        width: 100%;
+        min-height: 43px;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+
+    .continue-link,
+    .users-link {
+        width: 100%;
+    }
+}

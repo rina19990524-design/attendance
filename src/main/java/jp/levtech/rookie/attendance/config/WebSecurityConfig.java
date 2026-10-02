@@ -3,25 +3,19 @@ package jp.levtech.rookie.attendance.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * Webセキュリティに関する設定
- */
 @Configuration
 public class WebSecurityConfig {
 
-    /**
-     * HTTPリクエストに対するセキュリティを設定する
-     *
-     * @param http HTTPセキュリティ
-     * @param loginSuccessHandler ログイン成功後の処理
-     * @return セキュリティ設定
-     * @throws Exception セキュリティ設定に失敗した場合
-     */
+    // 公開用のデモ管理者ID
+    private static final String DEMO_ADMIN_ID = "E0003";
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -29,37 +23,48 @@ public class WebSecurityConfig {
             throws Exception {
 
         http
-            // ログインに関する設定
+            // ログイン
             .formLogin(form -> form
-
-                // ログイン画面のURL
                 .loginPage("/login")
-
-                // ログイン成功後の処理
                 .successHandler(loginSuccessHandler)
-
-                // ログイン画面は全員アクセス可能
                 .permitAll()
             )
 
-            // ログアウトに関する設定
+            // ログアウト
             .logout(logout -> logout
-
-                // ログアウト処理を実行するURL
                 .logoutUrl("/logout")
-
-                // ログアウト成功後の移動先
                 .logoutSuccessUrl("/login?logout")
-
-                // ログアウト処理は全員利用可能
                 .permitAll()
             )
 
-            // URLごとのアクセス制限
+            // アクセス制御
             .authorizeHttpRequests(authorize -> authorize
 
-                // CSSやJavaScriptなどの静的ファイルは
-                // ログインしていなくても利用可能
+                // デモ管理者は変更操作を実行できない。
+                // GET・HEADは画面の閲覧に使用する。
+                // ログイン・ログアウトは上の設定で許可する。
+                .requestMatchers(request ->
+                    !"GET".equals(request.getMethod())
+                    && !"HEAD".equals(request.getMethod())
+                    && !"OPTIONS".equals(request.getMethod())
+                )
+                .access((authentication, context) -> {
+
+                    var user = authentication.get();
+
+                    boolean allowed =
+                            user != null
+                            && user.isAuthenticated()
+                            && !(user instanceof
+                                AnonymousAuthenticationToken)
+                            && !DEMO_ADMIN_ID.equals(
+                                user.getName()
+                            );
+
+                    return new AuthorizationDecision(allowed);
+                })
+
+                // CSS・JavaScriptなど
                 .requestMatchers(
                     PathRequest
                         .toStaticResources()
@@ -67,11 +72,11 @@ public class WebSecurityConfig {
                 )
                 .permitAll()
 
-                // 最初の画面は全員アクセス可能
+                // 最初の画面
                 .requestMatchers("/")
                 .permitAll()
 
-                // その他の画面はログイン済みの人だけ利用可能
+                // その他はログインが必要
                 .anyRequest()
                 .authenticated()
             );
@@ -79,12 +84,6 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-
-    /**
-     * BCrypt形式のパスワードエンコーダーを作成する
-     *
-     * @return パスワードエンコーダー
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
 

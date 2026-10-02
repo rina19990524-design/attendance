@@ -56,6 +56,7 @@ select {
 }
 
 /* 背景の波 */
+
 body::before {
     content: "";
     position: fixed;
@@ -64,9 +65,7 @@ body::before {
     bottom: -35%;
     width: 120%;
     height: 65%;
-    border-radius:
-        45% 55% 0 0 /
-        35% 40% 0 0;
+    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
     background:
         linear-gradient(
             135deg,
@@ -88,9 +87,7 @@ body::after {
     bottom: -47%;
     width: 130%;
     height: 68%;
-    border-radius:
-        50% 50% 0 0 /
-        32% 38% 0 0;
+    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
     background:
         linear-gradient(
             110deg,
@@ -113,15 +110,10 @@ body::after {
     max-width: 100%;
     margin: 0 auto;
     overflow: hidden;
-    background:
-        rgba(255, 255, 255, 0.93);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.93);
+    border: 1px solid rgba(255, 255, 255, 0.92);
     border-radius: 16px;
-    box-shadow:
-        0 22px 55px
-        rgba(38, 105, 87, 0.18);
+    box-shadow: 0 22px 55px rgba(38, 105, 87, 0.18);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -132,10 +124,7 @@ body::after {
 
 .header {
     display: grid;
-    grid-template-columns:
-        minmax(260px, 1fr)
-        auto
-        auto;
+    grid-template-columns: minmax(260px, 1fr) auto auto;
     align-items: center;
     gap: 24px;
     min-height: 110px;
@@ -159,11 +148,8 @@ body::after {
 .admin-information {
     padding: 12px 18px;
     color: #def8f0;
-    background:
-        rgba(255, 255, 255, 0.11);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.11);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     font-size: 15px;
     white-space: nowrap;
@@ -208,19 +194,14 @@ body::after {
     background: #ffffff;
     border: 1px solid #ffffff;
     text-decoration: none;
-    box-shadow:
-        0 7px 16px
-        rgba(0, 38, 30, 0.2);
+    box-shadow: 0 7px 16px rgba(0, 38, 30, 0.2);
 }
 
 .logout-button {
     min-width: 120px;
     color: #ffffff;
-    background:
-        rgba(255, 255, 255, 0.12);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.58);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.58);
 }
 
 .header-home-link:hover,
@@ -231,14 +212,56 @@ body::after {
 .header-home-link:hover {
     color: #043c32;
     background: #e8f8f3;
-    box-shadow:
-        0 10px 20px
-        rgba(0, 38, 30, 0.27);
+    box-shadow: 0 10px 20px rgba(0, 38, 30, 0.27);
 }
 
 .logout-button:hover {
-    background:
-        rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.22);
+}
+
+/* ========================================
+   デモアカウントの表示
+   ======================================== */
+
+.demo-badge {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #d9f6ef;
+    color: #185348;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.demo-notice {
+    margin: 24px 55px;
+    padding: 16px 20px;
+    border: 1px solid #c8e1ed;
+    border-radius: 10px;
+    background: #edf7fc;
+    color: #24465a;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.demo-notice strong {
+    display: block;
+}
+
+.demo-notice p {
+    margin: 6px 0 0;
+}
+
+.demo-operation-note {
+    margin: 12px 0 0;
+    color: #a33b3b;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 /* ========================================
@@ -247,10 +270,8 @@ body::after {
 
 .page-title {
     padding: 23px 36px;
-    background:
-        rgba(255, 255, 255, 0.96);
-    border-bottom:
-        1px solid #c9e6dd;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid #c9e6dd;
 }
 
 .page-title h1 {
@@ -301,8 +322,7 @@ body::after {
 
 .employee-edit-form {
     display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px 30px;
     margin: 0;
     padding: 34px 38px 40px;
@@ -314,9 +334,7 @@ body::after {
         );
     border: 1px solid #c4e4da;
     border-radius: 14px;
-    box-shadow:
-        0 12px 28px
-        rgba(32, 105, 85, 0.1);
+    box-shadow: 0 12px 28px rgba(32, 105, 85, 0.1);
 }
 
 .form-item {
@@ -359,9 +377,7 @@ body::after {
 .form-item input:focus,
 .form-item select:focus {
     border-color: #0c846a;
-    box-shadow:
-        0 0 0 4px
-        rgba(12, 132, 106, 0.13);
+    box-shadow: 0 0 0 4px rgba(12, 132, 106, 0.13);
 }
 
 #employeeId {
@@ -375,6 +391,18 @@ body::after {
     margin-top: 7px;
     color: #687d77;
     font-size: 12px;
+}
+
+/* デモ管理者の入力欄 */
+
+.employee-edit-form input:disabled,
+.employee-edit-form select:disabled {
+    background: #f0f2f4;
+    color: #46535c;
+    border-color: #cbd4d0;
+    opacity: 1;
+    -webkit-text-fill-color: #46535c;
+    cursor: not-allowed;
 }
 
 /* ========================================
@@ -392,9 +420,7 @@ body::after {
         );
     border: 1px solid #c4e4da;
     border-radius: 14px;
-    box-shadow:
-        0 12px 28px
-        rgba(32, 105, 85, 0.1);
+    box-shadow: 0 12px 28px rgba(32, 105, 85, 0.1);
 }
 
 .section-heading {
@@ -440,9 +466,7 @@ body::after {
 
 .copy-area {
     display: grid;
-    grid-template-columns:
-        minmax(0, 1fr)
-        auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
 }
 
@@ -494,6 +518,7 @@ body::after {
 }
 
 /* コピー結果 */
+
 .copy-message {
     min-height: 24px;
     margin: 17px 0 0;
@@ -533,21 +558,17 @@ body::after {
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow:
-        0 8px 18px
-        rgba(153, 80, 25, 0.2);
+    box-shadow: 0 8px 18px rgba(153, 80, 25, 0.2);
     transition:
         transform 0.2s,
         box-shadow 0.2s,
         filter 0.2s;
 }
 
-.password-reset-button:hover {
+.password-reset-button:not(:disabled):hover {
     transform: translateY(-2px);
     filter: brightness(1.05);
-    box-shadow:
-        0 11px 22px
-        rgba(153, 80, 25, 0.27);
+    box-shadow: 0 11px 22px rgba(153, 80, 25, 0.27);
 }
 
 /* ========================================
@@ -592,36 +613,44 @@ body::after {
             #08705a 100%
         );
     border: none;
-    box-shadow:
-        0 8px 18px
-        rgba(8, 112, 90, 0.25);
+    box-shadow: 0 8px 18px rgba(8, 112, 90, 0.25);
 }
 
 .employee-list-link {
     color: #315d53;
     background: #ffffff;
     border: 1px solid #a9c9c0;
-    box-shadow:
-        0 7px 16px
-        rgba(35, 91, 77, 0.09);
+    box-shadow: 0 7px 16px rgba(35, 91, 77, 0.09);
 }
 
-.update-button:hover,
+.update-button:not(:disabled):hover,
 .employee-list-link:hover {
     transform: translateY(-2px);
 }
 
-.update-button:hover {
+.update-button:not(:disabled):hover {
     filter: brightness(1.06);
-    box-shadow:
-        0 11px 23px
-        rgba(8, 112, 90, 0.32);
+    box-shadow: 0 11px 23px rgba(8, 112, 90, 0.32);
 }
 
 .employee-list-link:hover {
     color: #086b56;
     background: #f3fcf9;
     border-color: #0d9273;
+}
+
+/* デモ管理者の無効ボタン */
+
+.password-reset-button:disabled,
+.update-button:disabled {
+    color: #46535c;
+    background: #d6dce0;
+    border-color: #d6dce0;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
 }
 
 /* ========================================
@@ -634,8 +663,7 @@ body::after {
     }
 
     .header {
-        grid-template-columns:
-            1fr auto;
+        grid-template-columns: 1fr auto;
         gap: 16px;
         padding: 22px;
     }
@@ -659,7 +687,8 @@ body::after {
         font-size: 22px;
     }
 
-    .message {
+    .message,
+    .demo-notice {
         margin-right: 24px;
         margin-left: 24px;
     }
@@ -698,6 +727,8 @@ body::after {
 
     .admin-information {
         width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .header-actions {
@@ -707,15 +738,21 @@ body::after {
     .header-home-link,
     .logout-form {
         width: 50%;
+        min-width: 0;
     }
 
     .logout-button {
         width: 100%;
     }
 
-    .message {
+    .message,
+    .demo-notice {
         margin-right: 15px;
         margin-left: 15px;
+    }
+
+    .demo-notice {
+        padding: 14px 16px;
     }
 
     .main-content {
@@ -744,10 +781,7 @@ body::after {
         grid-template-columns: 1fr;
     }
 
-    .copy-button {
-        width: 100%;
-    }
-
+    .copy-button,
     .password-reset-button {
         width: 100%;
     }

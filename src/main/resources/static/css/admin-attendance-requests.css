@@ -1,7 +1,6 @@
 @charset "UTF-8";
 
-/* 管理者用 勤怠申請一覧 */
-
+/* 共通設定 */
 * {
     box-sizing: border-box;
 }
@@ -25,15 +24,16 @@ body {
         "Yu Gothic",
         Meiryo,
         sans-serif;
+
     background:
         radial-gradient(
             circle at 8% 25%,
-            rgba(255, 255, 255, 0.72) 0 70px,
+            rgba(255, 255, 255, 0.72) 70px,
             transparent 71px
         ),
         radial-gradient(
             circle at 91% 22%,
-            rgba(255, 255, 255, 0.58) 0 120px,
+            rgba(255, 255, 255, 0.58) 120px,
             transparent 121px
         ),
         linear-gradient(
@@ -44,29 +44,30 @@ body {
         );
 }
 
-/* 画面全体 */
-
+/* ページ全体 */
 .page-container {
     width: 100%;
     max-width: 1440px;
     min-height: calc(100vh - 110px);
     margin: 0 auto;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.98);
+    background: rgba(255, 255, 255, 0.98);
     border: 1px solid #c4e4dd;
     border-radius: 22px;
     box-shadow: 0 18px 45px rgba(15, 92, 78, 0.14);
 }
 
 /* ヘッダー */
-
 .page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
     min-height: 105px;
     padding: 24px 42px;
     color: #ffffff;
+
     background: linear-gradient(
         110deg,
         #034d40 0%,
@@ -76,7 +77,11 @@ body {
 }
 
 .company-info {
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
     font-size: 21px;
     font-weight: 700;
     letter-spacing: 0.02em;
@@ -85,6 +90,7 @@ body {
 .header-right {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 14px;
 }
 
@@ -93,12 +99,10 @@ body {
     font-size: 15px;
     font-weight: 700;
     white-space: nowrap;
-    background-color: rgba(255, 255, 255, 0.17);
+    background: rgba(255, 255, 255, 0.17);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 10px;
 }
-
-/* ヘッダーのボタン */
 
 .header-home-link,
 .logout-button {
@@ -114,6 +118,7 @@ body {
     white-space: nowrap;
     border-radius: 10px;
     cursor: pointer;
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease,
@@ -122,9 +127,14 @@ body {
 
 .header-home-link {
     color: #075949;
-    background-color: #ffffff;
+    background: #ffffff;
     border: 1px solid #ffffff;
     box-shadow: 0 6px 14px rgba(0, 49, 40, 0.14);
+}
+
+.header-home-link:hover {
+    background: #f2fffb;
+    transform: translateY(-2px);
 }
 
 .logout-form {
@@ -133,31 +143,69 @@ body {
 
 .logout-button {
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.72);
 }
 
-.header-home-link:hover,
 .logout-button:hover {
+    background: rgba(255, 255, 255, 0.22);
     transform: translateY(-2px);
 }
 
-.header-home-link:hover {
-    background-color: #f2fffb;
+/* デモ用バッジ */
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 27px;
+    padding: 4px 11px;
+    color: #694700;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    background: #fff1bd;
+    border: 1px solid #f2d477;
+    border-radius: 999px;
 }
 
-.logout-button:hover {
-    background-color: rgba(255, 255, 255, 0.22);
-}
-
-/* メイン部分 */
-
+/* メイン */
 .main-content {
     padding: 36px 42px 50px;
 }
 
-/* 画面タイトル */
+/* デモ用の案内 */
+.demo-banner {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    color: #705000;
+    font-size: 14px;
+    line-height: 1.8;
+    background: #fff8df;
+    border: 1px solid #ead18a;
+    border-radius: 12px;
+}
 
+.demo-banner strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
+}
+
+.demo-banner p {
+    margin: 0;
+}
+
+.demo-note {
+    margin: 10px 0 0;
+    color: #826b32;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* タイトル */
 .page-title {
     padding-bottom: 22px;
     border-bottom: 1px solid #b9ded6;
@@ -174,36 +222,40 @@ body {
     margin: 9px 0 0;
     color: #6c8982;
     font-size: 14px;
+    line-height: 1.7;
 }
 
 /* メッセージ */
-
 .message {
     margin-top: 24px;
     padding: 14px 18px;
     font-size: 14px;
     font-weight: 700;
+    line-height: 1.7;
     border-radius: 10px;
 }
 
 .success-message {
     color: #08705d;
-    background-color: #e4f8f1;
+    background: #e4f8f1;
     border: 1px solid #a9dfd2;
 }
 
 .error-message {
     color: #a3453d;
-    background-color: #fff0ee;
+    background: #fff0ee;
     border: 1px solid #efc0bb;
 }
 
-/* 申請一覧カード */
+/* 申請一覧 */
+.approval-form {
+    margin: 0;
+}
 
 .request-list-card {
     margin-top: 28px;
     padding: 27px 28px 32px;
-    background-color: #ffffff;
+    background: #ffffff;
     border: 1px solid #b7ded5;
     border-radius: 15px;
     box-shadow: 0 10px 24px rgba(21, 98, 82, 0.08);
@@ -221,30 +273,33 @@ body {
     margin: 0;
     color: #075949;
     font-size: 23px;
+    line-height: 1.4;
 }
 
 .list-description {
     margin: 7px 0 0;
     color: #718b85;
     font-size: 13px;
+    line-height: 1.7;
 }
 
 .result-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     min-width: 54px;
     min-height: 33px;
     padding: 5px 14px;
     color: #087460;
     font-size: 13px;
     font-weight: 700;
-    background-color: #dcf5ee;
+    white-space: nowrap;
+    background: #dcf5ee;
     border-radius: 999px;
 }
 
 /* 一括承認 */
-
 .bulk-actions {
     display: flex;
     justify-content: flex-end;
@@ -258,39 +313,42 @@ body {
     font-family: inherit;
     font-size: 14px;
     font-weight: 700;
+    line-height: 1.5;
+
     background: linear-gradient(
         135deg,
         #13a283 0%,
         #08745f 100%
     );
+
     border: none;
     border-radius: 9px;
     box-shadow: 0 7px 15px rgba(7, 116, 95, 0.18);
     cursor: pointer;
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
 }
 
-.bulk-approve-button:hover {
+.bulk-approve-button:not(:disabled):hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(7, 116, 95, 0.24);
 }
 
-/* データなし */
-
+/* 申請がない場合 */
 .no-data {
     padding: 40px 20px;
     color: #708b85;
     font-size: 14px;
+    line-height: 1.7;
     text-align: center;
-    background-color: #f8fcfb;
+    background: #f8fcfb;
     border: 1px dashed #b7dcd4;
     border-radius: 11px;
 }
 
 /* テーブル */
-
 .table-scroll {
     width: 100%;
     overflow-x: auto;
@@ -329,6 +387,7 @@ body {
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
+
     background: linear-gradient(
         180deg,
         #08705c 0%,
@@ -339,64 +398,73 @@ body {
 .request-table tbody td {
     color: #274b44;
     font-size: 13px;
-    background-color: #ffffff;
+    background: #ffffff;
 }
 
 .request-table tbody tr:nth-child(even) td {
-    background-color: #f4fbf9;
+    background: #f4fbf9;
 }
 
 .request-table tbody tr:hover td {
-    background-color: #eaf8f4;
+    background: #eaf8f4;
 }
 
 /*
- * テーブルの列幅
- * HTMLの10列と同じ順番に指定する
+ * 列の並び：
+ * 選択・社員ID・社員名・部署名・勤務日・
+ * 変更前・変更後・申請種別・申請理由・承認
  */
-
-.request-table th:nth-child(1) {
-    width: 6%;   /* 選択 */
+.request-table th:nth-child(1),
+.request-table td:nth-child(1) {
+    width: 6%;
 }
 
-.request-table th:nth-child(2) {
-    width: 9%;   /* 社員ID */
+.request-table th:nth-child(2),
+.request-table td:nth-child(2) {
+    width: 9%;
 }
 
-.request-table th:nth-child(3) {
-    width: 11%;  /* 社員名 */
+.request-table th:nth-child(3),
+.request-table td:nth-child(3) {
+    width: 11%;
 }
 
-.request-table th:nth-child(4) {
-    width: 9%;   /* 部署名 */
+.request-table th:nth-child(4),
+.request-table td:nth-child(4) {
+    width: 9%;
 }
 
-.request-table th:nth-child(5) {
-    width: 10%;  /* 勤務日 */
+.request-table th:nth-child(5),
+.request-table td:nth-child(5) {
+    width: 10%;
 }
 
-.request-table th:nth-child(6) {
-    width: 13%;  /* 変更前 */
+.request-table th:nth-child(6),
+.request-table td:nth-child(6) {
+    width: 13%;
 }
 
-.request-table th:nth-child(7) {
-    width: 13%;  /* 変更後 */
+.request-table th:nth-child(7),
+.request-table td:nth-child(7) {
+    width: 13%;
 }
 
-.request-table th:nth-child(8) {
-    width: 10%;  /* 申請種別 */
+.request-table th:nth-child(8),
+.request-table td:nth-child(8) {
+    width: 10%;
 }
 
-.request-table th:nth-child(9) {
-    width: 12%;  /* 申請理由 */
+.request-table th:nth-child(9),
+.request-table td:nth-child(9) {
+    width: 12%;
 }
 
-.request-table th:nth-child(10) {
-    width: 7%;   /* 承認 */
+.request-table th:nth-child(10),
+.request-table td:nth-child(10) {
+    width: 7%;
 }
 
 /* チェックボックス */
-
 .select-cell {
     text-align: center;
 }
@@ -414,6 +482,7 @@ body {
     width: 18px;
     height: 18px;
     margin: 0;
+    vertical-align: middle;
     accent-color: #0a8870;
     cursor: pointer;
 }
@@ -422,18 +491,23 @@ body {
     accent-color: #ffffff;
 }
 
-/* 表内の表示 */
+.request-checkbox:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
 
+/* 時刻・申請理由 */
 .time-cell {
     white-space: nowrap;
 }
 
-.reason-cell {
+.request-table .reason-cell {
     line-height: 1.6;
-    text-align: left !important;
+    text-align: left;
     overflow-wrap: anywhere;
 }
 
+/* 申請種別 */
 .request-type {
     display: inline-flex;
     align-items: center;
@@ -444,13 +518,13 @@ body {
     color: #a46300;
     font-size: 12px;
     font-weight: 700;
-    background-color: #fff1cf;
+    line-height: 1.4;
+    background: #fff1cf;
     border: 1px solid #f0d58d;
     border-radius: 999px;
 }
 
-/* 1件承認ボタン */
-
+/* 個別承認 */
 .approve-button {
     min-height: 37px;
     padding: 0 16px;
@@ -459,25 +533,47 @@ body {
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
-    background-color: #ffffff;
+    background: #ffffff;
     border: 1px solid #79c8b6;
     border-radius: 8px;
     cursor: pointer;
+
     transition:
         color 0.2s ease,
         transform 0.2s ease,
         background-color 0.2s ease;
 }
 
-.approve-button:hover {
+.approve-button:not(:disabled):hover {
     color: #ffffff;
-    background-color: #0a8870;
+    background: #0a8870;
     transform: translateY(-1px);
 }
 
-/* タブレット */
+/* デモ管理者の操作できないボタン */
+.bulk-approve-button:disabled,
+.approve-button:disabled {
+    color: #66736f;
+    background: #e7ecea;
+    border: 1px solid #c8d1cd;
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+    cursor: not-allowed;
+}
 
-@media (max-width: 1200px) {
+/* キーボード操作時 */
+.header-home-link:focus-visible,
+.logout-button:focus-visible,
+.bulk-approve-button:focus-visible,
+.approve-button:focus-visible,
+.request-checkbox:focus-visible {
+    outline: 3px solid #e7b84d;
+    outline-offset: 3px;
+}
+
+/* タブレット */
+@media screen and (max-width: 1200px) {
     body {
         padding: 24px 16px 50px;
     }
@@ -512,8 +608,7 @@ body {
 }
 
 /* スマートフォン */
-
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     body {
         padding: 8px;
     }
@@ -524,24 +619,26 @@ body {
     }
 
     .page-header {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
         gap: 18px;
         padding: 24px 18px;
     }
 
     .company-info {
         font-size: 18px;
+        line-height: 1.6;
     }
 
     .header-right {
-        align-items: stretch;
         flex-direction: column;
+        align-items: stretch;
         width: 100%;
     }
 
     .admin-info {
         text-align: center;
+        white-space: normal;
     }
 
     .header-home-link,
@@ -552,6 +649,16 @@ body {
 
     .main-content {
         padding: 27px 15px 38px;
+    }
+
+    .demo-banner {
+        margin-bottom: 20px;
+        padding: 14px 15px;
+        font-size: 13px;
+    }
+
+    .demo-banner strong {
+        font-size: 14px;
     }
 
     .page-title {
@@ -566,23 +673,30 @@ body {
         font-size: 13px;
     }
 
+    .message {
+        padding: 13px 15px;
+        font-size: 13px;
+    }
+
     .request-list-card {
         padding: 21px 15px;
     }
 
     .list-heading {
         align-items: flex-start;
+        gap: 12px;
     }
 
     .list-heading h2 {
         font-size: 21px;
     }
 
-    .bulk-actions {
-        justify-content: stretch;
-    }
-
     .bulk-approve-button {
         width: 100%;
+        padding: 12px 15px;
+    }
+
+    .no-data {
+        padding: 30px 15px;
     }
 }

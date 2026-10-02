@@ -696,4 +696,86 @@ main {
     .users-link {
         width: 100%;
     }
+    
+    /* ========================================
+   デモ管理者の表示
+   ======================================== */
+
+	.demo-badge {
+	    display: inline-block;
+	    margin-left: 10px;
+	    padding: 4px 12px;
+	    color: #185348;
+	    background: #d9f6ef;
+	    border-radius: 20px;
+	    font-size: 12px;
+	    font-weight: 700;
+	    letter-spacing: 0.04em;
+	    vertical-align: middle;
+	    white-space: nowrap;
+	}
+	
+	.demo-notice {
+	    margin-bottom: 24px;
+	    padding: 16px 20px;
+	    color: #24465a;
+	    background: #edf7fc;
+	    border: 1px solid #c8e1ed;
+	    border-radius: 10px;
+	    font-size: 14px;
+	    line-height: 1.7;
+	    overflow-wrap: anywhere;
+	}
+	
+	.demo-notice strong {
+	    display: block;
+	}
+	
+	.demo-notice p {
+	    margin: 6px 0 0;
+	}
+	
+	.demo-operation-note {
+	    grid-column: 1 / -1;
+	    margin: 0;
+	    color: #a33b3b;
+	    font-size: 14px;
+	    line-height: 1.6;
+	    text-align: center;
+	}
+	
+	/* ========================================
+	   デモ管理者の操作制限
+	   ======================================== */
+	
+	.registration-form input:disabled,
+	.registration-form select:disabled {
+	    color: #46535c;
+	    background: #f0f2f4;
+	    border-color: #cbd4d0;
+	    opacity: 1;
+	    -webkit-text-fill-color: #46535c;
+	    cursor: not-allowed;
+	}
+	
+	.register-button:disabled,
+	.register-button:disabled:hover {
+	    color: #46535c;
+	    background: #d6dce0;
+	    cursor: not-allowed;
+	    box-shadow: none;
+	    opacity: 1;
+	    transform: none;
+	    filter: none;
+	}
+	
+	@media screen and (max-width: 600px) {
+	    .demo-notice {
+	        padding: 14px 16px;
+	    }
+	
+	    .demo-operation-note {
+	        grid-column: auto;
+	    }
+	}
 }
