@@ -1,18 +1,11 @@
-@charset "UTF-8";
-
-/* ========================================
-   社員登録画面
-   ======================================== */
-
 * {
     box-sizing: border-box;
 }
 
 html,
 body {
-    width: 100%;
-    min-height: 100%;
     margin: 0;
+    min-height: 100%;
 }
 
 body {
@@ -21,22 +14,17 @@ body {
     padding: 40px 24px 70px;
     color: #183b35;
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        Meiryo,
-        sans-serif;
+        -apple-system, BlinkMacSystemFont,
+        "Segoe UI", "Noto Sans JP", sans-serif;
     background:
         radial-gradient(
             circle at 12% 28%,
-            rgba(255, 255, 255, 0.8) 0 45px,
+            rgba(255, 255, 255, .8) 0 45px,
             transparent 46px
         ),
         radial-gradient(
             circle at 89% 20%,
-            rgba(255, 255, 255, 0.58) 0 105px,
+            rgba(255, 255, 255, .58) 0 105px,
             transparent 106px
         ),
         linear-gradient(
@@ -55,56 +43,45 @@ select {
     font: inherit;
 }
 
-/* 背景の波 */
-body::before {
-    content: "";
-    position: fixed;
-    z-index: 0;
-    left: -10%;
-    bottom: -35%;
-    width: 120%;
-    height: 65%;
-    border-radius:
-        45% 55% 0 0 /
-        35% 40% 0 0;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(69, 190, 155, 0.27),
-            rgba(20, 128, 101, 0.35)
-        );
-    transform: rotate(-3deg);
-    box-shadow:
-        0 -35px 0 rgba(255, 255, 255, 0.42),
-        0 -70px 0 rgba(106, 203, 174, 0.15);
-    pointer-events: none;
-}
-
+body::before,
 body::after {
     content: "";
     position: fixed;
     z-index: 0;
+    pointer-events: none;
+}
+
+body::before {
+    left: -10%;
+    bottom: -35%;
+    width: 120%;
+    height: 65%;
+    border-radius: 45% 55% 0 0 / 35% 40% 0 0;
+    background: linear-gradient(
+        135deg,
+        rgba(69, 190, 155, .27),
+        rgba(20, 128, 101, .35)
+    );
+    box-shadow:
+        0 -35px 0 rgba(255, 255, 255, .42),
+        0 -70px 0 rgba(106, 203, 174, .15);
+    transform: rotate(-3deg);
+}
+
+body::after {
     left: -15%;
     bottom: -47%;
     width: 130%;
     height: 68%;
-    border-radius:
-        50% 50% 0 0 /
-        32% 38% 0 0;
-    background:
-        linear-gradient(
-            110deg,
-            rgba(255, 255, 255, 0.65),
-            rgba(72, 177, 146, 0.22),
-            rgba(255, 255, 255, 0.56)
-        );
+    border-radius: 50% 50% 0 0 / 32% 38% 0 0;
+    background: linear-gradient(
+        110deg,
+        rgba(255, 255, 255, .65),
+        rgba(72, 177, 146, .22),
+        rgba(255, 255, 255, .56)
+    );
     transform: rotate(4deg);
-    pointer-events: none;
 }
-
-/* ========================================
-   画面全体
-   ======================================== */
 
 .page-container {
     position: relative;
@@ -113,61 +90,53 @@ body::after {
     max-width: 100%;
     margin: 0 auto;
     overflow: hidden;
-    background:
-        rgba(255, 255, 255, 0.91);
-    border: 1px solid
-        rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, .91);
+    border: 1px solid rgba(255, 255, 255, .92);
     border-radius: 16px;
-    box-shadow:
-        0 22px 55px
-        rgba(38, 105, 87, 0.18);
+    box-shadow: 0 22px 55px rgba(38, 105, 87, .18);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
-
-/* ========================================
-   ヘッダー
-   ======================================== */
 
 .header {
     display: grid;
-    grid-template-columns:
-        minmax(260px, 1fr)
-        auto
-        auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
     min-height: 110px;
     padding: 25px 34px;
-    color: #ffffff;
-    background:
-        linear-gradient(
-            135deg,
-            #043c32 0%,
-            #075748 55%,
-            #08705b 100%
-        );
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        #043c32 0%,
+        #075748 55%,
+        #08705b 100%
+    );
+}
+
+.company-information {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .company-name {
-    margin: 0;
     font-size: 22px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: .04em;
 }
 
 .admin-information {
     padding: 12px 18px;
     color: #def8f0;
-    background:
-        rgba(255, 255, 255, 0.11);
+    background: rgba(255, 255, 255, .11);
     border-radius: 8px;
     font-size: 15px;
     white-space: nowrap;
 }
 
 .admin-information span {
-    color: #ffffff;
+    color: #fff;
     font-weight: 700;
 }
 
@@ -188,43 +157,29 @@ body::after {
     justify-content: center;
     min-height: 45px;
     padding: 10px 18px;
-    color: #ffffff;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
+    text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
     transition:
-        transform 0.2s,
-        background-color 0.2s,
-        filter 0.2s,
-        box-shadow 0.2s;
+        transform .2s,
+        background .2s,
+        box-shadow .2s;
 }
 
 .header-home-link {
-    min-width: 165px;
-    background:
-        linear-gradient(
-            135deg,
-            #159b7c 0%,
-            #0a735d 100%
-        );
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.24);
-    text-decoration: none;
-    box-shadow:
-        0 7px 16px
-        rgba(0, 38, 30, 0.2);
+    color: #075949;
+    background: #fff;
+    border: 1px solid #fff;
 }
 
 .logout-button {
     min-width: 120px;
-    background:
-        rgba(255, 255, 255, 0.12);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.58);
+    color: #fff;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .58);
 }
 
 .header-home-link:hover,
@@ -233,64 +188,77 @@ body::after {
 }
 
 .header-home-link:hover {
-    filter: brightness(1.08);
-    box-shadow:
-        0 10px 20px
-        rgba(0, 38, 30, 0.27);
+    background: #edf9f4;
+    box-shadow: 0 7px 16px rgba(0, 38, 30, .2);
 }
 
 .logout-button:hover {
-    background:
-        rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, .22);
 }
-
-/* ========================================
-   画面タイトル
-   ======================================== */
-
-.page-title {
-    margin: 0;
-    padding: 23px 36px;
-    color: #174b40;
-    background:
-        rgba(255, 255, 255, 0.96);
-    border-bottom:
-        1px solid #c9e6dd;
-    font-size: 25px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-/* ========================================
-   メイン部分
-   ======================================== */
 
 main {
-    padding: 42px 55px 55px;
+    padding: 32px 55px 55px;
 }
 
-/* ========================================
-   登録フォーム
-   ======================================== */
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 27px;
+    padding: 4px 11px;
+    color: #694700;
+    background: #fff1bd;
+    border: 1px solid #f2d477;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: .06em;
+    white-space: nowrap;
+}
+
+.demo-banner {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    color: #705000;
+    background: #fff8df;
+    border: 1px solid #ead18a;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.demo-banner strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
+}
+
+.demo-banner p {
+    margin: 0;
+}
+
+.page-title {
+    margin: 0 0 28px;
+    padding-bottom: 18px;
+    color: #174b40;
+    border-bottom: 1px solid #c9e6dd;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: .05em;
+}
 
 .registration-form {
     display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px 30px;
     margin: 0;
     padding: 35px 38px 40px;
-    background:
-        linear-gradient(
-            145deg,
-            #ffffff 0%,
-            #e9f9f4 100%
-        );
+    background: linear-gradient(145deg, #fff, #e9f9f4);
     border: 1px solid #c4e4da;
     border-radius: 14px;
-    box-shadow:
-        0 12px 28px
-        rgba(32, 105, 85, 0.1);
+    box-shadow: 0 12px 28px rgba(32, 105, 85, .1);
 }
 
 .form-item {
@@ -313,14 +281,12 @@ main {
     min-height: 48px;
     padding: 10px 13px;
     color: #173f37;
-    background: #ffffff;
+    background: #fff;
     border: 1px solid #b9d4cc;
     border-radius: 8px;
     font-size: 15px;
     outline: none;
-    transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+    transition: border-color .2s, box-shadow .2s;
 }
 
 .form-item select {
@@ -331,12 +297,17 @@ main {
 .form-item select:focus,
 .issued-item input:focus {
     border-color: #0c846a;
-    box-shadow:
-        0 0 0 4px
-        rgba(12, 132, 106, 0.13);
+    box-shadow: 0 0 0 4px rgba(12, 132, 106, .13);
 }
 
-/* 自動発行欄 */
+.form-item input:disabled,
+.form-item select:disabled {
+    color: #68766f;
+    background: #edf1ef;
+    opacity: 1;
+    cursor: not-allowed;
+}
+
 .automatic-value {
     display: flex;
     align-items: center;
@@ -344,27 +315,22 @@ main {
     padding: 10px 14px;
     color: #55736c;
     background: #edf4f2;
-    border:
-        1px dashed #adcac2;
+    border: 1px dashed #adcac2;
     border-radius: 8px;
     font-size: 14px;
 }
 
 .automatic-value::before {
     content: "自動";
-    display: inline-block;
+    flex-shrink: 0;
     margin-right: 10px;
     padding: 3px 9px;
-    color: #ffffff;
+    color: #fff;
     background: #6c8d84;
     border-radius: 15px;
     font-size: 11px;
     font-weight: 700;
 }
-
-/* ========================================
-   登録ボタン
-   ======================================== */
 
 .form-actions {
     grid-column: 1 / -1;
@@ -376,7 +342,9 @@ main {
 }
 
 .register-button,
-.back-link {
+.back-link,
+.continue-link,
+.users-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -386,67 +354,58 @@ main {
     border-radius: 8px;
     font-size: 15px;
     font-weight: 700;
+    text-align: center;
     text-decoration: none;
     cursor: pointer;
     transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+        transform .2s,
+        background .2s,
+        box-shadow .2s;
 }
 
-.register-button {
-    color: #ffffff;
-    background:
-        linear-gradient(
-            135deg,
-            #149878 0%,
-            #08705a 100%
-        );
-    border: none;
-    box-shadow:
-        0 8px 18px
-        rgba(8, 112, 90, 0.25);
+.register-button,
+.continue-link {
+    color: #fff;
+    background: linear-gradient(135deg, #149878, #08705a);
+    border: 1px solid transparent;
+    box-shadow: 0 8px 18px rgba(8, 112, 90, .25);
 }
 
-.back-link {
-    color: #315d53;
-    background: #ffffff;
-    border: 1px solid #a9c9c0;
-}
-
-.register-button:hover,
-.back-link:hover {
+.register-button:not(:disabled):hover,
+.continue-link:hover {
+    box-shadow: 0 11px 23px rgba(8, 112, 90, .31);
     transform: translateY(-2px);
 }
 
-.register-button:hover {
-    box-shadow:
-        0 11px 23px
-        rgba(8, 112, 90, 0.31);
+.register-button:disabled {
+    color: #66736f;
+    background: #e7ecea;
+    border: 1px solid #c8d1cd;
+    box-shadow: none;
+    cursor: not-allowed;
 }
 
-.back-link:hover {
+.back-link,
+.users-link {
+    color: #315d53;
+    background: #fff;
+    border: 1px solid #a9c9c0;
+}
+
+.back-link:hover,
+.users-link:hover {
     color: #086b56;
     background: #f3fcf9;
     border-color: #0d9273;
+    transform: translateY(-2px);
 }
-
-/* ========================================
-   登録完了画面
-   ======================================== */
 
 .registration-result {
     padding: 36px 40px 40px;
-    background:
-        linear-gradient(
-            145deg,
-            #ffffff 0%,
-            #e7f8f2 100%
-        );
+    background: linear-gradient(145deg, #fff, #e7f8f2);
     border: 1px solid #bfe2d7;
     border-radius: 14px;
-    box-shadow:
-        0 12px 28px
-        rgba(32, 105, 85, 0.11);
+    box-shadow: 0 12px 28px rgba(32, 105, 85, .11);
 }
 
 .success-message {
@@ -469,9 +428,7 @@ main {
 
 .copy-area {
     display: grid;
-    grid-template-columns:
-        minmax(0, 1fr)
-        auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
 }
 
@@ -479,24 +436,22 @@ main {
     color: #174b40;
     background: #f3f8f6;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    user-select: text;
+    letter-spacing: .04em;
     -webkit-user-select: text;
+    user-select: text;
 }
 
 .copy-button {
     min-width: 100px;
     padding: 10px 17px;
-    color: #ffffff;
+    color: #fff;
     background: #397a69;
     border: none;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    transition:
-        background-color 0.2s,
-        transform 0.2s;
+    transition: background .2s, transform .2s;
 }
 
 .copy-button:hover {
@@ -510,13 +465,14 @@ main {
     font-size: 14px;
     font-weight: 700;
     text-align: center;
+    line-height: 1.7;
 }
 
-.copy-message.copy-success {
+.copy-success {
     color: #08705a;
 }
 
-.copy-message.copy-error {
+.copy-error {
     color: #b42318;
 }
 
@@ -528,68 +484,28 @@ main {
     margin-top: 15px;
 }
 
-.continue-link,
-.users-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 180px;
-    min-height: 48px;
-    padding: 11px 22px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 700;
-    text-decoration: none;
-    transition:
-        transform 0.2s,
-        background-color 0.2s;
+@media (max-width: 1000px) {
+    .header {
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+    }
+
+    .company-information {
+        grid-column: 1 / -1;
+    }
+
+    .company-name {
+        font-size: 20px;
+    }
 }
 
-.continue-link {
-    color: #ffffff;
-    background:
-        linear-gradient(
-            135deg,
-            #149878,
-            #08705a
-        );
-}
-
-.users-link {
-    color: #315d53;
-    background: #ffffff;
-    border: 1px solid #a9c9c0;
-}
-
-.continue-link:hover,
-.users-link:hover {
-    transform: translateY(-2px);
-}
-
-.users-link:hover {
-    color: #086b56;
-    background: #f3fcf9;
-    border-color: #0d9273;
-}
-
-/* ========================================
-   タブレット
-   ======================================== */
-
-@media screen and (max-width: 850px) {
+@media (max-width: 850px) {
     body {
         padding: 20px 14px 50px;
     }
 
     .header {
-        grid-template-columns:
-            1fr auto;
-        gap: 16px;
         padding: 22px;
-    }
-
-    .company-information {
-        grid-column: 1 / -1;
     }
 
     .header-actions {
@@ -604,7 +520,6 @@ main {
     }
 
     .page-title {
-        padding: 21px 24px;
         font-size: 22px;
     }
 
@@ -613,11 +528,7 @@ main {
     }
 }
 
-/* ========================================
-   スマートフォン
-   ======================================== */
-
-@media screen and (max-width: 600px) {
+@media (max-width: 600px) {
     body {
         padding: 7px;
     }
@@ -638,10 +549,7 @@ main {
         font-size: 19px;
     }
 
-    .admin-information {
-        width: 100%;
-    }
-
+    .admin-information,
     .header-actions {
         width: 100%;
     }
@@ -651,8 +559,20 @@ main {
         width: 50%;
     }
 
+    .header-home-link {
+        white-space: normal;
+    }
+
     .logout-button {
         width: 100%;
+    }
+
+    main {
+        padding: 24px 15px 30px;
+    }
+
+    .demo-banner {
+        padding: 14px 16px;
     }
 
     .registration-form {
@@ -662,17 +582,14 @@ main {
     }
 
     .form-actions {
-        grid-column: auto;
         flex-direction: column;
     }
 
     .register-button,
-    .back-link {
+    .back-link,
+    .continue-link,
+    .users-link {
         width: 100%;
-    }
-
-    main {
-        padding: 24px 15px 30px;
     }
 
     .registration-result {
@@ -691,91 +608,4 @@ main {
     .result-actions {
         flex-direction: column;
     }
-
-    .continue-link,
-    .users-link {
-        width: 100%;
-    }
-    
-    /* ========================================
-   デモ管理者の表示
-   ======================================== */
-
-	.demo-badge {
-	    display: inline-block;
-	    margin-left: 10px;
-	    padding: 4px 12px;
-	    color: #185348;
-	    background: #d9f6ef;
-	    border-radius: 20px;
-	    font-size: 12px;
-	    font-weight: 700;
-	    letter-spacing: 0.04em;
-	    vertical-align: middle;
-	    white-space: nowrap;
-	}
-	
-	.demo-notice {
-	    margin-bottom: 24px;
-	    padding: 16px 20px;
-	    color: #24465a;
-	    background: #edf7fc;
-	    border: 1px solid #c8e1ed;
-	    border-radius: 10px;
-	    font-size: 14px;
-	    line-height: 1.7;
-	    overflow-wrap: anywhere;
-	}
-	
-	.demo-notice strong {
-	    display: block;
-	}
-	
-	.demo-notice p {
-	    margin: 6px 0 0;
-	}
-	
-	.demo-operation-note {
-	    grid-column: 1 / -1;
-	    margin: 0;
-	    color: #a33b3b;
-	    font-size: 14px;
-	    line-height: 1.6;
-	    text-align: center;
-	}
-	
-	/* ========================================
-	   デモ管理者の操作制限
-	   ======================================== */
-	
-	.registration-form input:disabled,
-	.registration-form select:disabled {
-	    color: #46535c;
-	    background: #f0f2f4;
-	    border-color: #cbd4d0;
-	    opacity: 1;
-	    -webkit-text-fill-color: #46535c;
-	    cursor: not-allowed;
-	}
-	
-	.register-button:disabled,
-	.register-button:disabled:hover {
-	    color: #46535c;
-	    background: #d6dce0;
-	    cursor: not-allowed;
-	    box-shadow: none;
-	    opacity: 1;
-	    transform: none;
-	    filter: none;
-	}
-	
-	@media screen and (max-width: 600px) {
-	    .demo-notice {
-	        padding: 14px 16px;
-	    }
-	
-	    .demo-operation-note {
-	        grid-column: auto;
-	    }
-	}
 }

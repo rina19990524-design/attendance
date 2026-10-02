@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-
-<html lang="ja"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -15,271 +12,247 @@
           th:href="@{/css/admin-users.css}">
 </head>
 
-<body>
-    <div class="page-container">
+<body th:with="isDemoAdmin=${admin.employeeId == 'E0003'}">
 
-        <!-- 上部 -->
-        <header class="header">
+<div class="page-container">
 
-            <!-- 会社名 -->
-            <div class="company-information">
-                <span class="admin-label">
-                    ADMIN
+    <header class="header">
+
+        <div class="company-information">
+            <span class="admin-label">ADMIN</span>
+
+            <strong>
+                会社名：株式会社アテンダンス
+            </strong>
+
+            <span class="demo-badge"
+                  th:if="${isDemoAdmin}">
+                DEMO
+            </span>
+        </div>
+
+        <div class="administrator-information">
+            管理者名：
+            <span th:text="${admin.employeeName}">
+                山田太郎
+            </span>
+        </div>
+
+        <div class="header-actions">
+
+            <a class="header-home-link"
+               th:href="@{/admin}">
+                管理者ホームへ戻る
+            </a>
+
+            <form class="logout-form"
+                  th:action="@{/logout}"
+                  method="post">
+
+                <button class="logout-button"
+                        type="submit">
+                    ログアウト
+                </button>
+
+            </form>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <div class="demo-banner"
+             th:if="${isDemoAdmin}"
+             role="status">
+
+            <strong>
+                デモ管理者としてログインしています
+            </strong>
+
+            <p>
+                画面の閲覧や検索をお試しいただけます。
+                デモアカウントでは、登録・更新・パスワード再設定・申請の承認はできません。
+            </p>
+
+        </div>
+
+        <section class="title-section">
+            <h1>社員管理</h1>
+            <p>社員情報の確認・登録・編集を行います</p>
+        </section>
+
+        <section class="operation-section">
+
+            <form class="search-form"
+                  th:action="@{/admin/users}"
+                  method="get">
+
+                <label for="keyword">社員検索</label>
+
+                <div class="search-controls">
+
+                    <input type="text"
+                           id="keyword"
+                           name="keyword"
+                           th:value="${keyword}"
+                           placeholder="社員ID・社員名を入力">
+
+                    <button type="submit">検索</button>
+
+                    <a class="clear-button"
+                       th:href="@{/admin/users}">
+                        クリア
+                    </a>
+
+                </div>
+
+            </form>
+
+            <a class="new-user-button"
+               th:href="@{/admin/users/new}">
+                ＋ 新規登録
+            </a>
+
+        </section>
+
+        <section class="employee-section">
+
+            <div class="employee-list-header">
+
+                <h2>社員一覧</h2>
+
+                <span class="employee-count"
+                      th:if="${employees != null}"
+                      th:text="${#lists.size(employees) + '件'}">
+                    0件
                 </span>
 
-                <strong>
-				    会社名：
-				</strong>
-				
-				<strong>
-				    株式会社アテンダンス
-				</strong>
             </div>
 
-            <!-- 管理者名 -->
-            <div class="administrator-information">
-                <strong>
-                    管理者名：
-                </strong>
+            <div class="table-wrapper">
 
-                <span th:text="${admin.employeeName}">
-                    山田太郎
-                </span>
+                <table>
+
+                    <thead>
+                    <tr>
+                        <th>社員ID</th>
+                        <th>社員名</th>
+                        <th>部署名</th>
+                        <th>状態</th>
+
+                        <th th:text="${isDemoAdmin ? '詳細' : '編集'}">
+                            編集
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="employee : ${employees}">
+
+                        <td th:text="${employee.employeeId}">
+                            E0001
+                        </td>
+
+                        <td th:text="${employee.employeeName}">
+                            山田花子
+                        </td>
+
+                        <td th:switch="${employee.departmentId}">
+                            <span th:case="1">営業部</span>
+                            <span th:case="2">総務部</span>
+                            <span th:case="3">人事部</span>
+                            <span th:case="*">―</span>
+                        </td>
+
+                        <td th:switch="${employee.employeeStatusId}">
+
+                            <span class="status-badge status-active"
+                                  th:case="1">
+                                在籍
+                            </span>
+
+                            <span class="status-badge status-retired"
+                                  th:case="2">
+                                退職
+                            </span>
+
+                            <span class="status-badge status-leave"
+                                  th:case="3">
+                                育休
+                            </span>
+
+                            <span class="status-badge status-leave"
+                                  th:case="4">
+                                休職
+                            </span>
+
+                            <span class="status-badge status-unknown"
+                                  th:case="*">
+                                ―
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <a class="edit-button"
+                               th:href="@{/admin/users/{employeeId}/edit(employeeId=${employee.employeeId})}"
+                               th:text="${isDemoAdmin ? '詳細' : '編集'}">
+                                編集
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(employees)}">
+                        <td class="empty-message"
+                            colspan="5">
+                            該当する社員は見つかりませんでした
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
             </div>
 
-            <!-- 右側のボタン -->
-			<div class="header-actions">
-			
-			    <!-- ホームへ戻る：左側 -->
-			    <a class="header-home-link"
-			       th:href="@{/admin}">
-			        ◀ ホームへ戻る
-			    </a>
-			
-			    <!-- ログアウト：右側 -->
-			    <form class="logout-form"
-			          th:action="@{/logout}"
-			          method="post">
-			
-			        <button class="logout-button"
-			                type="submit">
-			            ログアウト
-			        </button>
-			    </form>
-			
-			</div>
-        </header>
+            <nav class="pagination"
+                 aria-label="社員一覧のページ">
 
-        <main>
-            <!-- 画面タイトル -->
-            <section class="title-section">
-                <h1>
-                    社員管理
-                </h1>
-
-                <p>
-                    社員情報の確認・登録・編集を行います
-                </p>
-            </section>
-
-            <!-- 検索と新規登録 -->
-            <section class="operation-section">
-
-                <!-- 検索フォーム -->
-                <form class="search-form"
-                      th:action="@{/admin/users}"
-                      method="get">
-
-                    <label for="keyword">
-                        社員検索
-                    </label>
-
-                    <div class="search-controls">
-                        <input type="text"
-                               id="keyword"
-                               name="keyword"
-                               th:value="${keyword}"
-                               placeholder="社員ID・社員名を入力">
-
-                        <button type="submit">
-                            検索
-                        </button>
-
-                        <a class="clear-button"
-                           th:href="@{/admin/users}">
-                            クリア
-                        </a>
-                    </div>
-                </form>
-
-                <!-- 新規登録 -->
-                <a class="new-user-button"
-                   th:href="@{/admin/users/new}">
-                    ＋ 新規登録
+                <a th:href="@{/admin/users(keyword=${keyword}, page=1)}">
+                    ＜ 前へ
                 </a>
-            </section>
 
-            <!-- 社員一覧 -->
-            <section class="employee-section">
+                <a class="current-page"
+                   th:href="@{/admin/users(keyword=${keyword}, page=1)}">
+                    1
+                </a>
 
-                <div class="employee-list-header">
-                    <h2>
-                        社員一覧
-                    </h2>
+                <a th:href="@{/admin/users(keyword=${keyword}, page=2)}">
+                    2
+                </a>
 
-                    <span class="employee-count"
-                          th:if="${employees != null}"
-                          th:text="${#lists.size(employees) + '件'}">
-                        0件
-                    </span>
-                </div>
+                <a th:href="@{/admin/users(keyword=${keyword}, page=3)}">
+                    3
+                </a>
 
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>社員ID</th>
-                                <th>社員名</th>
-                                <th>部署名</th>
-                                <th>状態</th>
-                                <th>編集</th>
-                            </tr>
-                        </thead>
+                <a th:href="@{/admin/users(keyword=${keyword}, page=4)}">
+                    4
+                </a>
 
-                        <tbody>
-                            <!-- 社員情報 -->
-                            <tr th:each="employee : ${employees}">
+                <a th:href="@{/admin/users(keyword=${keyword}, page=2)}">
+                    次へ ＞
+                </a>
 
-                                <!-- 社員ID -->
-                                <td th:text="${employee.employeeId}">
-                                    E0001
-                                </td>
+            </nav>
 
-                                <!-- 社員名 -->
-                                <td th:text="${employee.employeeName}">
-                                    山田花子
-                                </td>
+        </section>
 
-                                <!-- 部署名 -->
-                                <td th:switch="${employee.departmentId}">
+    </main>
 
-                                    <span th:case="1">
-                                        営業部
-                                    </span>
+</div>
 
-                                    <span th:case="2">
-                                        総務部
-                                    </span>
-
-                                    <span th:case="3">
-                                        人事部
-                                    </span>
-
-                                    <span th:case="*">
-                                        ―
-                                    </span>
-                                </td>
-
-                                <!-- 在籍状態 -->
-                                <td th:switch="${employee.employeeStatusId}">
-
-                                    <span class="status-badge status-active"
-                                          th:case="1">
-                                        在籍
-                                    </span>
-
-                                    <span class="status-badge status-retired"
-                                          th:case="2">
-                                        退職
-                                    </span>
-
-                                    <span class="status-badge status-leave"
-                                          th:case="3">
-                                        育休
-                                    </span>
-
-                                    <span class="status-badge status-leave"
-                                          th:case="4">
-                                        休職
-                                    </span>
-
-                                    <span class="status-badge status-unknown"
-                                          th:case="*">
-                                        ―
-                                    </span>
-                                </td>
-
-                                <!-- 編集 -->
-                                <td>
-                                    <a class="edit-button"
-                                       th:href="@{/admin/users/{employeeId}/edit(
-                                           employeeId=${employee.employeeId}
-                                       )}">
-                                        編集
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <!-- 検索結果が0件 -->
-                            <tr th:if="${#lists.isEmpty(employees)}">
-                                <td class="empty-message"
-                                    colspan="5">
-                                    該当する社員は見つかりませんでした
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- ページ番号 -->
-                <nav class="pagination">
-
-                    <a th:href="@{/admin/users(
-                        keyword=${keyword},
-                        page=1
-                    )}">
-                        ＜ 前へ
-                    </a>
-
-                    <a class="current-page"
-                       th:href="@{/admin/users(
-                           keyword=${keyword},
-                           page=1
-                       )}">
-                        1
-                    </a>
-
-                    <a th:href="@{/admin/users(
-                        keyword=${keyword},
-                        page=2
-                    )}">
-                        2
-                    </a>
-
-                    <a th:href="@{/admin/users(
-                        keyword=${keyword},
-                        page=3
-                    )}">
-                        3
-                    </a>
-
-                    <a th:href="@{/admin/users(
-                        keyword=${keyword},
-                        page=4
-                    )}">
-                        4
-                    </a>
-
-                    <a th:href="@{/admin/users(
-                        keyword=${keyword},
-                        page=2
-                    )}">
-                        次へ ＞
-                    </a>
-                </nav>
-            </section>
-        </main>
-    </div>
 </body>
-
 </html>

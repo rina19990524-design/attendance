@@ -15,33 +15,44 @@
           th:href="@{/css/paidholiday.css}">
 </head>
 
-<body>
+<body th:with="isDemoEmployee=${employee.employeeId == 'E0002'}">
+
     <div class="page-container">
 
         <!-- ヘッダー -->
         <header class="header">
+
             <div class="header-information">
-                <h1>
-                    株式会社アテンダンス
-                </h1>
+
+                <div class="company-information">
+
+                    <h1>
+                        株式会社アテンダンス
+                    </h1>
+
+                    <span class="demo-badge"
+                          th:if="${isDemoEmployee}">
+                        DEMO
+                    </span>
+
+                </div>
 
                 <p>
                     社員名：
-
                     <span th:text="${employee.employeeName}">
                         山田太郎
                     </span>
                 </p>
+
             </div>
 
             <div class="header-actions">
-                <!-- ホームへ戻る -->
+
                 <a class="header-home-link"
                    th:href="@{/home}">
                     ◀ ホームへ戻る
                 </a>
 
-                <!-- ログアウト -->
                 <form class="logout-form"
                       th:action="@{/logout}"
                       method="post">
@@ -50,13 +61,29 @@
                             type="submit">
                         ログアウト
                     </button>
-                </form>
-            </div>
-        </header>
 
+                </form>
+
+            </div>
+
+        </header>
 
         <!-- メイン部分 -->
         <main class="main-content">
+
+            <!-- デモ従業員への案内 -->
+            <div class="demo-banner"
+                 th:if="${isDemoEmployee}">
+
+                <strong>
+                    デモ従業員としてログインしています
+                </strong>
+
+                <p>
+                    出退勤の打刻や勤務予定の登録、勤怠修正・有給休暇の申請をお試しいただけます。
+                </p>
+
+            </div>
 
             <!-- 申請完了メッセージ -->
             <div class="message success-message"
@@ -72,9 +99,9 @@
                 入力内容を確認してください
             </div>
 
-
             <!-- 画面タイトル -->
             <section class="page-title">
+
                 <h1>
                     有給申請
                 </h1>
@@ -82,12 +109,14 @@
                 <p>
                     取得する休暇区分・日付・申請理由を入力してください
                 </p>
-            </section>
 
+            </section>
 
             <!-- 有給申請フォーム -->
             <section class="application-card">
+
                 <div class="card-heading">
+
                     <h2>
                         申請内容
                     </h2>
@@ -95,8 +124,8 @@
                     <p>
                         必要事項を入力して申請してください
                     </p>
-                </div>
 
+                </div>
 
                 <form id="paidHolidayForm"
                       class="application-form"
@@ -105,6 +134,7 @@
 
                     <!-- 休暇区分 -->
                     <div class="form-item">
+
                         <label for="holidayType">
                             休暇区分
 
@@ -132,13 +162,16 @@
                             <option value="3">
                                 午後半休
                             </option>
-                        </select>
-                    </div>
 
+                        </select>
+
+                    </div>
 
                     <!-- 取得日 -->
                     <div class="date-section">
+
                         <div class="date-section-header">
+
                             <div>
                                 <h3>
                                     取得日
@@ -154,20 +187,21 @@
                                     type="button">
                                 ＋ 日付を追加
                             </button>
+
                         </div>
 
-
-                        <!-- 日付を追加する場所 -->
                         <div id="dateContainer"
                              class="date-container">
 
                             <!-- 最初の日付 -->
                             <div class="date-row">
+
                                 <div class="date-number">
                                     1
                                 </div>
 
                                 <div class="date-input-area">
+
                                     <label>
                                         日付
 
@@ -180,6 +214,7 @@
                                            type="date"
                                            name="holidays"
                                            required>
+
                                 </div>
 
                                 <button class="remove-date-button"
@@ -187,13 +222,16 @@
                                         disabled>
                                     削除
                                 </button>
-                            </div>
-                        </div>
-                    </div>
 
+                            </div>
+
+                        </div>
+
+                    </div>
 
                     <!-- 申請理由 -->
                     <div class="form-item reason-item">
+
                         <label for="reason">
                             申請理由
 
@@ -211,36 +249,41 @@
                         <p class="character-information">
                             500文字以内
                         </p>
-                    </div>
 
+                    </div>
 
                     <!-- JavaScriptで表示するエラー -->
                     <div id="clientErrorMessage"
                          class="client-error-message"
-                         role="alert">
-                    </div>
-
+                         role="alert"></div>
 
                     <!-- 申請ボタン -->
                     <div class="application-actions">
+
                         <button class="application-button"
                                 type="submit">
                             有給を申請
                         </button>
-                    </div>
-                </form>
-            </section>
-        </main>
-    </div>
 
+                    </div>
+
+                </form>
+
+            </section>
+
+        </main>
+
+    </div>
 
     <!-- 追加する日付行 -->
     <template id="dateRowTemplate">
+
         <div class="date-row">
-            <div class="date-number">
-            </div>
+
+            <div class="date-number"></div>
 
             <div class="date-input-area">
+
                 <label>
                     日付
 
@@ -253,301 +296,190 @@
                        type="date"
                        name="holidays"
                        required>
+
             </div>
 
             <button class="remove-date-button"
                     type="button">
                 削除
             </button>
+
         </div>
+
     </template>
 
-
     <script>
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-                const paidHolidayForm =
-                    document.getElementById(
-                        "paidHolidayForm"
-                    );
+        document.addEventListener("DOMContentLoaded", function () {
 
-                const dateContainer =
-                    document.getElementById(
-                        "dateContainer"
-                    );
+            const paidHolidayForm =
+                document.getElementById("paidHolidayForm");
 
-                const dateRowTemplate =
-                    document.getElementById(
-                        "dateRowTemplate"
-                    );
+            const dateContainer =
+                document.getElementById("dateContainer");
 
-                const addDateButton =
-                    document.getElementById(
-                        "addDateButton"
-                    );
+            const dateRowTemplate =
+                document.getElementById("dateRowTemplate");
 
-                const clientErrorMessage =
-                    document.getElementById(
-                        "clientErrorMessage"
-                    );
+            const addDateButton =
+                document.getElementById("addDateButton");
 
+            const clientErrorMessage =
+                document.getElementById("clientErrorMessage");
 
-                /*
-                 * 日付を追加する
-                 */
-                addDateButton.addEventListener(
-                    "click",
-                    function () {
-                        const templateContent =
-                            dateRowTemplate
-                                .content
-                                .cloneNode(true);
+            // 日付を追加する
+            addDateButton.addEventListener("click", function () {
 
-                        const newDateRow =
-                            templateContent.querySelector(
-                                ".date-row"
-                            );
+                const templateContent =
+                    dateRowTemplate.content.cloneNode(true);
 
-                        const removeButton =
-                            newDateRow.querySelector(
-                                ".remove-date-button"
-                            );
+                const newDateRow =
+                    templateContent.querySelector(".date-row");
 
+                const removeButton =
+                    newDateRow.querySelector(".remove-date-button");
 
-                        removeButton.addEventListener(
-                            "click",
-                            function () {
-                                newDateRow.remove();
-                                updateDateRows();
-                                clearClientError();
-                            }
-                        );
+                removeButton.addEventListener("click", function () {
 
+                    newDateRow.remove();
 
-                        dateContainer.appendChild(
-                            newDateRow
-                        );
+                    updateDateRows();
+                    clearClientError();
+                });
 
-                        setNextDate(
-                            newDateRow
-                        );
+                dateContainer.appendChild(newDateRow);
 
-                        updateDateRows();
-                        clearClientError();
-                    }
-                );
-
-
-                /*
-                 * 前の入力日の翌日を設定する
-                 */
-                function setNextDate(
-                        newDateRow) {
-
-                    const dateInputs =
-                        dateContainer.querySelectorAll(
-                            ".holiday-date"
-                        );
-
-                    if (dateInputs.length < 2) {
-                        return;
-                    }
-
-
-                    const previousInput =
-                        dateInputs[
-                            dateInputs.length - 2
-                        ];
-
-                    const newInput =
-                        newDateRow.querySelector(
-                            ".holiday-date"
-                        );
-
-
-                    if (previousInput.value === "") {
-                        return;
-                    }
-
-
-                    const nextDate =
-                        new Date(
-                            previousInput.value
-                            + "T00:00:00"
-                        );
-
-                    nextDate.setDate(
-                        nextDate.getDate() + 1
-                    );
-
-                    newInput.value =
-                        formatDate(nextDate);
-                }
-
-
-                /*
-                 * Dateをyyyy-MM-dd形式へ変換する
-                 */
-                function formatDate(
-                        date) {
-
-                    const year =
-                        date.getFullYear();
-
-                    const month =
-                        String(
-                            date.getMonth() + 1
-                        ).padStart(
-                            2,
-                            "0"
-                        );
-
-                    const day =
-                        String(
-                            date.getDate()
-                        ).padStart(
-                            2,
-                            "0"
-                        );
-
-                    return year
-                        + "-"
-                        + month
-                        + "-"
-                        + day;
-                }
-
-
-                /*
-                 * 行番号と削除ボタンを更新する
-                 */
-                function updateDateRows() {
-                    const dateRows =
-                        dateContainer.querySelectorAll(
-                            ".date-row"
-                        );
-
-                    dateRows.forEach(
-                        function (
-                                dateRow,
-                                index) {
-
-                            const dateNumber =
-                                dateRow.querySelector(
-                                    ".date-number"
-                                );
-
-                            const removeButton =
-                                dateRow.querySelector(
-                                    ".remove-date-button"
-                                );
-
-                            dateNumber.textContent =
-                                index + 1;
-
-                            removeButton.disabled =
-                                dateRows.length === 1;
-                        }
-                    );
-                }
-
-
-                /*
-                 * 送信前に入力内容を確認する
-                 */
-                paidHolidayForm.addEventListener(
-                    "submit",
-                    function (event) {
-                        clearClientError();
-
-                        const dateInputs =
-                            dateContainer.querySelectorAll(
-                                ".holiday-date"
-                            );
-
-                        const selectedDates =
-                            new Set();
-
-
-                        for (const dateInput
-                                of dateInputs) {
-
-                            if (dateInput.value === "") {
-                                event.preventDefault();
-
-                                showClientError(
-                                    "取得日を入力してください。"
-                                );
-
-                                dateInput.focus();
-                                return;
-                            }
-
-
-                            if (selectedDates.has(
-                                    dateInput.value
-                            )) {
-                                event.preventDefault();
-
-                                showClientError(
-                                    "同じ日付が複数選択されています。"
-                                );
-
-                                dateInput.focus();
-                                return;
-                            }
-
-
-                            selectedDates.add(
-                                dateInput.value
-                            );
-                        }
-
-
-                        const confirmed =
-                            window.confirm(
-                                "入力した内容で有給を申請しますか？"
-                            );
-
-                        if (!confirmed) {
-                            event.preventDefault();
-                        }
-                    }
-                );
-
-
-                /*
-                 * JavaScriptのエラーを表示する
-                 */
-                function showClientError(
-                        message) {
-
-                    clientErrorMessage.textContent =
-                        message;
-
-                    clientErrorMessage.classList.add(
-                        "is-visible"
-                    );
-                }
-
-
-                /*
-                 * JavaScriptのエラーを消す
-                 */
-                function clearClientError() {
-                    clientErrorMessage.textContent =
-                        "";
-
-                    clientErrorMessage.classList.remove(
-                        "is-visible"
-                    );
-                }
-
-
+                setNextDate(newDateRow);
                 updateDateRows();
+                clearClientError();
+            });
+
+            // 前の入力日の翌日を設定する
+            function setNextDate(newDateRow) {
+
+                const dateInputs =
+                    dateContainer.querySelectorAll(".holiday-date");
+
+                if (dateInputs.length < 2) {
+                    return;
+                }
+
+                const previousInput =
+                    dateInputs[dateInputs.length - 2];
+
+                const newInput =
+                    newDateRow.querySelector(".holiday-date");
+
+                if (previousInput.value === "") {
+                    return;
+                }
+
+                const nextDate =
+                    new Date(previousInput.value + "T00:00:00");
+
+                nextDate.setDate(nextDate.getDate() + 1);
+
+                newInput.value = formatDate(nextDate);
             }
-        );
+
+            // 日付をyyyy-MM-dd形式へ変換する
+            function formatDate(date) {
+
+                const year = date.getFullYear();
+
+                const month =
+                    String(date.getMonth() + 1).padStart(2, "0");
+
+                const day =
+                    String(date.getDate()).padStart(2, "0");
+
+                return year + "-" + month + "-" + day;
+            }
+
+            // 行番号と削除ボタンを更新する
+            function updateDateRows() {
+
+                const dateRows =
+                    dateContainer.querySelectorAll(".date-row");
+
+                dateRows.forEach(function (dateRow, index) {
+
+                    const dateNumber =
+                        dateRow.querySelector(".date-number");
+
+                    const removeButton =
+                        dateRow.querySelector(".remove-date-button");
+
+                    dateNumber.textContent = index + 1;
+
+                    removeButton.disabled = dateRows.length === 1;
+                });
+            }
+
+            // 送信前に入力内容を確認する
+            paidHolidayForm.addEventListener("submit", function (event) {
+
+                clearClientError();
+
+                const dateInputs =
+                    dateContainer.querySelectorAll(".holiday-date");
+
+                const selectedDates = new Set();
+
+                for (const dateInput of dateInputs) {
+
+                    if (dateInput.value === "") {
+
+                        event.preventDefault();
+
+                        showClientError("取得日を入力してください。");
+
+                        dateInput.focus();
+
+                        return;
+                    }
+
+                    if (selectedDates.has(dateInput.value)) {
+
+                        event.preventDefault();
+
+                        showClientError(
+                            "同じ日付が複数選択されています。"
+                        );
+
+                        dateInput.focus();
+
+                        return;
+                    }
+
+                    selectedDates.add(dateInput.value);
+                }
+
+                if (!window.confirm(
+                    "入力した内容で有給を申請しますか？"
+                )) {
+                    event.preventDefault();
+                }
+            });
+
+            // エラーを表示する
+            function showClientError(message) {
+
+                clientErrorMessage.textContent = message;
+
+                clientErrorMessage.classList.add("is-visible");
+            }
+
+            // エラーを消す
+            function clearClientError() {
+
+                clientErrorMessage.textContent = "";
+
+                clientErrorMessage.classList.remove("is-visible");
+            }
+
+            updateDateRows();
+        });
     </script>
+
 </body>
 </html>

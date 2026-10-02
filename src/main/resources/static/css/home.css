@@ -13,7 +13,6 @@ body {
 /* 画面全体 */
 body {
     position: relative;
-
     min-height: 100vh;
     padding: 40px 24px;
 
@@ -28,7 +27,6 @@ body {
         Meiryo,
         sans-serif;
 
-    /* ログイン画面と同じ水色背景 */
     background:
         radial-gradient(
             circle at 12% 30%,
@@ -54,6 +52,10 @@ body {
         );
 
     overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
 }
 
 /* 背景の大きな波 */
@@ -120,7 +122,6 @@ body::after {
 
     width: 1100px;
     max-width: 100%;
-
     margin: 0 auto;
 
     background: rgba(255, 255, 255, 0.92);
@@ -142,6 +143,7 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
 
     min-height: 120px;
     padding: 25px 35px;
@@ -156,8 +158,22 @@ body::after {
         );
 }
 
+.header-information {
+    min-width: 0;
+}
+
+/* 会社名とDEMO */
+.company-information {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-bottom: 12px;
+}
+
 .header h1 {
-    margin: 0 0 12px;
+    margin: 0;
 
     font-size: 28px;
     font-weight: 700;
@@ -172,8 +188,58 @@ body::after {
     font-size: 16px;
 }
 
+/* 黄色のDEMO */
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    min-height: 27px;
+    padding: 4px 11px;
+
+    color: #694700;
+    background: #fff1bd;
+
+    border: 1px solid #f2d477;
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+/* デモの説明 */
+.demo-banner {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+
+    color: #705000;
+    background: #fff8df;
+
+    border: 1px solid #ead18a;
+    border-radius: 12px;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.demo-banner strong {
+    display: block;
+    margin-bottom: 4px;
+
+    font-size: 15px;
+}
+
+.demo-banner p {
+    margin: 0;
+}
+
 /* ログアウトフォーム */
 .logout-form {
+    flex-shrink: 0;
     margin: 0;
 }
 
@@ -241,6 +307,7 @@ main {
     border-right: 1px solid #c8e5f5;
     border-bottom: 1px solid #c8e5f5;
     border-left: 1px solid #c8e5f5;
+
     border-radius: 0 0 9px 9px;
 
     text-align: center;
@@ -302,7 +369,6 @@ main {
 .attendance-button {
     width: 100%;
     min-height: 60px;
-
     padding: 12px 20px;
 
     color: #ffffff;
@@ -332,12 +398,26 @@ main {
         filter 0.2s;
 }
 
-.attendance-button:hover {
+.attendance-button:hover:not(:disabled) {
     transform: translateY(-2px);
     filter: brightness(1.05);
 
     box-shadow:
         0 11px 23px rgba(9, 105, 223, 0.3);
+}
+
+/* 打刻できないボタン */
+.attendance-button:disabled {
+    color: #718096;
+    background: #dbe5ec;
+
+    box-shadow: none;
+
+    cursor: not-allowed;
+
+    transform: none;
+    filter: none;
+    opacity: 0.8;
 }
 
 /* 打刻された時刻 */
@@ -351,7 +431,6 @@ main {
 
 .attendance-time span {
     display: block;
-
     margin-top: 6px;
 
     color: #17335c;
@@ -424,103 +503,6 @@ main {
     font-size: 13px;
 }
 
-/* タブレット・スマートフォン */
-@media screen and (max-width: 750px) {
-    body {
-        padding: 20px 12px;
-    }
-
-    .header {
-        align-items: flex-start;
-        padding: 22px;
-    }
-
-    .header h1 {
-        font-size: 20px;
-    }
-
-    .header p {
-        font-size: 14px;
-    }
-
-    .logout-button {
-        min-width: auto;
-        padding: 10px 13px;
-    }
-
-    main {
-        padding: 30px 20px 35px;
-    }
-
-    #currentTime {
-        font-size: 35px;
-    }
-
-    .attendance-section {
-        gap: 15px;
-    }
-
-    .attendance-card {
-        width: 50%;
-        padding: 14px;
-    }
-
-    .menu {
-        grid-template-columns: 1fr;
-    }
-
-    .menu-card {
-        min-height: 105px;
-    }
-}
-
-/* 小さいスマートフォン */
-@media screen and (max-width: 450px) {
-    .header {
-        gap: 15px;
-    }
-
-    .attendance-section {
-        flex-direction: column;
-    }
-
-    .attendance-card {
-        width: 100%;
-    }
-}
-
-/* ========================================
-   打刻できないボタン
-   ======================================== */
-
-/* 出勤済み・退勤済み・出勤前の退勤ボタン */
-.attendance-button:disabled {
-    color: #718096;
-
-    background: #dbe5ec;
-
-    box-shadow: none;
-
-    cursor: not-allowed;
-
-    transform: none;
-    filter: none;
-
-    opacity: 0.8;
-}
-
-/* 無効なボタンにカーソルを合わせても動かさない */
-.attendance-button:disabled:hover {
-    color: #718096;
-
-    background: #dbe5ec;
-
-    box-shadow: none;
-
-    transform: none;
-    filter: none;
-}
-
 /* 成功メッセージ */
 .success-message {
     width: 430px;
@@ -557,4 +539,90 @@ main {
     font-size: 14px;
     font-weight: 600;
     text-align: center;
+}
+
+/* キーボード操作時の表示 */
+button:focus-visible,
+.menu-card:focus-visible {
+    outline: 3px solid #e5ad26;
+    outline-offset: 4px;
+}
+
+/* タブレット・スマートフォン */
+@media screen and (max-width: 750px) {
+    body {
+        padding: 20px 12px;
+    }
+
+    .header {
+        align-items: flex-start;
+        padding: 22px;
+        gap: 16px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .company-information {
+        gap: 8px;
+    }
+
+    .logout-button {
+        min-width: auto;
+        padding: 10px 13px;
+    }
+
+    main {
+        padding: 30px 20px 35px;
+    }
+
+    .demo-banner {
+        padding: 14px 16px;
+    }
+
+    #currentTime {
+        font-size: 35px;
+    }
+
+    .attendance-section {
+        gap: 15px;
+    }
+
+    .attendance-card {
+        width: calc((100% - 15px) / 2);
+        padding: 14px;
+    }
+
+    .menu {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-card {
+        min-height: 105px;
+    }
+}
+
+/* 小さいスマートフォン */
+@media screen and (max-width: 450px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .logout-form {
+        margin-left: auto;
+    }
+
+    .attendance-section {
+        flex-direction: column;
+    }
+
+    .attendance-card {
+        width: 100%;
+    }
 }

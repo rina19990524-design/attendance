@@ -1,35 +1,47 @@
 <!DOCTYPE html>
-<html lang="ja"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>管理者ホーム</title>
+
     <link rel="stylesheet"
           th:href="@{/css/admin.css}">
 </head>
 
-<body>
+<body th:with="isDemoAdmin=${employee.employeeId == 'E0003'}">
 
-    <!-- 上部の管理者情報 -->
-    <header>
+<div class="page-container">
 
-        <div>
-            会社名：株式会社アテンダンス
+    <header class="header">
+
+        <div class="company-information">
+            <span class="company-name">
+                会社名：株式会社アテンダンス
+            </span>
+
+            <span class="demo-badge"
+                  th:if="${isDemoAdmin}">
+                DEMO
+            </span>
         </div>
 
-        <div>
+        <div class="admin-information">
             管理者名：
             <span th:text="${employee.employeeName}">
                 山田太郎
             </span>
         </div>
 
-        <!-- ログアウト -->
-        <form th:action="@{/logout}"
+        <form class="logout-form"
+              th:action="@{/logout}"
               method="post">
 
-            <button type="submit">
+            <button class="logout-button"
+                    type="submit">
                 ログアウト
             </button>
 
@@ -37,77 +49,80 @@
 
     </header>
 
-
-    <!-- 画面タイトル -->
-    <h1>管理者ホーム</h1>
-
-
-    <!-- 管理者メニュー -->
     <main>
 
-        <!-- 社員管理 -->
-        <div>
-            <a th:href="@{/admin/users}">
-                社員管理
-            </a>
+        <div class="demo-banner"
+             th:if="${isDemoAdmin}"
+             role="status">
+
+            <strong>
+                デモ管理者としてログインしています
+            </strong>
+
+            <p>
+                画面の閲覧や検索をお試しいただけます。
+                デモアカウントでは、登録・更新・パスワード再設定・申請の承認はできません。
+            </p>
+
         </div>
 
+        <h1 class="page-title">管理者ホーム</h1>
 
-        <!-- 勤怠実績一覧 -->
-        <div>
-            <a th:href="@{/admin/attendance}">
-                勤怠実績一覧
+        <div class="admin-menu">
+
+            <a class="menu-card"
+               th:href="@{/admin/users}">
+
+                <span class="menu-category">社員情報</span>
+                <span class="menu-title">社員管理</span>
+
             </a>
+
+            <a class="menu-card"
+               th:href="@{/admin/attendance}">
+
+                <span class="menu-category">勤怠確認</span>
+                <span class="menu-title">勤怠実績一覧</span>
+
+            </a>
+
+            <a class="menu-card"
+               th:href="@{/admin/attendance-requests}">
+
+                <span class="menu-category">承認管理</span>
+                <span class="menu-title">勤怠申請</span>
+
+                <span class="request-count">
+                    未承認
+                    <strong th:text="${attendanceRequestCount}">
+                        0
+                    </strong>
+                    件
+                </span>
+
+            </a>
+
+            <a class="menu-card"
+               th:href="@{/admin/paid-holiday-requests}">
+
+                <span class="menu-category">承認管理</span>
+                <span class="menu-title">有給申請</span>
+
+                <span class="request-count">
+                    未承認
+                    <strong th:text="${paidHolidayRequestCount}">
+                        0
+                    </strong>
+                    件
+                </span>
+
+            </a>
+
         </div>
 
-
-        <!-- 勤怠修正申請 -->
-        <!-- 勤怠修正申請 -->
-		<div>
-		    <a th:href="@{/admin/attendance-requests}">
-		
-		        <span class="request-title">
-		            勤怠申請
-		        </span>
-		
-		        <span class="request-count">
-		
-		            未承認　
-		
-		            <strong th:text="${attendanceRequestCount}">
-		                0
-		            </strong>
-		
-		            件
-		
-		        </span>
-		
-		    </a>
-		</div>
-
-
-		<!-- 有給申請 -->
-		<div>
-		    <a th:href="@{/admin/paid-holiday-requests}">
-		
-		        <span class="request-title">
-		            有給申請
-		        </span>
-		
-		        <span class="request-count">
-		
-		            未承認　
-		
-		            <strong th:text="${paidHolidayRequestCount}">
-		                0
-		            </strong>
-		
-		            件
-		
-		        </span>
-		
-		    </a>
     </main>
+
+</div>
 
 </body>
 </html>

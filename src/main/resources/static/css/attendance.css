@@ -15,7 +15,9 @@ body {
 body {
     min-height: 100vh;
     padding: 16px;
+
     color: #153458;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -24,6 +26,7 @@ body {
         "Yu Gothic",
         Meiryo,
         sans-serif;
+
     background-color: #ffffff;
 }
 
@@ -38,11 +41,15 @@ select {
     width: 100%;
     max-width: 1500px;
     min-height: calc(100vh - 32px);
+
     margin: 0 auto;
     overflow: hidden;
+
     background-color: #ffffff;
+
     border: 1px solid #c7ddec;
     border-radius: 18px;
+
     box-shadow: 0 12px 32px rgba(17, 65, 111, 0.11);
 }
 
@@ -51,9 +58,13 @@ select {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
+
     min-height: 110px;
     padding: 24px 38px;
+
     color: #ffffff;
+
     background: linear-gradient(
         110deg,
         #082b5c 0%,
@@ -62,18 +73,82 @@ select {
     );
 }
 
+.header-information {
+    min-width: 0;
+}
+
+.company-information {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
 .header-information h1 {
     margin: 0;
+
     font-size: 23px;
     letter-spacing: 0.02em;
 }
 
 .header-information p {
     margin: 11px 0 0;
+
     font-size: 15px;
     font-weight: 700;
 }
 
+/* 黄色のDEMO */
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    min-height: 27px;
+    padding: 4px 11px;
+
+    color: #694700;
+    background: #fff1bd;
+
+    border: 1px solid #f2d477;
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+
+    white-space: nowrap;
+}
+
+/* デモの説明 */
+.demo-banner {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+
+    color: #705000;
+    background: #fff8df;
+
+    border: 1px solid #ead18a;
+    border-radius: 12px;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.demo-banner strong {
+    display: block;
+    margin-bottom: 4px;
+
+    font-size: 15px;
+}
+
+.demo-banner p {
+    margin: 0;
+}
+
+/* ヘッダーの操作 */
 .header-actions {
     display: flex;
     align-items: center;
@@ -85,14 +160,20 @@ select {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     min-height: 46px;
     padding: 0 22px;
+
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
+
     white-space: nowrap;
+
     border-radius: 9px;
+
     cursor: pointer;
+
     transition:
         transform 0.2s ease,
         background-color 0.2s ease,
@@ -101,12 +182,15 @@ select {
 
 .header-home-link {
     color: #ffffff;
+
     background: linear-gradient(
         135deg,
         #2b9cf0 0%,
         #0877df 100%
     );
+
     border: 1px solid #2b9cf0;
+
     box-shadow: 0 6px 14px rgba(0, 70, 145, 0.2);
 }
 
@@ -117,6 +201,7 @@ select {
 .logout-button {
     color: #ffffff;
     background-color: rgba(255, 255, 255, 0.08);
+
     border: 1px solid rgba(255, 255, 255, 0.65);
 }
 
@@ -146,14 +231,17 @@ select {
 .message {
     margin: 0 0 20px;
     padding: 13px 17px;
+
     font-size: 14px;
     font-weight: 700;
+
     border-radius: 9px;
 }
 
 .success-message {
     color: #08705d;
     background-color: #e4f8f1;
+
     border: 1px solid #a9dfd2;
 }
 
@@ -161,15 +249,19 @@ select {
 .client-error-message {
     color: #a3453d;
     background-color: #fff0ee;
+
     border: 1px solid #efc0bb;
 }
 
 .client-error-message {
     display: none;
+
     margin-top: 18px;
     padding: 13px 16px;
+
     font-size: 14px;
     font-weight: 700;
+
     border-radius: 9px;
 }
 
@@ -180,13 +272,16 @@ select {
 /* 勤務予定登録・編集 */
 .registration-section {
     padding: 28px 30px 32px;
+
     background: linear-gradient(
         120deg,
         #ffffff 0%,
         #f2faff 100%
     );
+
     border: 1px solid #b9ddf0;
     border-radius: 14px;
+
     box-shadow: 0 8px 22px rgba(23, 98, 157, 0.07);
 }
 
@@ -195,32 +290,44 @@ select {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+
     margin-bottom: 24px;
 }
 
 .section-title h2 {
     margin: 0;
+
     color: #0a376d;
+
     font-size: 23px;
 }
 
 .section-title p {
     margin: 7px 0 0;
+
     color: #70889f;
+
     font-size: 13px;
 }
 
 .add-schedule-button {
     min-height: 43px;
     padding: 0 18px;
+
     color: #0b6fc8;
+
     font-size: 14px;
     font-weight: 700;
+
     white-space: nowrap;
+
     background-color: #ffffff;
+
     border: 1px solid #75bced;
     border-radius: 9px;
+
     cursor: pointer;
+
     transition:
         color 0.2s ease,
         background-color 0.2s ease,
@@ -230,6 +337,7 @@ select {
 .add-schedule-button:hover {
     color: #ffffff;
     background-color: #1688df;
+
     transform: translateY(-1px);
 }
 
@@ -241,6 +349,7 @@ select {
 .schedule-header,
 .schedule-row {
     display: grid;
+
     grid-template-columns:
         55px
         minmax(170px, 1.25fr)
@@ -248,13 +357,16 @@ select {
         minmax(150px, 1fr)
         minmax(150px, 1fr)
         80px;
+
     align-items: center;
     gap: 12px;
 }
 
 .schedule-header {
     padding: 0 14px 9px;
+
     color: #234f7c;
+
     font-size: 13px;
     font-weight: 700;
     text-align: center;
@@ -268,7 +380,9 @@ select {
 
 .schedule-row {
     padding: 14px;
+
     background-color: #f6fbfe;
+
     border: 1px solid #c9e2ef;
     border-radius: 10px;
 }
@@ -277,13 +391,18 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 38px;
     height: 44px;
     margin: 0 auto;
+
     color: #0d69b2;
+
     font-size: 14px;
     font-weight: 800;
+
     background-color: #e3f4ff;
+
     border-radius: 8px;
 }
 
@@ -300,30 +419,39 @@ select {
     width: 100%;
     height: 44px;
     padding: 0 12px;
+
     color: #173f68;
+
     font-size: 14px;
+
     background-color: #ffffff;
+
     border: 1px solid #b6d5e8;
     border-radius: 8px;
+
     outline: none;
 }
 
 .schedule-field input:focus,
 .schedule-field select:focus {
     border-color: #1788df;
+
     box-shadow: 0 0 0 3px rgba(23, 136, 223, 0.12);
 }
 
 .schedule-field input.is-disabled {
     color: #8b969f;
     background-color: #edf1f4;
+
     border-color: #d6dde2;
+
     cursor: not-allowed;
 }
 
 .working-date.is-editing-date {
     color: #536779;
     background-color: #edf2f5;
+
     cursor: not-allowed;
 }
 
@@ -335,13 +463,19 @@ select {
     width: 100%;
     height: 40px;
     padding: 0 12px;
+
     color: #b14747;
+
     font-size: 13px;
     font-weight: 700;
+
     background-color: #ffffff;
+
     border: 1px solid #e2a9a9;
     border-radius: 8px;
+
     cursor: pointer;
+
     transition:
         color 0.2s ease,
         background-color 0.2s ease;
@@ -355,7 +489,9 @@ select {
 .remove-schedule-button:disabled {
     color: #a8b1b8;
     background-color: #f2f4f5;
+
     border-color: #d5dadd;
+
     cursor: not-allowed;
 }
 
@@ -363,6 +499,7 @@ select {
 .register-action {
     display: flex;
     justify-content: center;
+
     margin-top: 25px;
 }
 
@@ -370,18 +507,25 @@ select {
     min-width: 220px;
     min-height: 50px;
     padding: 0 30px;
+
     color: #ffffff;
+
     font-size: 15px;
     font-weight: 700;
+
     background: linear-gradient(
         135deg,
         #2b9cf0 0%,
         #0877df 100%
     );
+
     border: none;
     border-radius: 9px;
+
     box-shadow: 0 8px 18px rgba(8, 119, 223, 0.22);
+
     cursor: pointer;
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -389,6 +533,7 @@ select {
 
 .register-button:hover {
     transform: translateY(-2px);
+
     box-shadow: 0 11px 23px rgba(8, 119, 223, 0.28);
 }
 
@@ -396,9 +541,12 @@ select {
 .list-section {
     margin-top: 30px;
     padding: 28px 30px 34px;
+
     background-color: #ffffff;
+
     border: 1px solid #b9ddf0;
     border-radius: 14px;
+
     box-shadow: 0 8px 22px rgba(23, 98, 157, 0.07);
 }
 
@@ -407,19 +555,25 @@ select {
     align-items: center;
     justify-content: space-between;
     gap: 22px;
+
     margin-bottom: 22px;
 }
 
 .list-header h2 {
     margin: 0;
+
     color: #0a376d;
+
     font-size: 23px;
 }
 
 .list-header p {
     margin: 7px 0 0;
+
     color: #70889f;
+
     font-size: 13px;
+    line-height: 1.7;
 }
 
 /* 月移動 */
@@ -427,12 +581,18 @@ select {
     display: flex;
     align-items: center;
     gap: 14px;
+
     padding: 8px 11px;
+
     color: #153f70;
+
     font-size: 14px;
     font-weight: 700;
+
     white-space: nowrap;
+
     background-color: #edf8ff;
+
     border: 1px solid #b9dff3;
     border-radius: 9px;
 }
@@ -441,13 +601,18 @@ select {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     width: 32px;
     height: 32px;
+
     color: #0b79ce;
     text-decoration: none;
+
     background-color: #ffffff;
+
     border: 1px solid #9dd1ef;
     border-radius: 50%;
+
     transition:
         color 0.2s ease,
         background-color 0.2s ease;
@@ -462,6 +627,7 @@ select {
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
+
     border: 1px solid #b7d9eb;
     border-radius: 10px;
 }
@@ -469,16 +635,20 @@ select {
 .attendance-table {
     width: 100%;
     min-width: 1100px;
+
     border-spacing: 0;
     border-collapse: separate;
+
     table-layout: fixed;
 }
 
 .attendance-table th,
 .attendance-table td {
     padding: 13px 10px;
+
     text-align: center;
     vertical-align: middle;
+
     border-right: 1px solid #c9dfeb;
     border-bottom: 1px solid #c9dfeb;
 }
@@ -494,9 +664,12 @@ select {
 
 .attendance-table thead th {
     color: #153f70;
+
     font-size: 13px;
     font-weight: 700;
+
     white-space: nowrap;
+
     background: linear-gradient(
         180deg,
         #e5f6ff 0%,
@@ -506,7 +679,9 @@ select {
 
 .attendance-table tbody td {
     color: #294966;
+
     font-size: 13px;
+
     background-color: #ffffff;
 }
 
@@ -544,7 +719,7 @@ select {
     width: 13%;
 }
 
-/* 行・状態ラベル */
+/* 行の状態 */
 .holiday-row td {
     color: #697680 !important;
     background-color: #f2f4f6 !important;
@@ -554,10 +729,7 @@ select {
     background-color: #fffaf0 !important;
 }
 
-/*
- * 勤怠修正・公休・有給のラベル共通。
- * 複数の申請が同じ日にある場合は折り返して表示する。
- */
+/* 状態ラベル共通 */
 .holiday-badge,
 .requesting-badge,
 .approved-badge,
@@ -566,47 +738,97 @@ select {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     min-width: 76px;
     min-height: 29px;
+
     margin: 2px;
     padding: 4px 10px;
+
     font-size: 12px;
     font-weight: 700;
     line-height: 1.4;
+
     vertical-align: middle;
+
     border-radius: 999px;
 }
 
 .holiday-badge {
     color: #59666f;
     background-color: #e7ebee;
+
     border: 1px solid #cbd2d7;
 }
 
 .requesting-badge {
     color: #9b6200;
     background-color: #fff0cf;
+
     border: 1px solid #efd18a;
 }
 
 .approved-badge {
     color: #08705d;
     background-color: #dcf6ef;
+
     border: 1px solid #a8dfd2;
 }
 
-/* 有給申請中：黄色 */
 .paid-leave-pending-badge {
     color: #8a5700;
     background-color: #fff0c7;
+
     border: 1px solid #e6c570;
 }
 
-/* 有給承認済み：緑色 */
 .paid-leave-approved-badge {
     color: #086b50;
     background-color: #d9f5e8;
+
     border: 1px solid #91d5b3;
+}
+
+/* 申請中の表示と取消ボタン */
+.request-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    margin: 3px 2px;
+
+    vertical-align: middle;
+}
+
+.cancel-request-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.cancel-request-button {
+    min-height: 29px;
+    padding: 4px 9px;
+
+    color: #a3453d;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    background-color: #ffffff;
+
+    border: 1px solid #d99b95;
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+.cancel-request-button:hover {
+    color: #ffffff;
+    background-color: #b94f46;
 }
 
 /* 予定編集 */
@@ -617,13 +839,19 @@ select {
 .edit-schedule-button {
     min-height: 34px;
     padding: 0 13px;
+
     color: #0b6fc8;
+
     font-size: 12px;
     font-weight: 700;
+
     background-color: #ffffff;
+
     border: 1px solid #75bced;
     border-radius: 7px;
+
     cursor: pointer;
+
     transition:
         color 0.2s ease,
         background-color 0.2s ease,
@@ -633,6 +861,7 @@ select {
 .edit-schedule-button:hover {
     color: #ffffff;
     background-color: #1688df;
+
     transform: translateY(-1px);
 }
 
@@ -641,28 +870,41 @@ select {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     min-width: 72px;
     min-height: 29px;
     padding: 4px 9px;
+
     font-size: 11px;
     font-weight: 700;
+
     border-radius: 999px;
 }
 
 .locked-label {
     color: #8d4f4f;
     background-color: #faeaea;
+
     border: 1px solid #e5baba;
 }
 
 .unregistered-label {
     color: #667681;
     background-color: #edf1f4;
+
     border: 1px solid #d0d8dd;
+}
+
+/* キーボード操作時 */
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #e5ad26;
+    outline-offset: 3px;
 }
 
 /* タブレット */
 @media (max-width: 1050px) {
+
     body {
         padding: 10px;
     }
@@ -683,6 +925,7 @@ select {
     .logout-button {
         padding-right: 16px;
         padding-left: 16px;
+
         font-size: 13px;
     }
 
@@ -703,8 +946,11 @@ select {
 
     .mobile-label {
         display: block;
+
         margin-bottom: 6px;
+
         color: #234f7c;
+
         font-size: 12px;
         font-weight: 700;
     }
@@ -721,6 +967,7 @@ select {
 
 /* スマートフォン */
 @media (max-width: 700px) {
+
     body {
         padding: 6px;
     }
@@ -734,7 +981,12 @@ select {
         align-items: flex-start;
         flex-direction: column;
         gap: 18px;
+
         padding: 22px 17px;
+    }
+
+    .company-information {
+        gap: 8px;
     }
 
     .header-information h1 {
@@ -748,6 +1000,7 @@ select {
     .header-actions {
         align-items: stretch;
         flex-direction: column;
+
         width: 100%;
     }
 
@@ -759,6 +1012,10 @@ select {
 
     .main-content {
         padding: 22px 12px 32px;
+    }
+
+    .demo-banner {
+        padding: 14px 16px;
     }
 
     .registration-section,
@@ -805,43 +1062,4 @@ select {
     .month-navigation {
         justify-content: center;
     }
-    /* 申請中の表示と取消ボタン */
-
-	.request-action {
-	    display: inline-flex;
-	    align-items: center;
-	    justify-content: center;
-	    flex-wrap: wrap;
-	    gap: 4px;
-	    margin: 3px 2px;
-	    vertical-align: middle;
-	}
-	
-	.cancel-request-form {
-	    display: inline-flex;
-	    margin: 0;
-	}
-	
-	.cancel-request-button {
-	    min-height: 29px;
-	    padding: 4px 9px;
-	    color: #a3453d;
-	    font-size: 12px;
-	    font-weight: 700;
-	    white-space: nowrap;
-	    background-color: #ffffff;
-	    border: 1px solid #d99b95;
-	    border-radius: 7px;
-	    cursor: pointer;
-	}
-	
-	.cancel-request-button:hover {
-	    color: #ffffff;
-	    background-color: #b94f46;
-	}
-	
-	.cancel-request-button:focus-visible {
-	    outline: 3px solid #d99b95;
-	    outline-offset: 2px;
-	}
 }

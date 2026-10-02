@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja"
       xmlns:th="http://www.thymeleaf.org">
 
@@ -9,13 +8,13 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>ホーム</title>
+    <title>従業員ホーム</title>
 
     <link rel="stylesheet"
           th:href="@{/css/home.css}">
 </head>
 
-<body>
+<body th:with="isDemoEmployee=${employee.employeeId == 'E0002'}">
 
     <div class="home-container">
 
@@ -24,20 +23,23 @@
 
             <div class="header-information">
 
-                <h1>
-                    株式会社アテンダンス
-                </h1>
+                <div class="company-information">
+                    <h1>株式会社アテンダンス</h1>
+
+                    <span class="demo-badge"
+                          th:if="${isDemoEmployee}">
+                        DEMO
+                    </span>
+                </div>
 
                 <p>
                     社員名：
-
                     <span th:text="${employee.employeeName}">
                         社員名
                     </span>
                 </p>
 
             </div>
-
 
             <!-- ログアウト -->
             <form class="logout-form"
@@ -46,17 +48,28 @@
 
                 <button class="logout-button"
                         type="submit">
-
                     ログアウト
-
                 </button>
 
             </form>
 
         </header>
 
-
         <main>
+
+            <!-- デモ従業員への案内 -->
+            <div class="demo-banner"
+                 th:if="${isDemoEmployee}">
+
+                <strong>
+                    デモ従業員としてログインしています
+                </strong>
+
+                <p>
+                    出退勤の打刻や勤務予定の登録、勤怠修正・有給休暇の申請をお試しいただけます。
+                </p>
+
+            </div>
 
             <!-- 成功メッセージ -->
             <p class="success-message"
@@ -65,7 +78,6 @@
                 打刻しました
             </p>
 
-
             <!-- エラーメッセージ -->
             <p class="error-message"
                th:if="${errorMessage != null}"
@@ -73,18 +85,15 @@
                 エラーが発生しました
             </p>
 
-
             <!-- 日付と現在時刻 -->
             <section class="clock-section">
 
                 <p class="today">
                     日付：
-
                     <span th:text="${today}">
                         2026年8月19日
                     </span>
                 </p>
-
 
                 <div class="clock-panel">
 
@@ -99,7 +108,6 @@
                 </div>
 
             </section>
-
 
             <!-- 出勤・退勤 -->
             <section class="attendance-section">
@@ -126,7 +134,6 @@
 
                     </form>
 
-
                     <p class="attendance-time">
                         出勤時間
 
@@ -141,7 +148,6 @@
                     </p>
 
                 </div>
-
 
                 <!-- 退勤 -->
                 <div class="attendance-card">
@@ -165,7 +171,6 @@
 
                     </form>
 
-
                     <p class="attendance-time">
                         退勤時間
 
@@ -183,9 +188,8 @@
 
             </section>
 
-
             <!-- メニュー -->
-            <nav class="menu">
+            <nav class="menu" aria-label="従業員メニュー">
 
                 <a class="menu-card"
                    th:href="@{/attendance}">
@@ -200,7 +204,6 @@
 
                 </a>
 
-
                 <a class="menu-card"
                    th:href="@{/request}">
 
@@ -213,7 +216,6 @@
                     </span>
 
                 </a>
-
 
                 <a class="menu-card"
                    th:href="@{/paid-holiday}">
@@ -234,11 +236,9 @@
 
     </div>
 
-
     <!-- 現在時刻を更新 -->
     <script>
         function updateTime() {
-
             const now = new Date();
 
             const hours =
@@ -250,19 +250,13 @@
             const seconds =
                 String(now.getSeconds()).padStart(2, "0");
 
-            const time =
+            document.getElementById("currentTime").textContent =
                 hours + ":" + minutes + ":" + seconds;
-
-            document
-                .getElementById("currentTime")
-                .textContent = time;
         }
 
         updateTime();
-
         setInterval(updateTime, 1000);
     </script>
 
 </body>
-
 </html>

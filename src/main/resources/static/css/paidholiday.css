@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
-/* ========================================
-   共通
-   ======================================== */
-
+/* 共通 */
 * {
     box-sizing: border-box;
 }
@@ -19,8 +16,11 @@ body {
     position: relative;
     min-height: 100vh;
     padding: 32px 24px 60px;
+
     overflow-x: hidden;
+
     color: #172b4d;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -29,6 +29,7 @@ body {
         "Yu Gothic",
         Meiryo,
         sans-serif;
+
     background:
         radial-gradient(
             circle at 12% 30%,
@@ -56,70 +57,71 @@ textarea {
     font: inherit;
 }
 
-
-/* ========================================
-   背景
-   ======================================== */
-
+/* 背景の波 */
 body::before {
     content: "";
+
     position: fixed;
     z-index: 0;
+
     bottom: -32%;
     left: -10%;
+
     width: 120%;
     height: 65%;
+
     pointer-events: none;
+
     background:
         linear-gradient(
             135deg,
             rgba(80, 210, 235, 0.28),
             rgba(55, 164, 239, 0.35)
         );
+
     border-radius:
         45% 55% 0 0 /
         35% 40% 0 0;
+
     transform: rotate(-3deg);
+
     box-shadow:
-        0 -35px 0
-        rgba(255, 255, 255, 0.42);
+        0 -35px 0 rgba(255, 255, 255, 0.42);
 }
 
-
-/* ========================================
-   画面全体
-   ======================================== */
-
+/* 画面全体 */
 .page-container {
     position: relative;
     z-index: 1;
+
     width: 100%;
     max-width: 1100px;
     min-height: calc(100vh - 92px);
+
     margin: 0 auto;
     overflow: hidden;
-    background-color:
-        rgba(255, 255, 255, 0.97);
+
+    background-color: rgba(255, 255, 255, 0.97);
+
     border: 1px solid #c5e2f2;
     border-radius: 18px;
+
     box-shadow:
-        0 18px 46px
-        rgba(42, 114, 158, 0.18);
+        0 18px 46px rgba(42, 114, 158, 0.18);
 }
 
-
-/* ========================================
-   ヘッダー
-   ======================================== */
-
+/* ヘッダー */
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 30px;
+
     min-height: 116px;
     padding: 25px 35px;
+
     color: #ffffff;
+
     background:
         linear-gradient(
             135deg,
@@ -128,8 +130,23 @@ body::before {
         );
 }
 
+.header-information {
+    min-width: 0;
+}
+
+/* 会社名とDEMO */
+.company-information {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-bottom: 11px;
+}
+
 .header-information h1 {
-    margin: 0 0 11px;
+    margin: 0;
+
     font-size: 25px;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -137,7 +154,9 @@ body::before {
 
 .header-information p {
     margin: 0;
+
     color: #e0f0ff;
+
     font-size: 15px;
 }
 
@@ -146,6 +165,57 @@ body::before {
     font-weight: 700;
 }
 
+/* 黄色のDEMO */
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    min-height: 27px;
+    padding: 4px 11px;
+
+    color: #694700;
+    background: #fff1bd;
+
+    border: 1px solid #f2d477;
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+
+    white-space: nowrap;
+}
+
+/* デモの説明 */
+.demo-banner {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+
+    color: #705000;
+    background: #fff8df;
+
+    border: 1px solid #ead18a;
+    border-radius: 12px;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.demo-banner strong {
+    display: block;
+    margin-bottom: 4px;
+
+    font-size: 15px;
+}
+
+.demo-banner p {
+    margin: 0;
+}
+
+/* ヘッダーの操作 */
 .header-actions {
     display: flex;
     align-items: center;
@@ -161,14 +231,20 @@ body::before {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     min-height: 46px;
     padding: 0 21px;
+
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
+
     white-space: nowrap;
+
     border-radius: 8px;
+
     cursor: pointer;
+
     transition:
         transform 0.2s ease,
         background-color 0.2s ease,
@@ -177,25 +253,26 @@ body::before {
 
 .header-home-link {
     color: #ffffff;
+
     background:
         linear-gradient(
             135deg,
             #2795ef 0%,
             #0969df 100%
         );
+
     border: 1px solid #2795ef;
+
     box-shadow:
-        0 7px 16px
-        rgba(9, 105, 223, 0.25);
+        0 7px 16px rgba(9, 105, 223, 0.25);
 }
 
 .logout-button {
     color: #ffffff;
-    background-color:
-        rgba(255, 255, 255, 0.12);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.55);
+
+    background-color: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
 }
 
 .header-home-link:hover,
@@ -213,97 +290,89 @@ body::before {
 }
 
 .logout-button:hover {
-    background-color:
-        rgba(255, 255, 255, 0.22);
+    background-color: rgba(255, 255, 255, 0.22);
 }
 
-
-/* ========================================
-   メイン部分
-   ======================================== */
-
+/* メイン部分 */
 .main-content {
     padding: 36px 42px 48px;
 }
 
-
-/* ========================================
-   メッセージ
-   ======================================== */
-
+/* メッセージ */
 .message {
     width: 100%;
+
     margin: 0 0 24px;
     padding: 15px 19px;
+
     font-size: 14px;
     font-weight: 700;
+
     border-radius: 9px;
 }
-
-/* 申請しました */
 
 .success-message {
     color: #146c43;
     background-color: #e8f8ef;
-    border: 1px solid #80cda5;
-    box-shadow:
-        0 4px 12px
-        rgba(20, 108, 67, 0.07);
-}
 
-/* エラー */
+    border: 1px solid #80cda5;
+
+    box-shadow:
+        0 4px 12px rgba(20, 108, 67, 0.07);
+}
 
 .error-message,
 .client-error-message {
     color: #b42318;
     background-color: #fff0ee;
+
     border: 1px solid #f0b3ad;
 }
 
-
-/* ========================================
-   画面タイトル
-   ======================================== */
-
+/* 画面タイトル */
 .page-title {
     padding: 0 0 27px;
+
     border-bottom: 1px solid #c8e0ee;
 }
 
 .page-title h1 {
     margin: 0;
+
     color: #123764;
+
     font-size: 28px;
     line-height: 1.4;
 }
 
 .page-title p {
     margin: 9px 0 0;
+
     color: #70889f;
+
     font-size: 14px;
 }
 
-
-/* ========================================
-   有給申請カード
-   ======================================== */
-
+/* 有給申請カード */
 .application-card {
     width: 100%;
     max-width: 780px;
+
     margin: 30px auto 0;
     padding: 29px 35px 36px;
+
     background:
         linear-gradient(
             145deg,
             #ffffff 0%,
             #edf8ff 100%
         );
+
     border: 1px solid #c5e4f4;
     border-radius: 13px;
+
     box-shadow:
-        0 10px 27px
-        rgba(45, 119, 166, 0.1);
+        0 10px 27px rgba(45, 119, 166, 0.1);
 }
 
 .card-heading {
@@ -312,21 +381,21 @@ body::before {
 
 .card-heading h2 {
     margin: 0;
+
     color: #123764;
+
     font-size: 22px;
 }
 
 .card-heading p {
     margin: 8px 0 0;
+
     color: #70889f;
+
     font-size: 13px;
 }
 
-
-/* ========================================
-   入力項目
-   ======================================== */
-
+/* 入力項目 */
 .application-form {
     width: 100%;
 }
@@ -334,6 +403,7 @@ body::before {
 .form-item {
     display: flex;
     flex-direction: column;
+
     margin-top: 21px;
 }
 
@@ -344,21 +414,29 @@ body::before {
 .form-item label,
 .date-input-area label {
     margin-bottom: 8px;
+
     color: #17335c;
+
     font-size: 14px;
     font-weight: 700;
 }
 
+/* 必須ラベル */
 .required-label {
     display: inline-flex;
     align-items: center;
+
     min-height: 19px;
     margin-left: 6px;
     padding: 2px 7px;
+
     color: #ffffff;
+
     font-size: 10px;
     vertical-align: middle;
+
     background-color: #d65c55;
+
     border-radius: 999px;
 }
 
@@ -366,12 +444,18 @@ body::before {
 .form-item textarea,
 .date-input-area input {
     width: 100%;
+
     color: #17335c;
+
     font-size: 14px;
+
     background-color: #ffffff;
+
     border: 1px solid #c5d4e3;
     border-radius: 8px;
+
     outline: none;
+
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
@@ -386,7 +470,9 @@ body::before {
 .form-item textarea {
     min-height: 145px;
     padding: 13px;
+
     line-height: 1.7;
+
     resize: vertical;
 }
 
@@ -394,9 +480,9 @@ body::before {
 .form-item textarea:focus,
 .date-input-area input:focus {
     border-color: #2385e8;
+
     box-shadow:
-        0 0 0 4px
-        rgba(35, 133, 232, 0.13);
+        0 0 0 4px rgba(35, 133, 232, 0.13);
 }
 
 .form-item textarea::placeholder {
@@ -405,21 +491,20 @@ body::before {
 
 .character-information {
     margin: 7px 0 0;
+
     color: #8295a6;
+
     font-size: 12px;
     text-align: right;
 }
 
-
-/* ========================================
-   日付追加
-   ======================================== */
-
+/* 日付追加エリア */
 .date-section {
     margin-top: 24px;
     padding: 20px;
-    background-color:
-        rgba(255, 255, 255, 0.84);
+
+    background-color: rgba(255, 255, 255, 0.84);
+
     border: 1px solid #c9e2ef;
     border-radius: 11px;
 }
@@ -429,32 +514,44 @@ body::before {
     align-items: center;
     justify-content: space-between;
     gap: 18px;
+
     margin-bottom: 17px;
 }
 
 .date-section-header h3 {
     margin: 0;
+
     color: #153f70;
+
     font-size: 18px;
 }
 
 .date-section-header p {
     margin: 6px 0 0;
+
     color: #7890a5;
+
     font-size: 12px;
 }
 
 .add-date-button {
     min-height: 42px;
     padding: 0 17px;
+
     color: #0b6fc8;
+
     font-size: 13px;
     font-weight: 700;
+
     white-space: nowrap;
+
     background-color: #ffffff;
+
     border: 1px solid #75bced;
     border-radius: 8px;
+
     cursor: pointer;
+
     transition:
         color 0.2s ease,
         background-color 0.2s ease,
@@ -464,6 +561,7 @@ body::before {
 .add-date-button:hover {
     color: #ffffff;
     background-color: #1688df;
+
     transform: translateY(-1px);
 }
 
@@ -475,14 +573,19 @@ body::before {
 
 .date-row {
     display: grid;
+
     grid-template-columns:
         42px
         minmax(200px, 1fr)
         80px;
+
     align-items: end;
     gap: 12px;
+
     padding: 13px;
+
     background-color: #f7fcff;
+
     border: 1px solid #d1e8f4;
     border-radius: 9px;
 }
@@ -491,12 +594,17 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 36px;
     height: 47px;
+
     color: #0d69b2;
+
     font-size: 14px;
     font-weight: 800;
+
     background-color: #e3f4ff;
+
     border-radius: 8px;
 }
 
@@ -508,12 +616,17 @@ body::before {
 .remove-date-button {
     height: 42px;
     padding: 0 13px;
+
     color: #b14747;
+
     font-size: 12px;
     font-weight: 700;
+
     background-color: #ffffff;
+
     border: 1px solid #e2a9a9;
     border-radius: 8px;
+
     cursor: pointer;
 }
 
@@ -525,21 +638,22 @@ body::before {
 .remove-date-button:disabled {
     color: #a8b1b8;
     background-color: #f2f4f5;
+
     border-color: #d5dadd;
+
     cursor: not-allowed;
 }
 
-
-/* ========================================
-   JavaScriptエラー
-   ======================================== */
-
+/* JavaScriptのエラー表示 */
 .client-error-message {
     display: none;
+
     margin-top: 20px;
     padding: 13px 16px;
+
     font-size: 13px;
     font-weight: 700;
+
     border-radius: 9px;
 }
 
@@ -547,14 +661,11 @@ body::before {
     display: block;
 }
 
-
-/* ========================================
-   申請ボタン
-   ======================================== */
-
+/* 申請ボタン */
 .application-actions {
     display: flex;
     justify-content: center;
+
     margin-top: 28px;
 }
 
@@ -562,22 +673,28 @@ body::before {
     min-width: 210px;
     min-height: 50px;
     padding: 0 28px;
+
     color: #ffffff;
+
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.05em;
+
     background:
         linear-gradient(
             135deg,
             #2795ef 0%,
             #0969df 100%
         );
+
     border: none;
     border-radius: 8px;
+
     box-shadow:
-        0 8px 18px
-        rgba(9, 105, 223, 0.23);
+        0 8px 18px rgba(9, 105, 223, 0.23);
+
     cursor: pointer;
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -585,17 +702,21 @@ body::before {
 
 .application-button:hover {
     transform: translateY(-2px);
+
     box-shadow:
-        0 11px 23px
-        rgba(9, 105, 223, 0.3);
+        0 11px 23px rgba(9, 105, 223, 0.3);
 }
 
+/* キーボード操作時 */
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #e5ad26;
+    outline-offset: 3px;
+}
 
-/* ========================================
-   タブレット
-   ======================================== */
-
+/* タブレット */
 @media screen and (max-width: 800px) {
+
     body {
         padding: 20px 13px 45px;
     }
@@ -616,6 +737,7 @@ body::before {
     .logout-button {
         padding-right: 15px;
         padding-left: 15px;
+
         font-size: 13px;
     }
 
@@ -628,12 +750,9 @@ body::before {
     }
 }
 
-
-/* ========================================
-   スマートフォン
-   ======================================== */
-
+/* スマートフォン */
 @media screen and (max-width: 560px) {
+
     body {
         padding: 7px;
     }
@@ -647,7 +766,12 @@ body::before {
         align-items: flex-start;
         flex-direction: column;
         gap: 18px;
+
         padding: 22px 17px;
+    }
+
+    .company-information {
+        gap: 8px;
     }
 
     .header-information h1 {
@@ -661,6 +785,7 @@ body::before {
     .header-actions {
         align-items: stretch;
         flex-direction: column;
+
         width: 100%;
     }
 
@@ -672,6 +797,10 @@ body::before {
 
     .main-content {
         padding: 23px 13px 32px;
+    }
+
+    .demo-banner {
+        padding: 14px 16px;
     }
 
     .page-title {

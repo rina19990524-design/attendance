@@ -1,9 +1,5 @@
 @charset "UTF-8";
 
-/* ========================================
-   勤怠実績一覧
-   ======================================== */
-
 * {
     box-sizing: border-box;
 }
@@ -20,37 +16,24 @@ body {
     padding: 40px 24px 70px;
     color: #183b35;
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        Meiryo,
-        sans-serif;
-
+        -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
     background:
-        radial-gradient(
-            circle at 8% 25%,
-            rgba(255, 255, 255, 0.72) 0 70px,
-            transparent 71px
-        ),
-        radial-gradient(
-            circle at 90% 22%,
-            rgba(255, 255, 255, 0.58) 0 120px,
-            transparent 121px
-        ),
-        linear-gradient(
-            145deg,
-            #edfafa 0%,
-            #d8f5f3 48%,
-            #abe4dd 100%
-        );
+        radial-gradient(circle at 8% 25%,
+            rgba(255, 255, 255, .72) 0 70px, transparent 71px),
+        radial-gradient(circle at 90% 22%,
+            rgba(255, 255, 255, .58) 0 120px, transparent 121px),
+        linear-gradient(145deg,
+            #edfafa 0%, #d8f5f3 48%, #abe4dd 100%);
 }
 
+button,
+input,
+select {
+    font: inherit;
+}
 
-/* ========================================
-   画面全体を囲む枠
-   ======================================== */
+/* 画面枠 */
 
 .page-container {
     width: 100%;
@@ -58,46 +41,41 @@ body {
     min-height: calc(100vh - 110px);
     margin: 0 auto;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.97);
+    background: rgba(255, 255, 255, .97);
     border: 1px solid #c4e4dd;
     border-radius: 22px;
-    box-shadow:
-        0 18px 45px
-        rgba(15, 92, 78, 0.14);
+    box-shadow: 0 18px 45px rgba(15, 92, 78, .14);
 }
 
-
-/* ========================================
-   ヘッダー
-   ======================================== */
+/* ヘッダー */
 
 .page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
     min-height: 105px;
     padding: 24px 42px;
-    color: #ffffff;
-
-    background:
-        linear-gradient(
-            110deg,
-            #034d40 0%,
-            #08735f 60%,
-            #0a8971 100%
-        );
+    color: #fff;
+    background: linear-gradient(110deg,
+        #034d40 0%, #08735f 60%, #0a8971 100%);
 }
 
 .company-info {
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
     font-size: 21px;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: .02em;
 }
 
 .header-right {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     gap: 14px;
 }
 
@@ -106,11 +84,8 @@ body {
     font-size: 15px;
     font-weight: 700;
     white-space: nowrap;
-    background-color:
-        rgba(255, 255, 255, 0.17);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, .17);
+    border: 1px solid rgba(255, 255, 255, .12);
     border-radius: 10px;
 }
 
@@ -120,28 +95,21 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 48px;
-    padding: 0 24px;
-    font-family: inherit;
+    padding: 10px 24px;
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
     border-radius: 10px;
     cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background-color 0.2s ease;
+    transition: transform .2s, box-shadow .2s, background .2s;
 }
 
 .header-home-link {
     color: #075949;
-    background-color: #ffffff;
-    border: 1px solid #ffffff;
-    box-shadow:
-        0 6px 14px
-        rgba(0, 49, 40, 0.14);
+    background: #fff;
+    border: 1px solid #fff;
+    box-shadow: 0 6px 14px rgba(0, 49, 40, .14);
 }
 
 .logout-form {
@@ -149,12 +117,9 @@ body {
 }
 
 .logout-button {
-    color: #ffffff;
-    background-color:
-        rgba(255, 255, 255, 0.12);
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.72);
+    color: #fff;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .72);
 }
 
 .header-home-link:hover,
@@ -163,27 +128,59 @@ body {
 }
 
 .header-home-link:hover {
-    background-color: #f2fffb;
+    background: #f2fffb;
 }
 
 .logout-button:hover {
-    background-color:
-        rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, .22);
 }
 
+/* DEMO表示 */
 
-/* ========================================
-   メイン部分
-   ======================================== */
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 27px;
+    padding: 4px 11px;
+    color: #694700;
+    background: #fff1bd;
+    border: 1px solid #f2d477;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: .06em;
+    white-space: nowrap;
+}
+
+.demo-banner {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    color: #705000;
+    background: #fff8df;
+    border: 1px solid #ead18a;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.demo-banner strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
+}
+
+.demo-banner p {
+    margin: 0;
+}
+
+/* メイン・タイトル */
 
 .main-content {
     padding: 36px 42px 50px;
 }
-
-
-/* ========================================
-   画面タイトル
-   ======================================== */
 
 .page-title {
     padding-bottom: 22px;
@@ -201,40 +198,27 @@ body {
     margin: 9px 0 0;
     color: #6c8982;
     font-size: 14px;
+    line-height: 1.7;
 }
 
-
-/* ========================================
-   検索エリア
-   ======================================== */
+/* 検索 */
 
 .search-card {
     margin-top: 28px;
     padding: 25px 28px;
-
-    background:
-        linear-gradient(
-            120deg,
-            #ffffff 0%,
-            #f3fcf9 100%
-        );
-
+    background: linear-gradient(120deg, #fff, #f3fcf9);
     border: 1px solid #b7ded5;
     border-radius: 15px;
-    box-shadow:
-        0 8px 20px
-        rgba(21, 98, 82, 0.06);
+    box-shadow: 0 8px 20px rgba(21, 98, 82, .06);
 }
 
 .search-form {
     display: grid;
-
     grid-template-columns:
-        minmax(165px, 0.8fr)
-        minmax(165px, 0.8fr)
+        minmax(165px, .8fr)
+        minmax(165px, .8fr)
         minmax(280px, 2fr)
         auto;
-
     align-items: end;
     gap: 16px;
 }
@@ -258,24 +242,18 @@ body {
     height: 48px;
     padding: 0 15px;
     color: #274c45;
-    font-family: inherit;
     font-size: 14px;
-    background-color: #ffffff;
+    background: #fff;
     border: 1px solid #add5cc;
     border-radius: 9px;
     outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: border-color .2s, box-shadow .2s;
 }
 
 .search-item input:focus,
 .search-item select:focus {
     border-color: #0b8c73;
-    box-shadow:
-        0 0 0 4px
-        rgba(11, 140, 115, 0.12);
+    box-shadow: 0 0 0 4px rgba(11, 140, 115, .12);
 }
 
 .search-item input::placeholder {
@@ -295,39 +273,25 @@ body {
     justify-content: center;
     height: 48px;
     padding: 0 22px;
-    font-family: inherit;
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
     border-radius: 9px;
     cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background-color 0.2s ease;
+    transition: transform .2s, box-shadow .2s, background .2s;
 }
 
 .search-button {
-    color: #ffffff;
-
-    background:
-        linear-gradient(
-            135deg,
-            #13a283 0%,
-            #08745f 100%
-        );
-
+    color: #fff;
+    background: linear-gradient(135deg, #13a283, #08745f);
     border: none;
-    box-shadow:
-        0 7px 15px
-        rgba(7, 116, 95, 0.18);
+    box-shadow: 0 7px 15px rgba(7, 116, 95, .18);
 }
 
 .clear-button {
     color: #155d50;
-    background-color: #ffffff;
+    background: #fff;
     border: 1px solid #add5cc;
 }
 
@@ -337,29 +301,25 @@ body {
 }
 
 .clear-button:hover {
-    background-color: #f4fcf9;
+    background: #f4fcf9;
 }
 
-
-/* ========================================
-   勤怠実績カード
-   ======================================== */
+/* 勤怠実績 */
 
 .attendance-list-card {
     margin-top: 28px;
     padding: 27px 28px 32px;
-    background-color: #ffffff;
+    background: #fff;
     border: 1px solid #b7ded5;
     border-radius: 15px;
-    box-shadow:
-        0 10px 24px
-        rgba(21, 98, 82, 0.08);
+    box-shadow: 0 10px 24px rgba(21, 98, 82, .08);
 }
 
 .list-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 15px;
     margin-bottom: 21px;
 }
 
@@ -373,35 +333,28 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     min-width: 54px;
     min-height: 33px;
     padding: 5px 14px;
     color: #087460;
+    background: #dcf5ee;
+    border-radius: 999px;
     font-size: 13px;
     font-weight: 700;
-    background-color: #dcf5ee;
-    border-radius: 999px;
 }
-
-
-/* ========================================
-   データなし
-   ======================================== */
 
 .no-data {
     padding: 40px 20px;
     color: #708b85;
     font-size: 14px;
     text-align: center;
-    background-color: #f8fcfb;
+    background: #f8fcfb;
     border: 1px dashed #b7dcd4;
     border-radius: 11px;
 }
 
-
-/* ========================================
-   テーブル
-   ======================================== */
+/* テーブル */
 
 .table-scroll {
     width: 100%;
@@ -425,6 +378,7 @@ body {
     vertical-align: middle;
     border-right: 1px solid #c6e2dc;
     border-bottom: 1px solid #c6e2dc;
+    overflow-wrap: anywhere;
 }
 
 .attendance-table th:last-child,
@@ -437,78 +391,37 @@ body {
 }
 
 .attendance-table thead th {
-    color: #ffffff;
+    color: #fff;
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
-
-    background:
-        linear-gradient(
-            180deg,
-            #08705c 0%,
-            #045746 100%
-        );
+    background: linear-gradient(180deg, #08705c, #045746);
 }
 
 .attendance-table tbody td {
     color: #274b44;
     font-size: 13px;
-    background-color: #ffffff;
+    background: #fff;
 }
 
 .attendance-table tbody tr:nth-child(even) td {
-    background-color: #f4fbf9;
+    background: #f4fbf9;
 }
 
 .attendance-table tbody tr:hover td {
-    background-color: #eaf8f4;
+    background: #eaf8f4;
 }
 
-
-/* 日付 */
-.attendance-table th:nth-child(1) {
-    width: 12%;
-}
-
-/* 社員ID */
-.attendance-table th:nth-child(2) {
-    width: 12%;
-}
-
-/* 社員名 */
-.attendance-table th:nth-child(3) {
-    width: 16%;
-}
-
-/* 部署名 */
-.attendance-table th:nth-child(4) {
-    width: 13%;
-}
-
-/* 出勤時刻 */
-.attendance-table th:nth-child(5) {
-    width: 12%;
-}
-
-/* 退勤時刻 */
-.attendance-table th:nth-child(6) {
-    width: 12%;
-}
-
-/* 実働時間 */
-.attendance-table th:nth-child(7) {
-    width: 13%;
-}
+.attendance-table th:nth-child(1) { width: 12%; }
+.attendance-table th:nth-child(2) { width: 12%; }
+.attendance-table th:nth-child(3) { width: 16%; }
+.attendance-table th:nth-child(4) { width: 13%; }
+.attendance-table th:nth-child(5) { width: 12%; }
+.attendance-table th:nth-child(6) { width: 12%; }
+.attendance-table th:nth-child(7) { width: 13%; }
+.attendance-table th:nth-child(8) { width: 10%; }
 
 /* 状態 */
-.attendance-table th:nth-child(8) {
-    width: 10%;
-}
-
-
-/* ========================================
-   状態ラベル
-   ======================================== */
 
 .status-cell {
     white-space: nowrap;
@@ -527,67 +440,57 @@ body {
     border-radius: 999px;
 }
 
-/* 正常 */
 .status-normal {
     color: #08705d;
-    background-color: #dff6ef;
+    background: #dff6ef;
     border-color: #a8e0d3;
 }
 
-/* 勤務中 */
 .status-working {
     color: #1764a0;
-    background-color: #e0efff;
+    background: #e0efff;
     border-color: #b5d5f5;
 }
 
-/* 打刻漏れ */
 .status-missing {
     color: #a46300;
-    background-color: #fff1cf;
+    background: #fff1cf;
     border-color: #f0d58d;
 }
 
-/* 休日 */
 .status-holiday {
     color: #5f6874;
-    background-color: #edf0f3;
+    background: #edf0f3;
     border-color: #d2d8de;
 }
 
-/* 有給 */
 .status-paid-leave {
     color: #7450a8;
-    background-color: #f1e8ff;
+    background: #f1e8ff;
     border-color: #d6c0f3;
 }
 
-/* 予定 */
 .status-scheduled {
     color: #287787;
-    background-color: #e2f5f8;
+    background: #e2f5f8;
     border-color: #b8dde4;
 }
 
-/* その他 */
 .status-other {
     color: #5e6f6b;
-    background-color: #edf3f1;
+    background: #edf3f1;
     border-color: #d0ddda;
 }
 
-
-/* ========================================
-   タブレット
-   ======================================== */
+/* 画面幅に応じた調整 */
 
 @media (max-width: 1200px) {
-
     body {
         padding: 24px 16px 50px;
     }
 
     .page-header {
+        flex-wrap: wrap;
         padding: 22px 28px;
     }
 
@@ -597,6 +500,7 @@ body {
 
     .header-right {
         gap: 10px;
+        flex-wrap: wrap;
     }
 
     .admin-info,
@@ -628,13 +532,7 @@ body {
     }
 }
 
-
-/* ========================================
-   スマートフォン
-   ======================================== */
-
 @media (max-width: 768px) {
-
     body {
         padding: 8px;
     }
@@ -662,6 +560,7 @@ body {
     }
 
     .admin-info {
+        white-space: normal;
         text-align: center;
     }
 
@@ -673,6 +572,10 @@ body {
 
     .main-content {
         padding: 27px 15px 38px;
+    }
+
+    .demo-banner {
+        padding: 14px 16px;
     }
 
     .page-title {

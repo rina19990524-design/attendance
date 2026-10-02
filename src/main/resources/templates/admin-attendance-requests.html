@@ -1,359 +1,271 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
     <title>勤怠申請一覧</title>
-
-    <link
-        rel="stylesheet"
-        th:href="@{/css/admin-attendance-requests.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/admin-attendance-requests.css}">
 </head>
 
 <body th:with="isDemoAdmin=${admin.employeeId == 'E0003'}">
 
-    <div class="page-container">
+<div class="page-container">
 
-        <!-- ヘッダー -->
-        <header class="page-header">
+    <header class="page-header">
 
-            <div class="company-info">
-                <span>会社名：株式会社アテンダンス</span>
+        <div class="company-info">
+            <span>会社名：株式会社アテンダンス</span>
+            <span class="demo-badge" th:if="${isDemoAdmin}">
+                DEMO
+            </span>
+        </div>
 
-                <span
-                    class="demo-badge"
-                    th:if="${isDemoAdmin}">
-                    DEMO
+        <div class="header-right">
+
+            <div class="admin-info">
+                管理者名：
+                <span th:text="${admin.employeeName}">
+                    山田太郎
                 </span>
             </div>
 
-            <div class="header-right">
+            <a class="header-home-link" th:href="@{/admin}">
+                管理者ホームへ戻る
+            </a>
 
-                <div class="admin-info">
-                    管理者名：
-                    <span th:text="${admin.employeeName}">
-                        山田太郎
-                    </span>
-                </div>
+            <form class="logout-form"
+                  th:action="@{/logout}"
+                  method="post">
+                <button class="logout-button" type="submit">
+                    ログアウト
+                </button>
+            </form>
 
-                <a
-                    class="header-home-link"
-                    th:href="@{/admin}">
-                    ◀ ホームへ戻る
-                </a>
+        </div>
+    </header>
 
-                <form
-                    class="logout-form"
-                    th:action="@{/logout}"
-                    method="post">
+    <main class="main-content">
 
-                    <button
-                        class="logout-button"
-                        type="submit">
-                        ログアウト
-                    </button>
+        <div class="demo-banner"
+             th:if="${isDemoAdmin}"
+             role="status">
+            <strong>
+                デモ管理者としてログインしています
+            </strong>
+            <p>
+                画面の閲覧や検索をお試しいただけます。
+                デモアカウントでは、登録・更新・パスワード再設定・申請の承認はできません。
+            </p>
+        </div>
 
-                </form>
+        <section class="page-title">
+            <h1>勤怠申請一覧</h1>
+            <p th:unless="${isDemoAdmin}">
+                社員から申請された勤怠修正を確認・承認します
+            </p>
+            <p th:if="${isDemoAdmin}">
+                社員から申請された勤怠修正を確認できます
+            </p>
+        </section>
 
+        <div class="message success-message"
+             th:if="${message != null}"
+             th:text="${message}">
+            承認しました
+        </div>
+
+        <div class="message error-message"
+             th:if="${errorMessage != null}"
+             th:text="${errorMessage}">
+            承認する申請を選択してください
+        </div>
+
+        <section class="request-list-card"
+                 th:if="${attendanceRequests == null or attendanceRequests.isEmpty()}">
+
+            <div class="list-heading">
+                <h2>承認待ちの申請</h2>
+                <span class="result-count">0件</span>
             </div>
 
-        </header>
-
-        <!-- メイン -->
-        <main class="main-content">
-
-            <!-- デモ管理者への案内 -->
-            <div
-                class="demo-banner"
-                th:if="${isDemoAdmin}">
-
-                <strong>デモ管理者としてログインしています</strong>
-
-                <p>
-                    勤怠申請の内容をご覧いただけます。
-                    デモアカウントでは、申請の承認はできません。
-                </p>
-
+            <div class="no-data">
+                承認待ちの勤怠申請はありません。
             </div>
 
-            <!-- タイトル -->
-            <section class="page-title">
+        </section>
 
-                <h1>勤怠申請一覧</h1>
+        <form class="approval-form"
+              th:if="${attendanceRequests != null and !attendanceRequests.isEmpty()}"
+              th:action="@{/admin/attendance-requests/approve-selected}"
+              method="post">
 
-                <p th:if="${!isDemoAdmin}">
-                    社員から申請された勤怠修正を確認・承認します
-                </p>
-
-                <p th:if="${isDemoAdmin}">
-                    社員から申請された勤怠修正を確認できます
-                </p>
-
-            </section>
-
-            <!-- 成功メッセージ -->
-            <div
-                class="message success-message"
-                th:if="${message}"
-                th:text="${message}">
-                承認しました
-            </div>
-
-            <!-- エラーメッセージ -->
-            <div
-                class="message error-message"
-                th:if="${errorMessage}"
-                th:text="${errorMessage}">
-                承認する申請を選択してください
-            </div>
-
-            <!-- 申請がない場合 -->
-            <section
-                class="request-list-card"
-                th:if="${attendanceRequests == null or attendanceRequests.isEmpty()}">
+            <section class="request-list-card">
 
                 <div class="list-heading">
-
-                    <h2>承認待ちの申請</h2>
-
-                    <span class="result-count">
-                        0件
-                    </span>
-
-                </div>
-
-                <div class="no-data">
-                    承認待ちの勤怠申請はありません。
-                </div>
-
-            </section>
-
-            <!-- 申請がある場合 -->
-            <form
-                class="approval-form"
-                th:if="${attendanceRequests != null and !attendanceRequests.isEmpty()}"
-                th:action="@{/admin/attendance-requests/approve-selected}"
-                method="post">
-
-                <section class="request-list-card">
-
-                    <div class="list-heading">
-
-                        <div>
-
-                            <h2>承認待ちの申請</h2>
-
-                            <p
-                                class="list-description"
-                                th:if="${!isDemoAdmin}">
-                                内容を確認して承認してください
-                            </p>
-
-                            <p
-                                class="list-description"
-                                th:if="${isDemoAdmin}">
-                                デモアカウントでは閲覧のみ可能です
-                            </p>
-
-                        </div>
-
-                        <span
-                            class="result-count"
-                            th:text="${#lists.size(attendanceRequests) + '件'}">
-                            1件
-                        </span>
-
+                    <div>
+                        <h2>承認待ちの申請</h2>
+                        <p class="list-description">
+                            申請内容と変更前後の時刻を確認できます
+                        </p>
                     </div>
 
-                    <!-- 一括承認 -->
-                    <div class="bulk-actions">
+                    <span class="result-count"
+                          th:text="${#lists.size(attendanceRequests) + '件'}">
+                        1件
+                    </span>
+                </div>
 
-                        <button
-                            class="bulk-approve-button"
+                <div class="bulk-actions">
+                    <button class="bulk-approve-button"
                             type="submit"
                             th:disabled="${isDemoAdmin}"
                             onclick="return confirm('選択した申請を一括承認しますか？');">
-                            選択した申請を一括承認
-                        </button>
+                        選択した申請を一括承認
+                    </button>
+                </div>
 
-                    </div>
+                <div class="table-scroll">
+                    <table class="request-table">
 
-                    <!-- 申請一覧テーブル -->
-                    <div class="table-scroll">
+                        <thead>
+                        <tr>
+                            <th class="select-column">
+                                <label class="select-all-label">
+                                    <input id="selectAll"
+                                           class="request-checkbox"
+                                           type="checkbox"
+                                           th:disabled="${isDemoAdmin}"
+                                           aria-label="すべての勤怠申請を選択">
+                                    <span>選択</span>
+                                </label>
+                            </th>
+                            <th>社員ID</th>
+                            <th>社員名</th>
+                            <th>部署名</th>
+                            <th>勤務日</th>
+                            <th>変更前</th>
+                            <th>変更後</th>
+                            <th>申請種別</th>
+                            <th class="reason-column">申請理由</th>
+                            <th class="approve-column">承認</th>
+                        </tr>
+                        </thead>
 
-                        <table class="request-table">
+                        <tbody>
+                        <tr th:each="request : ${attendanceRequests}">
 
-                            <thead>
+                            <td class="select-cell">
+                                <input class="request-checkbox request-checkbox-item"
+                                       type="checkbox"
+                                       name="requestIds"
+                                       th:value="${request.attendanceRequestId}"
+                                       th:disabled="${isDemoAdmin}"
+                                       aria-label="この勤怠申請を選択">
+                            </td>
 
-                                <tr>
+                            <td th:text="${request.employeeId}">
+                                E0001
+                            </td>
 
-                                    <th class="select-column">
+                            <td th:text="${request.employeeName}">
+                                山田太郎
+                            </td>
 
-                                        <label class="select-all-label">
+                            <td th:text="${request.departmentName}">
+                                営業部
+                            </td>
 
-                                            <input
-                                                id="selectAll"
-                                                class="request-checkbox"
-                                                type="checkbox"
-                                                th:disabled="${isDemoAdmin}"
-                                                aria-label="すべての勤怠申請を選択">
+                            <td th:text="${#temporals.format(request.workingDay, 'yyyy/MM/dd')}">
+                                2026/09/11
+                            </td>
 
-                                            <span>選択</span>
+                            <td class="time-cell"
+                                th:text="${request.beforeTime}">
+                                --:--～--:--
+                            </td>
 
-                                        </label>
+                            <td class="time-cell"
+                                th:text="${request.afterTime}">
+                                09:00～18:00
+                            </td>
 
-                                    </th>
+                            <td>
+                                <span class="request-type"
+                                      th:text="${request.requestTypeName}">
+                                    打刻漏れ
+                                </span>
+                            </td>
 
-                                    <th>社員ID</th>
-                                    <th>社員名</th>
-                                    <th>部署名</th>
-                                    <th>勤務日</th>
-                                    <th>変更前</th>
-                                    <th>変更後</th>
-                                    <th>申請種別</th>
-                                    <th class="reason-column">申請理由</th>
-                                    <th class="approve-column">承認</th>
+                            <td class="reason-cell"
+                                th:text="${request.requestReason}">
+                                打刻漏れのため。
+                            </td>
 
-                                </tr>
+                            <td>
+                                <button class="approve-button"
+                                        type="submit"
+                                        th:formaction="@{/admin/attendance-requests/{requestId}/approve(requestId=${request.attendanceRequestId})}"
+                                        th:disabled="${isDemoAdmin}"
+                                        onclick="return confirm('この申請を承認しますか？');">
+                                    承認
+                                </button>
+                            </td>
 
-                            </thead>
+                        </tr>
+                        </tbody>
 
-                            <tbody>
+                    </table>
+                </div>
 
-                                <tr th:each="request : ${attendanceRequests}">
+            </section>
+        </form>
 
-                                    <td class="select-cell">
+    </main>
+</div>
 
-                                        <input
-                                            class="request-checkbox request-checkbox-item"
-                                            type="checkbox"
-                                            name="requestIds"
-                                            th:value="${request.attendanceRequestId}"
-                                            th:disabled="${isDemoAdmin}"
-                                            aria-label="この勤怠申請を選択">
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAll = document.getElementById("selectAll");
+        const requestCheckboxes = document.querySelectorAll(
+            ".request-checkbox-item:not(:disabled)"
+        );
 
-                                    </td>
+        if (selectAll === null || selectAll.disabled) {
+            return;
+        }
 
-                                    <td th:text="${request.employeeId}">
-                                        E0001
-                                    </td>
-
-                                    <td th:text="${request.employeeName}">
-                                        山田太郎
-                                    </td>
-
-                                    <td th:text="${request.departmentName}">
-                                        営業部
-                                    </td>
-
-                                    <td
-                                        th:text="${#temporals.format(request.workingDay, 'yyyy/MM/dd')}">
-                                        2026/09/11
-                                    </td>
-
-                                    <td
-                                        class="time-cell"
-                                        th:text="${request.beforeTime}">
-                                        --:--～--:--
-                                    </td>
-
-                                    <td
-                                        class="time-cell"
-                                        th:text="${request.afterTime}">
-                                        09:00～18:00
-                                    </td>
-
-                                    <td>
-
-                                        <span
-                                            class="request-type"
-                                            th:text="${request.requestTypeName}">
-                                            打刻漏れ
-                                        </span>
-
-                                    </td>
-
-                                    <td
-                                        class="reason-cell"
-                                        th:text="${request.requestReason}">
-                                        打刻漏れのため。
-                                    </td>
-
-                                    <td>
-
-                                        <button
-                                            class="approve-button"
-                                            type="submit"
-                                            th:formaction="@{/admin/attendance-requests/{requestId}/approve(requestId=${request.attendanceRequestId})}"
-                                            th:disabled="${isDemoAdmin}"
-                                            onclick="return confirm('この申請を承認しますか？');">
-                                            承認
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </section>
-
-            </form>
-
-        </main>
-
-    </div>
-
-    <!-- 全選択チェックボックス -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-
-            const selectAll = document.getElementById("selectAll");
-
-            const requestCheckboxes = document.querySelectorAll(
-                ".request-checkbox-item:not(:disabled)"
-            );
-
-            if (selectAll === null || selectAll.disabled) {
-                return;
-            }
-
-            selectAll.addEventListener("change", function () {
-
-                requestCheckboxes.forEach(function (checkbox) {
-                    checkbox.checked = selectAll.checked;
-                });
-
-                selectAll.indeterminate = false;
-            });
-
+        selectAll.addEventListener("change", function () {
             requestCheckboxes.forEach(function (checkbox) {
-                checkbox.addEventListener("change", updateSelectAll);
+                checkbox.checked = selectAll.checked;
             });
 
-            function updateSelectAll() {
-
-                const checkedCount = document.querySelectorAll(
-                    ".request-checkbox-item:not(:disabled):checked"
-                ).length;
-
-                const totalCount = requestCheckboxes.length;
-
-                selectAll.checked =
-                    totalCount > 0 && checkedCount === totalCount;
-
-                selectAll.indeterminate =
-                    checkedCount > 0 && checkedCount < totalCount;
-            }
-
-            updateSelectAll();
+            selectAll.indeterminate = false;
         });
-    </script>
+
+        requestCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", updateSelectAll);
+        });
+
+        function updateSelectAll() {
+            const checkedCount = document.querySelectorAll(
+                ".request-checkbox-item:not(:disabled):checked"
+            ).length;
+
+            const totalCount = requestCheckboxes.length;
+
+            selectAll.checked =
+                totalCount > 0 && checkedCount === totalCount;
+
+            selectAll.indeterminate =
+                checkedCount > 0 && checkedCount < totalCount;
+        }
+
+        updateSelectAll();
+    });
+</script>
 
 </body>
 </html>
